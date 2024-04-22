@@ -125,6 +125,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
+import 'package:pets/pages/profile_view.dart';
 
 void main() {
   runApp(const MyApp());
@@ -161,7 +162,7 @@ class MyHomePageState extends State<MyHomePage> {
     const PageOne(),
     const PageTwo(),
     const PageThree(),
-    const PageFour(),
+    const ProfileView(),
   ];
   /// Actua como comunicador entre el BottomBar y la página que se muestra, cambiando el index de la lista de Widgets _pages
   void _onItemTapped(int index) {
@@ -232,13 +233,3 @@ class PageThree extends StatelessWidget {
   }
 }
 
-class PageFour extends StatelessWidget {
-  const PageFour({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const Center(
-      child: Text('Page 4'),
-    );
-  }
-}
