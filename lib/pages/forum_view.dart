@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pets/components/commentCard.dart';
 import 'package:pets/models/comment.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
@@ -72,8 +73,8 @@ class ForumPageState extends State<ForumPage> {
     }
   }*/
 
-  ///Método fijo 
-void loadForumPosts() async {
+  ///Método fijo
+  void loadForumPosts() async {
     // Simulate loading forum posts from a server
     String jsonString = '''
       {
@@ -127,7 +128,6 @@ void loadForumPosts() async {
     });
   }
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -143,155 +143,54 @@ void loadForumPosts() async {
               },
             ),
           ),
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 16),
-            child: Row(
-              children: [
-                Expanded(
-                  child: TextFormField(
-                    decoration: InputDecoration(
-                      hintText: 'Escribe tu comentario aquí...',
-                      border: OutlineInputBorder(),
-                    ),
-                  ),
-                ),
-                IconButton(
-                  icon: Icon(Icons.send),
-                  onPressed: () {
-                    // Implement functionality to post comment as a reply
-                  },
-                ),
-              ],
-            ),
-          ),
-          const SizedBox(height: 20,)
         ],
       ),
-    );
-  }
-}
-
-class ForumPostCard extends StatefulWidget {
-  final ForumPost forumPost;
-
-  ForumPostCard({required this.forumPost});
-
-  @override
-  _ForumPostCardState createState() => _ForumPostCardState();
-}
-
-class _ForumPostCardState extends State<ForumPostCard> {
-  bool _expanded = false;
-  bool _liked = false;
-  bool _showCommentField = false; // Track if comment field is visible
-
-  @override
-  Widget build(BuildContext context) {
-    return Card(
-      margin: EdgeInsets.all(10),
-      child: InkWell(
-        onTap: () {
-          setState(() {
-            _expanded = !_expanded;
-            _showCommentField = !_showCommentField;
-          });
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          _showCommentDialog(context);
         },
-        child: Padding(
-          padding: EdgeInsets.all(10),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                widget.forumPost.username,
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 16,
-                ),
-              ),
-              SizedBox(height: 8),
-              Text(widget.forumPost.content),
-              SizedBox(height: 8),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Row(
-                    children: [
-                      IconButton(
-                        icon: _liked
-                            ? Icon(Icons.favorite)
-                            : Icon(Icons.favorite_border),
-                        onPressed: () {
-                          setState(() {
-                            _liked = !_liked;
-                          });
-                          _likePost();
-                        },
-                      ),
-                      SizedBox(width: 5),
-                      Text('${widget.forumPost.likes}'),
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      Icon(Icons.comment),
-                      SizedBox(width: 5),
-                      Text('${widget.forumPost.comments.length}'),
-                    ],
-                  ),
-                ],
-              ),
-              SizedBox(height: 8),
-              if (_expanded)
-                ListView.builder(
-                  shrinkWrap: true,
-                  physics: NeverScrollableScrollPhysics(),
-                  itemCount: widget.forumPost.comments.length,
-                  itemBuilder: (context, index) {
-                    return Column(
-                      children: [
-                        ListTile(
-                          title:
-                              Text(widget.forumPost.comments[index].username),
-                          subtitle:
-                              Text(widget.forumPost.comments[index].content),
-                        ),
-                      ],
-                    );
-                  },
-                ),
-              if (_showCommentField)
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 16),
-                  child: Row(
-                    children: [
-                      const SizedBox(
-                        height: 20,
-                      ),
-                      Expanded(
-                        child: TextFormField(
-                          decoration: InputDecoration(
-                            hintText: 'Escribe tu comentario aquí...',
-                            border: OutlineInputBorder(),
-                          ),
-                        ),
-                      ),
-                      IconButton(
-                        icon: Icon(Icons.send),
-                        onPressed: () {
-                          // Implement functionality to post comment as a reply
-                        },
-                      ),
-                    ],
-                  ),
-                ),
-            ],
-          ),
-        ),
+        child: Icon(Icons.add),
       ),
     );
   }
 
-  void _likePost() {
-    // Implement like functionality
+  void _showCommentDialog(BuildContext context) {
+    TextEditingController commentController = TextEditingController();
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Añadir Comentario'),
+          content: TextFormField(
+            controller: commentController,
+            decoration: InputDecoration(
+              hintText: 'Escribe tu comentario aquí...',
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: Text('Cancelar'),
+            ),
+            TextButton(
+              onPressed: () {
+                String comment = commentController.text;
+                // Aquí puedes implementar la lógica para enviar el comentario al servidor
+                _postComment(comment);
+                Navigator.pop(context);
+              },
+              child: Text('Enviar'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _postComment(String comment) {
+    // Implementa aquí la lógica para enviar el comentario al servidor
   }
 }

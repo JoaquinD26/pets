@@ -192,7 +192,7 @@ class MyHomePageState extends State<MyHomePage> {
             items: const <Widget>[
               Icon(Icons.home, size: 30),
               Icon(Icons.search, size: 30),
-              Icon(Icons.notifications, size: 30),
+              Icon(Icons.forum_outlined, size: 30),
               Icon(Icons.person, size: 30),
             ],
             onTap: _onItemTapped,
