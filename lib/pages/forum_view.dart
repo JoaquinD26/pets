@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:pets/components/commentCard.dart';
 import 'package:pets/models/comment.dart';
 import 'dart:convert';
-import 'package:http/http.dart' as http;
+//import 'package:http/http.dart' as http;
 
 import 'package:pets/models/forum_model.dart';
 
