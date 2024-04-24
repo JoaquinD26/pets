@@ -82,7 +82,7 @@ class MyPetsViewState extends State<MyPetsView> {
               children: [
                 IconButton(icon: const Icon(Icons.add) , onPressed: () => {},),
                 SizedBox(
-                  height: 400, // Altura fija para el carrusel
+                  height: 300, // Altura fija para el carrusel
                   child: _buildCarousel(),
                 ),
                 Expanded(
