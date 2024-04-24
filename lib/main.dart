@@ -31,10 +31,10 @@ class MyHomePageState extends State<MyHomePage> {
   int _selectedIndex = 0;
 
   final List<Widget> _pages = [
-    const MyPetsView(),
-    const PageTwo(),
-    const ForumPage(),
-    const ProfileView(),
+    MyPetsView(),
+    PageTwo(),
+    ForumPage(),
+    ProfileView(),
   ];
 
   void _onItemTapped(int index) {
@@ -48,12 +48,15 @@ class MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
     double iconSize = screenWidth < 400
-        ? 15.0
+        ? 13.0
         : 20.0; // Establece el tamaño del icono según el ancho de la pantalla
 
     return Scaffold(
+      backgroundColor: Colors.deepOrange[300],
       body: _pages[_selectedIndex],
       bottomNavigationBar: GNav(
+        activeColor: Colors.brown[900],
+        color: Colors.white,
         tabs: const [
           GButton(
             icon: Icons.pets,
