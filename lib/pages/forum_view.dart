@@ -178,7 +178,7 @@ class ForumPageState extends State<ForumPage> {
             TextButton(
               onPressed: () {
                 String comment = commentController.text;
-                // Aquí puedes implementar la lógica para enviar el comentario al servidor
+                // Implementar la lógica para enviar el comentario al servidor
                 _postComment(comment);
                 Navigator.pop(context);
               },
