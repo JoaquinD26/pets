@@ -115,6 +115,111 @@ class ForumPageState extends State<ForumPage> {
             "comments": [
               {"username": "User5", "content": "Comment 3"}
             ]
+          },
+          {
+            "username": "User1",
+            "content": "First forum post content",
+            "likes": 10,
+            "comments": [
+              {"username": "User2", "content": "Comment 1"},
+              {"username": "User3", "content": "Comment 2"},
+              {"username": "User2", "content": "Comment 1"},
+              {"username": "User3", "content": "Comment 2"},
+              {"username": "User2", "content": "Comment 1"},
+              {"username": "User3", "content": "Comment 2"},
+              {"username": "User2", "content": "Comment 1"},
+              {"username": "User3", "content": "Comment 2"},
+              {"username": "User2", "content": "Comment 1"},
+              {"username": "User3", "content": "Comment 2"},
+              {"username": "User2", "content": "Comment 1"},
+              {"username": "User3", "content": "Comment 2"},
+              {"username": "User2", "content": "Comment 1"},
+              {"username": "User3", "content": "Comment 2"},
+              {"username": "User2", "content": "Comment 1"},
+              {"username": "User3", "content": "Comment 2"},
+              {"username": "User2", "content": "Comment 1"},
+              {"username": "User3", "content": "Comment 2"},
+              {"username": "User2", "content": "Comment 1"},
+              {"username": "User3", "content": "Comment 2"}
+            ]
+          },
+          {
+            "username": "User4",
+            "content": "Second forum post content",
+            "likes": 20,
+            "comments": [
+              {"username": "User5", "content": "Comment 3"}
+            ]
+          },
+          {
+            "username": "User1",
+            "content": "First forum post content",
+            "likes": 10,
+            "comments": [
+              {"username": "User2", "content": "Comment 1"},
+              {"username": "User3", "content": "Comment 2"},
+              {"username": "User2", "content": "Comment 1"},
+              {"username": "User3", "content": "Comment 2"},
+              {"username": "User2", "content": "Comment 1"},
+              {"username": "User3", "content": "Comment 2"},
+              {"username": "User2", "content": "Comment 1"},
+              {"username": "User3", "content": "Comment 2"},
+              {"username": "User2", "content": "Comment 1"},
+              {"username": "User3", "content": "Comment 2"},
+              {"username": "User2", "content": "Comment 1"},
+              {"username": "User3", "content": "Comment 2"},
+              {"username": "User2", "content": "Comment 1"},
+              {"username": "User3", "content": "Comment 2"},
+              {"username": "User2", "content": "Comment 1"},
+              {"username": "User3", "content": "Comment 2"},
+              {"username": "User2", "content": "Comment 1"},
+              {"username": "User3", "content": "Comment 2"},
+              {"username": "User2", "content": "Comment 1"},
+              {"username": "User3", "content": "Comment 2"}
+            ]
+          },
+          {
+            "username": "User4",
+            "content": "Second forum post content",
+            "likes": 20,
+            "comments": [
+              {"username": "User5", "content": "Comment 3"}
+            ]
+          },
+          {
+            "username": "User1",
+            "content": "First forum post content",
+            "likes": 10,
+            "comments": [
+              {"username": "User2", "content": "Comment 1"},
+              {"username": "User3", "content": "Comment 2"},
+              {"username": "User2", "content": "Comment 1"},
+              {"username": "User3", "content": "Comment 2"},
+              {"username": "User2", "content": "Comment 1"},
+              {"username": "User3", "content": "Comment 2"},
+              {"username": "User2", "content": "Comment 1"},
+              {"username": "User3", "content": "Comment 2"},
+              {"username": "User2", "content": "Comment 1"},
+              {"username": "User3", "content": "Comment 2"},
+              {"username": "User2", "content": "Comment 1"},
+              {"username": "User3", "content": "Comment 2"},
+              {"username": "User2", "content": "Comment 1"},
+              {"username": "User3", "content": "Comment 2"},
+              {"username": "User2", "content": "Comment 1"},
+              {"username": "User3", "content": "Comment 2"},
+              {"username": "User2", "content": "Comment 1"},
+              {"username": "User3", "content": "Comment 2"},
+              {"username": "User2", "content": "Comment 1"},
+              {"username": "User3", "content": "Comment 2"}
+            ]
+          },
+          {
+            "username": "User4",
+            "content": "Second forum post content",
+            "likes": 20,
+            "comments": [
+              {"username": "User5", "content": "Comment 3"}
+            ]
           }
         ]
       }
@@ -162,6 +267,9 @@ class ForumPageState extends State<ForumPage> {
               },
             ),
           ),
+          SizedBox(
+            height: 20,
+          )
         ],
       ),
       floatingActionButton: FloatingActionButton(
@@ -171,71 +279,71 @@ class ForumPageState extends State<ForumPage> {
         backgroundColor: Colors.deepOrangeAccent,
         child: Icon(color: Colors.white, Icons.add),
       ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.startFloat,
     );
   }
 
   void _showCommentDialog(BuildContext context) {
-  TextEditingController commentController = TextEditingController();
+    TextEditingController commentController = TextEditingController();
 
-  showModalBottomSheet(
-    isScrollControlled: true,
-    context: context,
-    builder: (BuildContext context) {
-      return FractionallySizedBox(
-        heightFactor: 0.9, // Altura del 90% de la pantalla
-        alignment: Alignment.topCenter, // Aparece desde arriba
-        child: Container(
-          padding: EdgeInsets.all(16.0),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(16.0),
-              topRight: Radius.circular(16.0),
-            ),
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Text(
-                'Añadir Comentario',
-                textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
+    showModalBottomSheet(
+      isScrollControlled: true,
+      context: context,
+      builder: (BuildContext context) {
+        return FractionallySizedBox(
+          heightFactor: 0.9, // Altura del 90% de la pantalla
+          alignment: Alignment.topCenter, // Aparece desde arriba
+          child: Container(
+            padding: EdgeInsets.all(16.0),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(16.0),
+                topRight: Radius.circular(16.0),
               ),
-              SizedBox(height: 16.0),
-              Container(
-                decoration: BoxDecoration(
-                  color: Colors.deepOrange,
-                  borderRadius: BorderRadius.circular(8.0),
-                ),
-                child: TextFormField(
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Text(
+                  'Añadir Comentario',
                   textAlign: TextAlign.center,
-                  style: TextStyle(color: Colors.white),
-                  controller: commentController,
-                  decoration: InputDecoration(
-                    hintText: 'Escribe tu comentario aquí...',
-                    hintStyle: TextStyle(color: Colors.white),
-                    border: InputBorder.none,
+                  style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
+                ),
+                SizedBox(height: 16.0),
+                Container(
+                  decoration: BoxDecoration(
+                    color: Colors.deepOrange,
+                    borderRadius: BorderRadius.circular(8.0),
+                  ),
+                  child: TextFormField(
+                    textAlign: TextAlign.center,
+                    style: TextStyle(color: Colors.white),
+                    controller: commentController,
+                    decoration: InputDecoration(
+                      hintText: 'Escribe tu comentario aquí...',
+                      hintStyle: TextStyle(color: Colors.white),
+                      border: InputBorder.none,
+                    ),
                   ),
                 ),
-              ),
-              SizedBox(height: 16.0),
-              ElevatedButton(
-                onPressed: () {
-                  String comment = commentController.text;
-                  // Implementa la lógica para enviar el comentario al servidor
-                  _postComment(comment);
-                  Navigator.pop(context);
-                },
-                child: Text('Enviar'),
-              ),
-            ],
+                SizedBox(height: 16.0),
+                ElevatedButton(
+                  onPressed: () {
+                    String comment = commentController.text;
+                    // Implementa la lógica para enviar el comentario al servidor
+                    _postComment(comment);
+                    Navigator.pop(context);
+                  },
+                  child: Text('Enviar'),
+                ),
+              ],
+            ),
           ),
-        ),
-      );
-    },
-  );
-}
-
+        );
+      },
+    );
+  }
 
   void _postComment(String comment) {
     // Implementa aquí la lógica para enviar el comentario al servidor
