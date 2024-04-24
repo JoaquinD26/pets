@@ -22,30 +22,31 @@ class PostDetailsPageState extends State<PostDetailsPage> {
         child: Column(
           children: [
             SizedBox(height: 16),
-            Expanded(
+            Flexible(
               flex: 1,
               child: SizedBox(
                 width: double.infinity,
-                child: Card(
-                  child: Padding(
-                    padding: EdgeInsets.all(16),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          widget.forumPost.username,
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 20,
+                child: SingleChildScrollView(
+                  child: Card(
+                    child: Padding(
+                      padding: EdgeInsets.all(16),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            widget.forumPost.username,
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 20,
+                            ),
                           ),
-                        ),
-                        SizedBox(height: 8),
-                        Text(
-                          widget.forumPost.content,
-                          style: TextStyle(fontSize: 16),
-                        ),
-                        SizedBox(height: 16),
-                      ],
+                          SizedBox(height: 8),
+                          Text(
+                            widget.forumPost.content,
+                            style: TextStyle(fontSize: 16),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),
@@ -56,7 +57,6 @@ class PostDetailsPageState extends State<PostDetailsPage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  SizedBox(height: 20),
                   Text(
                     'Comentarios:',
                     style: TextStyle(
