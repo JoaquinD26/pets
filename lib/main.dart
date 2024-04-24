@@ -124,7 +124,7 @@
 // }
 
 import 'package:flutter/material.dart';
-import 'package:curved_navigation_bar/curved_navigation_bar.dart';
+import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:pets/pages/forum_view.dart';
 import 'package:pets/pages/profile_view.dart';
 
@@ -133,7 +133,7 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  const MyApp({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -149,7 +149,7 @@ class MyApp extends StatelessWidget {
 }
 
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key});
+  const MyHomePage({Key? key}) : super(key: key);
 
   @override
   MyHomePageState createState() => MyHomePageState();
@@ -158,14 +158,13 @@ class MyHomePage extends StatefulWidget {
 class MyHomePageState extends State<MyHomePage> {
   int _selectedIndex = 0;
 
-  /// Lista de Widgets para el intercambio de body del Widget principal, Ejem/Comparación: actua como una lista de fragments en java
   final List<Widget> _pages = [
     const PageOne(),
     const PageTwo(),
     const ForumPage(),
     const ProfileView(),
   ];
-  /// Actua como comunicador entre el BottomBar y la página que se muestra, cambiando el index de la lista de Widgets _pages
+
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
@@ -175,34 +174,38 @@ class MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: const Text('PetApp demo'),
-        ),
-        // Se establece como body del Widget principal de MyHomePageState una lista de widgets que cambiará dinámicamente según el método _onItemTapped()
-        body: _pages[_selectedIndex],
-        //Uso de MauseRegion debido a la emulacion web, posibles cambios
-        bottomNavigationBar: MouseRegion(
-          cursor: SystemMouseCursors.click,
-          // Curved Navigation Bar es una dependencia externa implementada en el pubspec.yaml, posible error al pulsar varias veces mientras la animación siguen en curso. 
-          child: CurvedNavigationBar(
-            backgroundColor: Colors.white,
-            color: Colors.grey,
-            buttonBackgroundColor: Colors.white,
-            height: 50,
-            items: const <Widget>[
-              Icon(Icons.home, size: 30),
-              Icon(Icons.search, size: 30),
-              Icon(Icons.forum_outlined, size: 30),
-              Icon(Icons.person, size: 30),
-            ],
-            onTap: _onItemTapped,
+      appBar: AppBar(
+        title: const Text('PetApp demo'),
+      ),
+      body: _pages[_selectedIndex],
+      bottomNavigationBar: GNav(
+        tabs: const [
+          GButton(
+            icon: Icons.home,
+            text: 'Home',
           ),
-        ));
+          GButton(
+            icon: Icons.search,
+            text: 'Search',
+          ),
+          GButton(
+            icon: Icons.forum_outlined,
+            text: 'Forum',
+          ),
+          GButton(
+            icon: Icons.person,
+            text: 'Profile',
+          ),
+        ],
+        selectedIndex: _selectedIndex,
+        onTabChange: _onItemTapped,
+      ),
+    );
   }
 }
-//TODO, Las páginas no irán en el main, falta estructuración del proyecto, directorios, clases, etc... 
+
 class PageOne extends StatelessWidget {
-  const PageOne({super.key});
+  const PageOne({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -213,7 +216,7 @@ class PageOne extends StatelessWidget {
 }
 
 class PageTwo extends StatelessWidget {
-  const PageTwo({super.key});
+  const PageTwo({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
