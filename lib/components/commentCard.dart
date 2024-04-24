@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pets/components/commentDetailsPage.dart';
 import 'package:pets/models/forum_model.dart';
 
 class ForumPostCard extends StatefulWidget {
@@ -11,9 +12,7 @@ class ForumPostCard extends StatefulWidget {
 }
 
 class ForumPostCardState extends State<ForumPostCard> {
-  bool _expanded = false;
   bool _liked = false;
-  bool _showCommentField = false;
 
   @override
   Widget build(BuildContext context) {
@@ -21,10 +20,7 @@ class ForumPostCardState extends State<ForumPostCard> {
       margin: EdgeInsets.all(10),
       child: InkWell(
         onTap: () {
-          setState(() {
-            _expanded = !_expanded;
-            _showCommentField = !_showCommentField;
-          });
+          _showPostDetails();
         },
         child: Padding(
           padding: EdgeInsets.all(10),
@@ -42,13 +38,13 @@ class ForumPostCardState extends State<ForumPostCard> {
               Text(widget.forumPost.content),
               SizedBox(height: 8),
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   Row(
                     children: [
                       IconButton(
                         icon: _liked
-                            ? Icon(Icons.favorite)
+                            ? Icon(color: Colors.red, Icons.favorite)
                             : Icon(Icons.favorite_border),
                         onPressed: () {
                           setState(() {
@@ -57,63 +53,20 @@ class ForumPostCardState extends State<ForumPostCard> {
                           _likePost();
                         },
                       ),
-                      SizedBox(width: 5),
                       Text('${widget.forumPost.likes}'),
-                    ],
-                  ),
-                  Row(
-                    children: [
+                      const SizedBox(
+                        width: 15,
+                      ),
                       Icon(Icons.comment),
                       SizedBox(width: 5),
                       Text('${widget.forumPost.comments.length}'),
+                      const SizedBox(
+                        width: 10,
+                      ),
                     ],
                   ),
                 ],
               ),
-              SizedBox(height: 8),
-              if (_expanded)
-                ListView.builder(
-                  shrinkWrap: true,
-                  physics: NeverScrollableScrollPhysics(),
-                  itemCount: widget.forumPost.comments.length,
-                  itemBuilder: (context, index) {
-                    return Column(
-                      children: [
-                        ListTile(
-                          title:
-                              Text(widget.forumPost.comments[index].username),
-                          subtitle:
-                              Text(widget.forumPost.comments[index].content),
-                        ),
-                      ],
-                    );
-                  },
-                ),
-              if (_showCommentField)
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 16),
-                  child: Row(
-                    children: [
-                      const SizedBox(
-                        height: 20,
-                      ),
-                      Expanded(
-                        child: TextFormField(
-                          decoration: InputDecoration(
-                            hintText: 'Responder comentario aquí...',
-                            border: OutlineInputBorder(),
-                          ),
-                        ),
-                      ),
-                      IconButton(
-                        icon: Icon(Icons.send),
-                        onPressed: () {
-                          // implementar respuesta de comentario
-                        },
-                      ),
-                    ],
-                  ),
-                ),
             ],
           ),
         ),
@@ -122,6 +75,19 @@ class ForumPostCardState extends State<ForumPostCard> {
   }
 
   void _likePost() {
-    // implementar añadir megustas
+    // Implementa la lógica para dar "me gusta" al post
+  }
+
+  void _showPostDetails() {
+    Navigator.of(context).push(
+      PageRouteBuilder(
+        pageBuilder: (context, animation, secondaryAnimation) {
+          return FadeTransition(
+            opacity: animation,
+            child: PostDetailsPage(forumPost: widget.forumPost),
+          );
+        },
+      ),
+    );
   }
 }
