@@ -4,15 +4,9 @@ import '../../common/color_extension.dart';
 import '../../common_widget/icon_text_button.dart';
 import '../../common_widget/menu_row.dart';
 
+class ProfileView extends StatelessWidget {
+  const ProfileView({super.key});
 
-class MyProfileView extends StatefulWidget {
-  const MyProfileView({super.key});
-
-  @override
-  State<MyProfileView> createState() => _MyProfileViewState();
-}
-
-class _MyProfileViewState extends State<MyProfileView> {
   @override
   Widget build(BuildContext context) {
     var media = MediaQuery.of(context).size;

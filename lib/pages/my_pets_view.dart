@@ -1,6 +1,8 @@
 import 'dart:convert';
-import 'package:flutter/material.dart';
+import 'package:carousel_slider/carousel_options.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:flutter/material.dart';
+
 import 'package:pets/models/pet.dart'; // Asegúrate de importar correctamente tu modelo Pet
 
 class MyPetsView extends StatefulWidget {
@@ -26,7 +28,7 @@ class MyPetsViewState extends State<MyPetsView> {
         "nombre": "Max",
         "tipo": "Perro",
         "edad": 3,
-        "imagen": "assets/images/perro1.jpg",
+        "imagen": "assets/img/perro1.jpg",
         "eventos": [
           "Vacunación",
           "Desparasitación",
@@ -37,7 +39,7 @@ class MyPetsViewState extends State<MyPetsView> {
         "nombre": "Juanita",
         "tipo": "Gato",
         "edad": 2,
-        "imagen": "assets/images/gato1.jpg",
+        "imagen": "assets/img/gato1.jpg",
         "eventos": [
           "Cita al peluquero",
           "Vacunación",
@@ -48,7 +50,7 @@ class MyPetsViewState extends State<MyPetsView> {
         "nombre": "Luno",
         "tipo": "Gato",
         "edad": 2,
-        "imagen": "assets/images/gato1.jpg",
+        "imagen": "assets/img/gato1.jpg",
         "eventos": [
           "Desparasitación",
           "Vacunación"

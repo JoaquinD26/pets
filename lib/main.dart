@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:pets/pages/forum_view.dart';
 import 'package:pets/pages/my_pets_view.dart';
-import 'package:pets/pages/profile_view.dart';
+import 'package:pets/pages/my_profile/my_profile_view.dart';
 
 void main() {
   runApp(const MyApp());
