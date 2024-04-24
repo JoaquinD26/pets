@@ -26,7 +26,7 @@ class MyPetsViewState extends State<MyPetsView> {
         "nombre": "Max",
         "tipo": "Perro",
         "edad": 3,
-        "imagen": "/images/perro1.jpg",
+        "imagen": "assets/images/perro1.jpg",
         "eventos": [
           "Vacunación",
           "Desparasitación",
@@ -37,7 +37,7 @@ class MyPetsViewState extends State<MyPetsView> {
         "nombre": "Juanita",
         "tipo": "Gato",
         "edad": 2,
-        "imagen": "/images/gato1.jpg",
+        "imagen": "assets/images/gato1.jpg",
         "eventos": [
           "Cita al peluquero",
           "Vacunación",
@@ -48,7 +48,7 @@ class MyPetsViewState extends State<MyPetsView> {
         "nombre": "Luno",
         "tipo": "Gato",
         "edad": 2,
-        "imagen": "/images/gato1.jpg",
+        "imagen": "assets/images/gato1.jpg",
         "eventos": [
           "Desparasitación",
           "Vacunación"
