@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
-import 'package:pets/pages/forum_view.dart';
-import 'package:pets/pages/my_pets_view.dart';
+import 'package:pets/pages/forum/forum_view.dart';
+import 'package:pets/pages/pets/my_pets_view.dart';
 import 'package:pets/pages/my_profile/my_profile_view.dart';
 
 void main() {
@@ -29,7 +29,7 @@ class MyHomePage extends StatefulWidget {
 
 class MyHomePageState extends State<MyHomePage> {
   int _selectedIndex = 0;
-
+  
   final List<Widget> _pages = [
     MyPetsView(),
     PageTwo(),

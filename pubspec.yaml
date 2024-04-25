@@ -34,6 +34,13 @@ dependencies:
   http: ^1.2.1
   google_nav_bar: ^5.0.6
   carousel_slider: ^4.2.1
+  flutter_otp_text_field: ^1.1.1
+  google_maps_flutter: ^2.2.6
+  readmore: ^2.2.0
+  flutter_rating_bar: ^4.0.1
+  custom_map_markers: ^0.0.2+1
+  widget_mask: ^1.0.0+0
+  percent_indicator: ^4.2.3
 
 
 
