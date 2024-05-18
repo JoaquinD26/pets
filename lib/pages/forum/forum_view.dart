@@ -62,63 +62,11 @@ class ForumPageState extends State<ForumPage> {
                 ],
               ),
             ),
-            SliverAppBar(
-              primary: false,
-              floating: false,
-              backgroundColor: Colors.white,
-              expandedHeight: 70,
-              elevation: 1,
-              leading: Container(),
-              leadingWidth: 0,
-              flexibleSpace: Container(
-                padding:
-                    const EdgeInsets.symmetric(vertical: 4, horizontal: 15),
-                decoration: const BoxDecoration(
-                  color: Colors.white,
-                ),
-                child: Row(
-                  children: [
-                    SelectionButton(
-                        title: "Popular",
-                        subTitle: "(203)",
-                        onPressed: () {
-                          setState(
-                            () {
-                              selectTab = 0;
-                            },
-                          );
-                        },
-                        isSelect: selectTab == 0),
-                    SelectionButton(
-                        title: "My Reviews",
-                        subTitle: "(400)",
-                        onPressed: () {
-                          setState(
-                            () {
-                              selectTab = 1;
-                            },
-                          );
-                        },
-                        isSelect: selectTab == 1),
-                    SelectionButton(
-                        title: "All Reviews",
-                        subTitle: "(1500)",
-                        onPressed: () {
-                          setState(
-                            () {
-                              selectTab = 2;
-                            },
-                          );
-                        },
-                        isSelect: selectTab == 2),
-                  ],
-                ),
-              ),
-            )
           ];
         },
         body: ListView.builder(
             padding: const EdgeInsets.symmetric(vertical: 2),
+            itemCount: 6,
             itemBuilder: (context, index) {
               return GestureDetector(
                 onTap: (){
@@ -139,12 +87,9 @@ class ForumPageState extends State<ForumPage> {
                     onCommentPress: (){
                        Navigator.push(
                           context, PopupLayout(child: const CommentListView()));
-              
-                      
                     },
                     onLikePress: () {
-                      Navigator.push(
-                          context, PopupLayout(child: const LikeUserListView()));
+                        
                     },
                   ),
                 ),

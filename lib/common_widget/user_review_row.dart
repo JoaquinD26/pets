@@ -1,17 +1,21 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:pets/common/color_extension.dart';
 import 'package:readmore/readmore.dart';
-
-import 'img_button.dart';
 
 class UserReviewRow extends StatelessWidget {
   final bool isBottomActionBar;
   final VoidCallback? onCommentPress;
   final VoidCallback? onLikePress;
   final VoidCallback? onSharePress;
+  late bool megusta;
 
-  const UserReviewRow({super.key, this.isBottomActionBar = false, this.onSharePress, this.onLikePress, this.onCommentPress});
+  UserReviewRow(
+      {super.key,
+      this.isBottomActionBar = false,
+      this.onSharePress,
+      this.onLikePress,
+      this.onCommentPress,
+      this.megusta = false});
 
   @override
   Widget build(BuildContext context) {
@@ -37,6 +41,7 @@ class UserReviewRow extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    //TO DO nombre del usuario
                     Text(
                       "Hibe Neted",
                       style: TextStyle(
@@ -44,80 +49,14 @@ class UserReviewRow extends StatelessWidget {
                           fontSize: 20,
                           fontWeight: FontWeight.w700),
                     ),
-                    Text(
-                      "45 Reviews, 210 Followers",
-                      style: TextStyle(
-                          color: TColor.gray,
-                          fontSize: 12,
-                          fontWeight: FontWeight.w700),
-                    ),
                   ],
                 ),
               ),
-              Container(
-                height: 30,
-                padding:
-                    const EdgeInsets.symmetric(vertical: 4, horizontal: 15),
-                decoration: BoxDecoration(
-                    border: Border.all(width: 1, color: TColor.primary),
-                    borderRadius: BorderRadius.circular(15)),
-                child: Text(
-                  "Follow",
-                  style: TextStyle(
-                      color: TColor.primary,
-                      fontSize: 16,
-                      fontWeight: FontWeight.w700),
-                ),
-              )
             ],
           ),
           const SizedBox(
             height: 8,
           ),
-          Row(children: [
-            Text(
-              "Rated",
-              style: TextStyle(
-                  color: TColor.gray,
-                  fontSize: 12,
-                  fontWeight: FontWeight.w700),
-            ),
-            IgnorePointer(
-              ignoring: true,
-              child: RatingBar.builder(
-                initialRating: 3,
-                minRating: 1,
-                direction: Axis.horizontal,
-                allowHalfRating: true,
-                unratedColor: Colors.transparent,
-                itemCount: 5,
-                itemSize: 20,
-                itemPadding: const EdgeInsets.symmetric(horizontal: 2.0),
-                itemBuilder: (context, _) => Icon(
-                  Icons.star,
-                  color: TColor.primary,
-                ),
-                onRatingUpdate: (rating) {
-                  print(rating);
-                },
-              ),
-            ),
-            Text(
-              "4.0",
-              style: TextStyle(
-                  color: TColor.primary,
-                  fontSize: 14,
-                  fontWeight: FontWeight.w700),
-            ),
-            const Spacer(),
-            Text(
-              "2 Days ago",
-              style: TextStyle(
-                  color: TColor.gray,
-                  fontSize: 12,
-                  fontWeight: FontWeight.w700),
-            ),
-          ]),
           const SizedBox(
             height: 8,
           ),
@@ -138,43 +77,15 @@ class UserReviewRow extends StatelessWidget {
           const SizedBox(
             height: 8,
           ),
-          SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                ImgButton(
-                  image: "assets/img/c1.png",
-                  onPressed: () {},
-                ),
-                ImgButton(
-                  image: "assets/img/c2.png",
-                  onPressed: () {},
-                ),
-                ImgButton(
-                  image: "assets/img/c3.png",
-                  onPressed: () {},
-                ),
-                ImgButton(
-                  image: "assets/img/l1.png",
-                  isMore: true,
-                  moreImageCount: 8,
-                  onPressed: () {},
-                ),
-              ],
-            ),
-          ),
-         
           Row(
             children: [
               IconButton(
                 onPressed: () {
-                  if(onLikePress != null) {
-                    onLikePress!();
-                  }
+                  megusta = !megusta;
+                  print("555555555555555555555555");
                 },
                 icon: Image.asset(
-                  "assets/img/like.png",
+                  "assets/img/likeDisable.png",
                   width: 22,
                   height: 22,
                   fit: BoxFit.fitWidth,
@@ -182,7 +93,7 @@ class UserReviewRow extends StatelessWidget {
               ),
               IconButton(
                 onPressed: () {
-                   if (onCommentPress != null) {
+                  if (onCommentPress != null) {
                     onCommentPress!();
                   }
                 },
@@ -195,7 +106,7 @@ class UserReviewRow extends StatelessWidget {
               ),
               IconButton(
                 onPressed: () {
-                   if (onSharePress != null) {
+                  if (onSharePress != null) {
                     onSharePress!();
                   }
                 },
