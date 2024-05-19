@@ -4,6 +4,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:pets/models/pet.dart'; // Asegúrate de importar correctamente tu modelo Pet
 
 class MyPetsView extends StatefulWidget {
+  static String id = "pets_page";
   const MyPetsView({Key? key}) : super(key: key);
 
   @override
@@ -80,6 +81,7 @@ class MyPetsViewState extends State<MyPetsView> {
           : Column(
             crossAxisAlignment: CrossAxisAlignment.end  ,
               children: [
+                SizedBox(height: 20,),
                 IconButton(icon: const Icon(Icons.add) , onPressed: () => {},),
                 SizedBox(
                   height: 300, // Altura fija para el carrusel

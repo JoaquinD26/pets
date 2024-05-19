@@ -7,6 +7,7 @@ import 'dart:convert';
 import 'package:pets/models/forum_model.dart';
 
 class ForumPage extends StatefulWidget {
+   static String id = "forum_page";
   ForumPage({super.key});
 
   @override

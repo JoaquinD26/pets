@@ -13,9 +13,11 @@ class ForumPostCard extends StatefulWidget {
 
 class ForumPostCardState extends State<ForumPostCard> {
   bool _liked = false;
+  late bool imagen = true;
 
   @override
   Widget build(BuildContext context) {
+    
     return Card(
       margin: EdgeInsets.all(10),
       child: InkWell(
@@ -23,10 +25,23 @@ class ForumPostCardState extends State<ForumPostCard> {
           _showPostDetails();
         },
         child: Padding(
-          padding: EdgeInsets.all(10),
+          padding: EdgeInsets.all(20),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              CircleAvatar(
+                radius: 20, // Tamaño del círculo
+                backgroundImage: imagen ? NetworkImage(
+                    "https://imgs.search.brave.com/gPisSlV1_hN5ejTCiWGdG8XCdQjhz-LX8W_6MTO1UcQ/rs:fit:860:0:0/g:ce/aHR0cHM6Ly93d3cu/YmxvZ2RlbGZvdG9n/cmFmby5jb20vd3At/Y29udGVudC91cGxv/YWRzLzIwMjIvMDEv/bG9iby1mb3RvLXBl/cmZpbC53ZWJw") : NetworkImage("https://upload.wikimedia.org/wikipedia/commons/thumb/b/b5/Windows_10_Default_Profile_Picture.svg/2048px-Windows_10_Default_Profile_Picture.svg.png"),
+                onBackgroundImageError: (exception, stackTrace) {
+                  // Manejar error en caso de que la imagen no se pueda cargar
+                  imagen = false;
+                  setState(() {
+                    
+                  });
+                },
+              ),
+              SizedBox(height: 10,),
               Text(
                 widget.forumPost.username,
                 style: TextStyle(
