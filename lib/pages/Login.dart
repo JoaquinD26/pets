@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:http/http.dart' as http;
@@ -22,58 +23,56 @@ class Login extends State<LoginPage> {
   final _email = TextEditingController();
   final _password = TextEditingController();
 
-  // Future<dynamic> signIn() async {
-  //   email = _email.text;
-  //   password = _password.text;
+  Future<dynamic> signIn() async {
+    email = _email.text;
+    password = _password.text;
 
-  //   String ipCasa = '192.168.1.21';
-  //   String ipCamp = '192.168.202.27';
+    try {
+      Map<dynamic, dynamic> params = {
+        'nombre': email,
+      };
 
-  //   try {
-  //     Map<dynamic, dynamic> params = {
-  //       "action": "login",
-  //       'user': '{"email": "$email","password": "$password"}',
-  //     };
+      var url = Uri.parse('http://localhost/pruebaApiPets/usuario.php');
+      var response = await http.post(
+        url,
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode(params),
+      );
 
-  //     var url = Uri.parse('http://$ipCasa/gestionhotelera/sw_user.php');
-  //     // var url = Uri.parse('http://$ipCamp/gestionhotelera/sw_user.php');
+      if (response.statusCode == 200) {
+        final jsonResponse = jsonDecode(response.body);
+        if (jsonResponse['success'] == true) {
+          // ignore: use_build_context_synchronously
+          Navigator.push(
+            context,
+            PageRouteBuilder(
+              pageBuilder: (context, animation, secondaryAnimation) =>
+                  const MyHomePage(account1: null,),
+              transitionsBuilder:
+                  (context, animation, secondaryAnimation, child) {
+                var begin = 0.0;
+                var end = 1.3;
+                var curve = Curves.ease;
 
-  //     var response = await http.post(url, body: params);
+                var tween = Tween(begin: begin, end: end)
+                    .chain(CurveTween(curve: curve));
 
-  //     if (response.statusCode == 200) {
-  //       final jsonResponse = jsonDecode(response.body);
-  //       if (jsonResponse['success'] == true) {
-  //         // ignore: use_build_context_synchronously
-  //         Navigator.push(
-  //           context,
-  //           PageRouteBuilder(
-  //             pageBuilder: (context, animation, secondaryAnimation) =>
-  //                 const MyHomePage(account1: null,),
-  //             transitionsBuilder:
-  //                 (context, animation, secondaryAnimation, child) {
-  //               var begin = 0.0;
-  //               var end = 1.3;
-  //               var curve = Curves.ease;
-
-  //               var tween = Tween(begin: begin, end: end)
-  //                   .chain(CurveTween(curve: curve));
-
-  //               return FadeTransition(
-  //                 opacity: animation.drive(tween),
-  //                 child: child,
-  //               );
-  //             },
-  //           ),
-  //         );
-  //       } else {
-  //         // Maneja el caso en que la autenticación falla
-  //         print('Error de autenticación');
-  //       }
-  //     }
-  //   } catch (e) {
-  //     print(e);
-  //   }
-  // }
+                return FadeTransition(
+                  opacity: animation.drive(tween),
+                  child: child,
+                );
+              },
+            ),
+          );
+        } else {
+          // Maneja el caso en que la autenticación falla
+          print('Error de autenticación');
+        }
+      }
+    } catch (e) {
+      print(e);
+    }
+  }
 
   final GoogleSignIn _googleSignIn = GoogleSignIn(scopes: ['email']);
 
@@ -158,12 +157,18 @@ Future<void> sendUserIdToServer(String nombreG) async {
 
     // Verifica si la solicitud fue exitosa
     if (response.statusCode == 200) {
-      print('ID del usuario enviada al servidor correctamente.');
+      if (kDebugMode) {
+        print('ID del usuario enviada al servidor correctamente.');
+      }
     } else {
-      print('Error al enviar ID del usuario al servidor: ${response.reasonPhrase}');
+      if (kDebugMode) {
+        print('Error al enviar ID del usuario al servidor: ${response.reasonPhrase}');
+      }
     }
   } catch (e) {
-    print('Error al enviar ID del usuario al servidor: $e');
+    if (kDebugMode) {
+      print('Error al enviar ID del usuario al servidor: $e');
+    }
   }
 }
 
@@ -232,7 +237,7 @@ Future<void> sendUserIdToServer(String nombreG) async {
     return Container(
       child: ElevatedButton(
         onPressed: () {
-          // signIn();
+          signIn();
         },
         child: const Text("Iniciar Sesión"),
       ),
