@@ -3,6 +3,6 @@
     define("host","localhost");
     define("user","root");
     define("password","");
-    define("database","pruebaspets");
+    define("database","pets_prueba");
 
 ?>

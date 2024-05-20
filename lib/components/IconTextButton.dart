@@ -31,7 +31,7 @@ class IconTextButton extends StatelessWidget {
           Text(
             title,
             style: TextStyle(
-              fontSize: 14,
+              fontSize: 12,
               color: Colors.black,
               fontWeight: FontWeight.bold,
             ),

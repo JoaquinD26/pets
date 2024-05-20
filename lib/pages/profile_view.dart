@@ -101,10 +101,11 @@ class ProfileView extends StatelessWidget {
                 child: Row(
                   children: [
                     Expanded(
+                      flex: 2,
                       child: IconTextButton(
                         icon: Icon(Icons.comment_bank_rounded),
                         title: "Comentarios",
-                        subTitle: "",
+                        subTitle: "200",
                         onPressed: () {},
                       ),
                     ),
@@ -112,10 +113,11 @@ class ProfileView extends StatelessWidget {
                       flex: 1,
                     ),
                     Expanded(
+                      flex: 2,
                       child: IconTextButton(
                         icon: Icon(Icons.question_answer),
                         title: "Respuestas",
-                        subTitle: "",
+                        subTitle: "200",
                         onPressed: () {},
                       ),
                     ),
@@ -123,10 +125,11 @@ class ProfileView extends StatelessWidget {
                       flex: 1,
                     ),
                     Expanded(
+                      flex: 2,
                       child: IconTextButton(
                         icon: Icon(Icons.rate_review),
                         title: "Fiabilidad",
-                        subTitle: "",
+                        subTitle: "200",
                         onPressed: () {},
                       ),
                     )

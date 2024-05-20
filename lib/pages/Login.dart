@@ -22,58 +22,58 @@ class Login extends State<LoginPage> {
   final _email = TextEditingController();
   final _password = TextEditingController();
 
-  Future<dynamic> signIn() async {
-    email = _email.text;
-    password = _password.text;
+  // Future<dynamic> signIn() async {
+  //   email = _email.text;
+  //   password = _password.text;
 
-    String ipCasa = '192.168.1.21';
-    String ipCamp = '192.168.202.27';
+  //   String ipCasa = '192.168.1.21';
+  //   String ipCamp = '192.168.202.27';
 
-    try {
-      Map<dynamic, dynamic> params = {
-        "action": "login",
-        'user': '{"email": "$email","password": "$password"}',
-      };
+  //   try {
+  //     Map<dynamic, dynamic> params = {
+  //       "action": "login",
+  //       'user': '{"email": "$email","password": "$password"}',
+  //     };
 
-      var url = Uri.parse('http://$ipCasa/gestionhotelera/sw_user.php');
-      // var url = Uri.parse('http://$ipCamp/gestionhotelera/sw_user.php');
+  //     var url = Uri.parse('http://$ipCasa/gestionhotelera/sw_user.php');
+  //     // var url = Uri.parse('http://$ipCamp/gestionhotelera/sw_user.php');
 
-      var response = await http.post(url, body: params);
+  //     var response = await http.post(url, body: params);
 
-      if (response.statusCode == 200) {
-        final jsonResponse = jsonDecode(response.body);
-        if (jsonResponse['success'] == true) {
-          // ignore: use_build_context_synchronously
-          Navigator.push(
-            context,
-            PageRouteBuilder(
-              pageBuilder: (context, animation, secondaryAnimation) =>
-                  const MyHomePage(account1: null,),
-              transitionsBuilder:
-                  (context, animation, secondaryAnimation, child) {
-                var begin = 0.0;
-                var end = 1.3;
-                var curve = Curves.ease;
+  //     if (response.statusCode == 200) {
+  //       final jsonResponse = jsonDecode(response.body);
+  //       if (jsonResponse['success'] == true) {
+  //         // ignore: use_build_context_synchronously
+  //         Navigator.push(
+  //           context,
+  //           PageRouteBuilder(
+  //             pageBuilder: (context, animation, secondaryAnimation) =>
+  //                 const MyHomePage(account1: null,),
+  //             transitionsBuilder:
+  //                 (context, animation, secondaryAnimation, child) {
+  //               var begin = 0.0;
+  //               var end = 1.3;
+  //               var curve = Curves.ease;
 
-                var tween = Tween(begin: begin, end: end)
-                    .chain(CurveTween(curve: curve));
+  //               var tween = Tween(begin: begin, end: end)
+  //                   .chain(CurveTween(curve: curve));
 
-                return FadeTransition(
-                  opacity: animation.drive(tween),
-                  child: child,
-                );
-              },
-            ),
-          );
-        } else {
-          // Maneja el caso en que la autenticación falla
-          print('Error de autenticación');
-        }
-      }
-    } catch (e) {
-      print(e);
-    }
-  }
+  //               return FadeTransition(
+  //                 opacity: animation.drive(tween),
+  //                 child: child,
+  //               );
+  //             },
+  //           ),
+  //         );
+  //       } else {
+  //         // Maneja el caso en que la autenticación falla
+  //         print('Error de autenticación');
+  //       }
+  //     }
+  //   } catch (e) {
+  //     print(e);
+  //   }
+  // }
 
   final GoogleSignIn _googleSignIn = GoogleSignIn(scopes: ['email']);
 
@@ -106,20 +106,67 @@ class Login extends State<LoginPage> {
     });
   }
 
+  // Future<void> signInGoogle() async {
+  //   try {
+  //     GoogleSignInAccount? account = await _googleSignIn.signIn();
+  //     if (account != null) {
+  //       // Navega a la página principal si la autenticación es exitosa
+  //       Navigator.pushReplacement(
+  //         context,
+  //         MaterialPageRoute(builder: (context) => MyHomePage(account1: _currentUser,)),
+  //       );
+
+
+  //     }
+  //   } catch (e) {
+  //     print('Error de Inicio de Sesión: $e');
+  //   }
+  // }
+
+
   Future<void> signInGoogle() async {
-    try {
-      GoogleSignInAccount? account = await _googleSignIn.signIn();
-      if (account != null) {
-        // Navega a la página principal si la autenticación es exitosa
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => MyHomePage(account1: _currentUser,)),
-        );
-      }
-    } catch (e) {
-      print('Error de Inicio de Sesión: $e');
+  try {
+    GoogleSignInAccount? account = await _googleSignIn.signIn();
+    if (account != null) {
+      // Si la autenticación es exitosa, obtén la ID del usuario
+      String nombreG = account.displayName!;
+
+      // Llama al método que realiza la solicitud POST con la ID del usuario
+      await sendUserIdToServer(nombreG);
+      
+      // Navega a la página principal si la autenticación es exitosa
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => MyHomePage(account1: _currentUser)),
+      );
     }
+  } catch (e) {
+    print('Error de Inicio de Sesión: $e');
   }
+}
+
+Future<void> sendUserIdToServer(String nombreG) async {
+  try {
+    // Construye el cuerpo de la solicitud con la ID del usuario
+    Map<String, dynamic> body = {'nombre': nombreG};
+    
+    // Realiza la solicitud POST al servidor
+    var response = await http.post(
+      Uri.parse('http://localhost/pruebaApiPets/usuario.php'),
+      body: body,
+    );
+
+    // Verifica si la solicitud fue exitosa
+    if (response.statusCode == 200) {
+      print('ID del usuario enviada al servidor correctamente.');
+    } else {
+      print('Error al enviar ID del usuario al servidor: ${response.reasonPhrase}');
+    }
+  } catch (e) {
+    print('Error al enviar ID del usuario al servidor: $e');
+  }
+}
+
 
   @override
   Widget build(BuildContext context) {
@@ -185,7 +232,7 @@ class Login extends State<LoginPage> {
     return Container(
       child: ElevatedButton(
         onPressed: () {
-          signIn();
+          // signIn();
         },
         child: const Text("Iniciar Sesión"),
       ),
