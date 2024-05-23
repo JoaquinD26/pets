@@ -1,40 +1,40 @@
 class Pet {
-  final String id;
-  final String nombre;
-  final String tipoAnimal;
-  final String raza;
-  final double peso;
-  final String genero;
+  final int id;
+  final String name;
+  final String animal;
+  final String race;
+  final double weight;
+  final int gender;
   final bool chip;
-  final String idUsuario;
-  final String imagen;
+  final String idUser;
+  final String petImg;
   final List<String> eventos;
 
   Pet({
     required this.id,
-    required this.nombre,
-    required this.tipoAnimal,
-    required this.raza,
-    required this.peso,
-    required this.genero,
+    required this.name,
+    required this.animal,
+    required this.race,
+    required this.weight,
+    required this.gender,
     required this.chip,
-    required this.idUsuario,
-    required this.imagen,
+    required this.idUser,
+    required this.petImg,
     required this.eventos,
   });
 
   // Factory constructor to create a Pet from JSON
   factory Pet.fromJson(Map<String, dynamic> json) {
     return Pet(
-      id: json['id'] ?? '',
-      nombre: json['name'] ?? '',
-      tipoAnimal: json['animal'] ?? '',
-      raza: json['race'] ?? '',
-      peso: json['weight'] ?? 0.0,
-      genero: json['gender'] ?? '',
-      chip: json['chip'] ?? 0,
-      idUsuario: json['id_user'] ?? '',
-      imagen: json['petImg'] ?? '',
+      id: json['id'] ?? 0,
+      name: json['name'] ?? '',
+      animal: json['animal'] ?? '',
+      race: json['race'] ?? '',
+      weight: (json['weight'] ?? 0.0).toDouble(),
+      gender: json['gender'] ?? 0,
+      chip: json['chip'] ?? false,
+      idUser: json['id_user'] ?? '',
+      petImg: json['petImg'] ?? '',
       eventos: List<String>.from(json['eventos'] ?? []),
     );
   }
@@ -42,16 +42,16 @@ class Pet {
   // Method to convert a Pet to JSON
   Map<String, dynamic> toJson() {
     return {
-      'id': id ?? '',
-      'name': nombre ?? '',
-      'animal': tipoAnimal ?? '',
-      'race': raza ?? '',
-      'weight': peso ?? 0.0,
-      'gender': genero ?? '',
-      'chip': chip ?? 0,
-      'id_user': idUsuario ?? '',
-      'petImg': imagen ?? '',
-      'eventos': eventos ?? [],
+      'id': id,
+      'name': name,
+      'animal': animal,
+      'race': race,
+      'weight': weight,
+      'gender': gender,
+      'chip': chip,
+      'id_user': idUser,
+      'petImg': petImg,
+      'eventos': eventos,
     };
   }
 }

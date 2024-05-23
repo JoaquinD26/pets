@@ -112,7 +112,7 @@ class MyPetsViewState extends State<MyPetsView> {
             child: ClipRRect(
               borderRadius: BorderRadius.circular(8.0),
               child: Image.network(
-                mascota.imagen,
+                mascota.petImg,
                 fit: BoxFit.cover,
               ),
             ),
@@ -135,24 +135,24 @@ class MyPetsViewState extends State<MyPetsView> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            mascota.nombre,
+            mascota.name,
             style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 10),
           Text(
-            'Tipo: ${mascota.tipoAnimal}',
+            'Tipo: ${mascota.animal}',
             style: const TextStyle(fontSize: 16, color: Colors.grey),
           ),
           Text(
-            'Raza: ${mascota.raza}',
+            'Raza: ${mascota.race}',
             style: const TextStyle(fontSize: 16, color: Colors.grey),
           ),
           Text(
-            'Peso: ${mascota.peso} kg',
+            'Peso: ${mascota.weight} kg',
             style: const TextStyle(fontSize: 16, color: Colors.grey),
           ),
           Text(
-            'Género: ${mascota.genero == 1 ? "Macho" : "Hembra"}',
+            'Género: ${mascota.gender == 1 ? "Macho" : "Hembra"}',
             style: const TextStyle(fontSize: 16, color: Colors.grey),
           ),
           Text(
