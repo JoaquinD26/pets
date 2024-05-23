@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:pets/models/forum_model.dart';
+import 'package:pets/models/Forum.dart';
 
 class PostDetailsPage extends StatefulWidget {
-  final ForumPost forumPost;
+  final Forum forumPost;
 
   const PostDetailsPage({Key? key, required this.forumPost}) : super(key: key);
 
@@ -34,7 +34,7 @@ class PostDetailsPageState extends State<PostDetailsPage> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            widget.forumPost.username,
+                            widget.forumPost.user.name,
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
                               fontSize: 20,
@@ -42,7 +42,7 @@ class PostDetailsPageState extends State<PostDetailsPage> {
                           ),
                           SizedBox(height: 8),
                           Text(
-                            widget.forumPost.content,
+                            widget.forumPost.description,
                             style: TextStyle(fontSize: 16),
                           ),
                         ],
@@ -67,13 +67,13 @@ class PostDetailsPageState extends State<PostDetailsPage> {
                   SizedBox(height: 8),
                   Expanded(
                     child: ListView.builder(
-                      itemCount: widget.forumPost.comments.length,
+                      itemCount: widget.forumPost.posts.length,
                       itemBuilder: (context, index) {
                         return ListTile(
                           title:
-                              Text(widget.forumPost.comments[index].username),
+                              Text(widget.forumPost.posts[index].name),
                           subtitle:
-                              Text(widget.forumPost.comments[index].content),
+                              Text(widget.forumPost.posts[index].message),
                         );
                       },
                     ),

@@ -7,11 +7,9 @@ import 'package:pets/pages/profile_view.dart';
 
 class MyHomePage extends StatefulWidget {
   static String id = "home_page";
-  final GoogleSignInAccount? account1;
 
   const MyHomePage({
     super.key,
-    required this.account1,
   });
 
   @override
@@ -30,7 +28,7 @@ class MyHomePageState extends State<MyHomePage> {
       const MyPetsView(),
       const PageTwo(),
       ForumPage(),
-      ProfileView(account: widget.account1!,),
+      ProfileView(),
     ];
   }
 

@@ -1,13 +1,14 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:pets/firebase_options.dart';
+import 'package:pets/pages/Home.dart';
 import 'package:pets/pages/Login.dart';
 
 Future<void> main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
+  // WidgetsFlutterBinding.ensureInitialized();
+  // await Firebase.initializeApp(
+  //   options: DefaultFirebaseOptions.currentPlatform,
+  // );
   runApp(const MyApp());
 }
 
@@ -22,9 +23,9 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      initialRoute: LoginPage.id,
+      initialRoute: MyHomePage.id,
       routes: {
-        LoginPage.id: (_) => const LoginPage(),
+        MyHomePage.id: (_) => const MyHomePage(),
       },
     );
   }

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:google_sign_in/google_sign_in.dart';
+// import 'package:google_sign_in/google_sign_in.dart';
 import 'package:pets/components/IconTextButton.dart';
 import 'package:pets/components/menuRow.dart';
 import 'package:pets/pages/Login.dart';
@@ -7,11 +7,9 @@ import 'package:pets/utils/TColor.dart';
 
 class ProfileView extends StatelessWidget {
   static String id = "profile_page";
-  final GoogleSignInAccount account;
 
   const ProfileView({
     super.key,
-    required this.account,
   });
 
   @override
@@ -54,7 +52,7 @@ class ProfileView extends StatelessWidget {
                   CircleAvatar(
                     radius: media.width * 0.125,
                     backgroundColor: TColor.secondary,
-                    backgroundImage: NetworkImage(account.photoUrl ?? 'https://example.com/default-avatar.png'),
+                    backgroundImage: NetworkImage(null ?? 'https://example.com/default-avatar.png'),
                     onBackgroundImageError: (exception, stackTrace) {
                       // Manejar error en la carga de la imagen
                     },
@@ -63,7 +61,7 @@ class ProfileView extends StatelessWidget {
                     height: media.width * 0.04,
                   ),
                   Text(
-                    account.displayName ?? 'Usuario',
+                    null ?? 'Usuario',
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       color: TColor.text,

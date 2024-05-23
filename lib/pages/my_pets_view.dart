@@ -1,7 +1,9 @@
 import 'dart:convert';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:pets/models/pet.dart'; // Asegúrate de importar correctamente tu modelo Pet
+import 'package:pets/models/Pet.dart';
 
 class MyPetsView extends StatefulWidget {
   static String id = "pets_page";
@@ -22,55 +24,21 @@ class MyPetsViewState extends State<MyPetsView> {
   }
 
   Future<void> _cargarMascotas() async {
-    const String data = '''[
-      {
-        "nombre": "Max",
-        "tipo": "Perro",
-        "edad": 3,
-        "imagen": "assets/images/perro1.jpg",
-        "eventos": [
-          "Vacunación",
-          "Desparasitación",
-          "Visita al veterinario"
-        ]
-      },
-      {
-        "nombre": "Juanita",
-        "tipo": "Gato",
-        "edad": 2,
-        "imagen": "assets/images/gato1.jpg",
-        "eventos": [
-          "Cita al peluquero",
-          "Vacunación",
-          "Control de peso"
-        ]
-      },
-      {
-        "nombre": "Luno",
-        "tipo": "Gato",
-        "edad": 2,
-        "imagen": "assets/images/gato1.jpg",
-        "eventos": [
-          "Desparasitación",
-          "Vacunación"
-        ]
+    final response = await http.get(Uri.parse('http://localhost:3000/pet'));
+    if (response.statusCode == 200) {
+      List<dynamic> mascotasData = json.decode(response.body);
+      List<Pet> mascotas = mascotasData.map((mascotaData) {
+        return Pet.fromJson(mascotaData);
+      }).toList();
+      if (kDebugMode) {
+        print(response.body);
       }
-    ]''';
-
-    List<dynamic> mascotasData = json.decode(data);
-    List<Pet> mascotas = mascotasData.map((mascotaData) {
-      return Pet(
-        nombre: mascotaData['nombre'],
-        tipo: mascotaData['tipo'],
-        edad: mascotaData['edad'],
-        imagen: mascotaData['imagen'],
-        eventos: List<String>.from(mascotaData['eventos'] ?? []),
-      );
-    }).toList();
-
-    setState(() {
-      _mascotas = mascotas;
-    });
+      setState(() {
+        _mascotas = mascotas;
+      });
+    } else {
+      throw Exception('Failed to load pets');
+    }
   }
 
   @override
@@ -79,10 +47,13 @@ class MyPetsViewState extends State<MyPetsView> {
       body: _mascotas.isEmpty
           ? const Center(child: CircularProgressIndicator())
           : Column(
-            crossAxisAlignment: CrossAxisAlignment.end  ,
+              crossAxisAlignment: CrossAxisAlignment.end,
               children: [
-                SizedBox(height: 20,),
-                IconButton(icon: const Icon(Icons.add) , onPressed: () => {},),
+                SizedBox(height: 20),
+                IconButton(
+                  icon: const Icon(Icons.add),
+                  onPressed: () => {},
+                ),
                 SizedBox(
                   height: 300, // Altura fija para el carrusel
                   child: _buildCarousel(),
@@ -140,7 +111,7 @@ class MyPetsViewState extends State<MyPetsView> {
           Expanded(
             child: ClipRRect(
               borderRadius: BorderRadius.circular(8.0),
-              child: Image.asset(
+              child: Image.network(
                 mascota.imagen,
                 fit: BoxFit.cover,
               ),
@@ -169,14 +140,25 @@ class MyPetsViewState extends State<MyPetsView> {
           ),
           const SizedBox(height: 10),
           Text(
-            'Tipo: ${mascota.tipo}',
+            'Tipo: ${mascota.tipoAnimal}',
             style: const TextStyle(fontSize: 16, color: Colors.grey),
           ),
           Text(
-            'Edad: ${mascota.edad} años',
+            'Raza: ${mascota.raza}',
             style: const TextStyle(fontSize: 16, color: Colors.grey),
           ),
-          // Agrega aquí más detalles de la mascota si lo deseas
+          Text(
+            'Peso: ${mascota.peso} kg',
+            style: const TextStyle(fontSize: 16, color: Colors.grey),
+          ),
+          Text(
+            'Género: ${mascota.genero == 1 ? "Macho" : "Hembra"}',
+            style: const TextStyle(fontSize: 16, color: Colors.grey),
+          ),
+          Text(
+            'Chip: ${mascota.chip ? "Sí" : "No"}',
+            style: const TextStyle(fontSize: 16, color: Colors.grey),
+          ),
         ],
       ),
     );

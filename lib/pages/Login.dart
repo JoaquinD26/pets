@@ -29,10 +29,11 @@ class Login extends State<LoginPage> {
 
     try {
       Map<dynamic, dynamic> params = {
-        'nombre': email,
+        'email': email,
+        'password': password
       };
 
-      var url = Uri.parse('http://localhost/pruebaApiPets/usuario.php');
+      var url = Uri.parse('http://localhost:3000/user');
       var response = await http.post(
         url,
         headers: {'Content-Type': 'application/json'},
@@ -47,7 +48,7 @@ class Login extends State<LoginPage> {
             context,
             PageRouteBuilder(
               pageBuilder: (context, animation, secondaryAnimation) =>
-                  const MyHomePage(account1: null,),
+                  const MyHomePage(),
               transitionsBuilder:
                   (context, animation, secondaryAnimation, child) {
                 var begin = 0.0;
@@ -87,7 +88,7 @@ class Login extends State<LoginPage> {
       if (account != null) {
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => MyHomePage(account1: _currentUser,)),
+          MaterialPageRoute(builder: (context) => MyHomePage()),
         );
       }
     });
@@ -136,7 +137,7 @@ class Login extends State<LoginPage> {
       // Navega a la página principal si la autenticación es exitosa
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => MyHomePage(account1: _currentUser)),
+        MaterialPageRoute(builder: (context) => MyHomePage()),
       );
     }
   } catch (e) {
