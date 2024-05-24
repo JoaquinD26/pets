@@ -5,8 +5,14 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/services.dart';
 import 'package:pets/models/pet.dart';
 import 'package:http/http.dart' as http;
+import 'package:pets/models/user.dart';
 
 class AddPetForm extends StatefulWidget {
+
+  late User user;
+
+  AddPetForm({required this.user, super.key});
+
   @override
   _AddPetFormState createState() => _AddPetFormState();
 }
@@ -214,19 +220,22 @@ class _AddPetFormState extends State<AddPetForm> {
         body: jsonEncode(petJson),
       );
 
-       var responseBody = jsonDecode(response.body);
-
       // Verificar si la solicitud fue exitosa (código de respuesta 200)
       if (response.statusCode == 200) {
+        var responseBody = jsonDecode(response.body);
+
+        String userId = widget.user.id as String;
+        String petId = responseBody['id'];
 
         // URL de tu endpoint para agregar conexión a mascotas con el usuario actual
-        final url = Uri.parse('http://localhost:3000/pet/${petId}/${responseBody['id']}');//TODO PONER LA ID DEL USUARIO
+        final url = Uri.parse(
+            'http://localhost:3000/pet/$userId/$petId'); //TODO PONER LA ID DEL USUARIO
 
         // Convertir el objeto Pet a JSON
         final petJson = pet.toJson();
 
         // Realizar la solicitud POST
-        final response = await http.post(
+        final response2 = await http.post(
           url,
           headers: <String, String>{
             'Content-Type': 'application/json; charset=UTF-8',
@@ -234,10 +243,13 @@ class _AddPetFormState extends State<AddPetForm> {
           body: jsonEncode(petJson),
         );
 
-        // Mostrar un mensaje de éxito
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Pet added successfully')),
-        );
+        if (response2.statusCode == 200) {
+          // Mostrar un mensaje de éxito
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Pet added successfully')),
+          );
+        }
+
       } else {
         // Si la solicitud no fue exitosa, imprimir el código de respuesta
         print('Error adding pet. Status code: ${response.statusCode}');

@@ -45,7 +45,7 @@ class MyPetsViewState extends State<MyPetsView> {
                   onPressed: () => {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => AddPetForm()),
+                      MaterialPageRoute(builder: (context) => AddPetForm(user: widget.user,)),
                     )
                   },
                 ),
