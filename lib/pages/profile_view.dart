@@ -1,16 +1,27 @@
 import 'package:flutter/material.dart';
-// import 'package:google_sign_in/google_sign_in.dart';
 import 'package:pets/components/IconTextButton.dart';
 import 'package:pets/components/menuRow.dart';
+import 'package:pets/models/user.dart';
 import 'package:pets/pages/Login.dart';
 import 'package:pets/utils/TColor.dart';
 
-class ProfileView extends StatelessWidget {
+class ProfileView extends StatefulWidget {
   static String id = "profile_page";
 
-  const ProfileView({
-    super.key,
-  });
+  late User user; // Agrega un parámetro para recibir el usuario logeado
+
+  ProfileView({required this.user, super.key});
+
+  @override
+  _ProfileViewState createState() => _ProfileViewState();
+}
+
+class _ProfileViewState extends State<ProfileView> {
+
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -52,7 +63,7 @@ class ProfileView extends StatelessWidget {
                   CircleAvatar(
                     radius: media.width * 0.125,
                     backgroundColor: TColor.secondary,
-                    backgroundImage: NetworkImage(null ?? 'https://example.com/default-avatar.png'),
+                    backgroundImage: NetworkImage(widget.user.mainImage ?? ""),
                     onBackgroundImageError: (exception, stackTrace) {
                       // Manejar error en la carga de la imagen
                     },
@@ -61,7 +72,7 @@ class ProfileView extends StatelessWidget {
                     height: media.width * 0.04,
                   ),
                   Text(
-                    null ?? 'Usuario',
+                    '${widget.user.name} ${widget.user.lastname}',
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       color: TColor.text,
@@ -73,7 +84,7 @@ class ProfileView extends StatelessWidget {
                     height: media.width * 0.025,
                   ),
                   Text(
-                    "Información Usuario",
+                    widget.user.email,
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       color: TColor.gray,
@@ -166,8 +177,10 @@ class ProfileView extends StatelessWidget {
                     icon: Icon(Icons.logout_outlined),
                     title: "Cerrar Sesión",
                     onPressed: () async {
+                      
                       // Realizar el cierre de sesión
-                      Login.signOut(context);
+              
+                      Navigator.pushNamedAndRemoveUntil(context, LoginPage.id, (route) => false);
                     },
                   ),
                   const Divider(

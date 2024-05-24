@@ -1,21 +1,21 @@
-import 'package:pets/models/Forum.dart';
+import 'package:pets/models/forum.dart';
 import 'package:pets/models/pet.dart';
 
 class User {
-  final int id;
-  final String name;
-  final String lastname;
+  final int? id;
+  final String? name;
+  final String? lastname;
   final String email;
-  final String address;
+  final String? address;
   final String password;
-  final int cp;
-  final String birthday;
-  final String mainImage;
-  final List<Forum> foro;
+  final int? cp;
+  final String? birthday;
+  final String? mainImage;
+  final List<Forum>? foro;
   final List<Pet> pets;
 
   User({
-    required this.id,
+    this.id,
     required this.name,
     required this.lastname,
     required this.email,
@@ -29,10 +29,13 @@ class User {
   });
 
   factory User.fromJson(Map<String, dynamic> json) {
+    var petsFromJson = json['pets'] as List;
+    List<Pet> petList = petsFromJson.map((i) => Pet.fromJson(i)).toList();
+
     return User(
       id: json['id'],
       name: json['name'],
-      lastname: json['lastname'],
+      lastname: json['lastName'],
       email: json['email'],
       address: json['address'],
       password: json['password'],
@@ -40,22 +43,22 @@ class User {
       birthday: json['birthday'],
       mainImage: json['mainimage'],
       foro: [], // Debes definir cómo manejar la lista de foros en tu aplicación
-      pets: [], // Debes definir cómo manejar la lista de mascotas en tu aplicación
+      pets: petList,
     );
   }
 
-   Map<String, dynamic> toJson() {
+  Map<String, dynamic> toJson() {
     return {
       'id': id,
       'name': name,
-      'lastname': lastname,
+      'lastName': lastname,
       'email': email,
       'address': address,
       'password': password,
       'cp': cp,
       'birthday': birthday,
       'mainimage': mainImage,
-      'foro': foro.map((forum) => forum.toJson()).toList(),
+      'foro': foro!.map((forum) => forum.toJson()).toList(),
       'pets': pets.map((pet) => pet.toJson()).toList(),
     };
   }

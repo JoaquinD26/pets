@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:pets/models/Forum.dart';
+import 'package:pets/models/forum.dart';
 
 class PostDetailsPage extends StatefulWidget {
   final Forum forumPost;
@@ -34,7 +34,7 @@ class PostDetailsPageState extends State<PostDetailsPage> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            widget.forumPost.user.name,
+                            widget.forumPost.user.name!,
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
                               fontSize: 20,

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pets/components/forumCard.dart';
-import 'package:pets/models/Forum.dart';
+import 'package:pets/models/forum.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
@@ -25,7 +25,7 @@ class ForumPageState extends State<ForumPage> {
   void loadForums() async {
     try {
       // Realizar la solicitud HTTP GET a la API
-      var response = await http.get(Uri.parse('http://your-api-url/forums'));
+      var response = await http.get(Uri.parse('http://localhost:3000/forum'));
 
       // Verificar si la solicitud fue exitosa (código de respuesta 200)
       if (response.statusCode == 200) {

@@ -1,20 +1,22 @@
-import 'dart:convert';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:pets/models/Pet.dart';
+import 'package:pets/models/pet.dart';
+import 'package:pets/models/user.dart';
+import 'package:pets/pages/forms/petForm.dart';
 
 class MyPetsView extends StatefulWidget {
   static String id = "pets_page";
-  const MyPetsView({Key? key}) : super(key: key);
+
+  late User user; // Agrega un parámetro para recibir el usuario logeado
+
+  MyPetsView({required this.user, super.key});
 
   @override
   MyPetsViewState createState() => MyPetsViewState();
 }
 
 class MyPetsViewState extends State<MyPetsView> {
-  late List<Pet> _mascotas = [];
+  late List<Pet> mascotas = [];
   int _currentMascotaIndex = 0;
 
   @override
@@ -23,28 +25,16 @@ class MyPetsViewState extends State<MyPetsView> {
     _cargarMascotas();
   }
 
-  Future<void> _cargarMascotas() async {
-    final response = await http.get(Uri.parse('http://localhost:3000/pet'));
-    if (response.statusCode == 200) {
-      List<dynamic> mascotasData = json.decode(response.body);
-      List<Pet> mascotas = mascotasData.map((mascotaData) {
-        return Pet.fromJson(mascotaData);
-      }).toList();
-      if (kDebugMode) {
-        print(response.body);
-      }
-      setState(() {
-        _mascotas = mascotas;
-      });
-    } else {
-      throw Exception('Failed to load pets');
-    }
+  void _cargarMascotas() {
+    setState(() {
+      mascotas = widget.user.pets;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: _mascotas.isEmpty
+      body: mascotas.isEmpty
           ? const Center(child: CircularProgressIndicator())
           : Column(
               crossAxisAlignment: CrossAxisAlignment.end,
@@ -52,7 +42,12 @@ class MyPetsViewState extends State<MyPetsView> {
                 SizedBox(height: 20),
                 IconButton(
                   icon: const Icon(Icons.add),
-                  onPressed: () => {},
+                  onPressed: () => {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => AddPetForm()),
+                    )
+                  },
                 ),
                 SizedBox(
                   height: 300, // Altura fija para el carrusel
@@ -63,8 +58,8 @@ class MyPetsViewState extends State<MyPetsView> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
-                        _buildMascotaInfo(_mascotas[_currentMascotaIndex]),
-                        _buildMascotaEventos(_mascotas[_currentMascotaIndex]),
+                        _buildMascotaInfo(mascotas[_currentMascotaIndex]),
+                        _buildMascotaEventos(mascotas[_currentMascotaIndex]),
                       ],
                     ),
                   ),
@@ -91,7 +86,7 @@ class MyPetsViewState extends State<MyPetsView> {
           });
         },
       ),
-      items: _mascotas.map((mascota) {
+      items: mascotas.map((mascota) {
         return Builder(
           builder: (BuildContext context) {
             return _buildMascotaItem(mascota);
@@ -156,7 +151,7 @@ class MyPetsViewState extends State<MyPetsView> {
             style: const TextStyle(fontSize: 16, color: Colors.grey),
           ),
           Text(
-            'Chip: ${mascota.chip ? "Sí" : "No"}',
+            'Chip: ${mascota.chip == 1 ? "Sí" : "No"}',
             style: const TextStyle(fontSize: 16, color: Colors.grey),
           ),
         ],

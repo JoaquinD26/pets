@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pets/components/postsFromForum.dart'; // Asegúrate de importar correctamente tu componente CommentDetailsPage
-import 'package:pets/models/Forum.dart';
+import 'package:pets/models/forum.dart';
 
 class ForumPostCard extends StatefulWidget {
   final Forum forum;
@@ -30,7 +30,7 @@ class ForumPostCardState extends State<ForumPostCard> {
             children: [
               CircleAvatar(
                 radius: 20, // Tamaño del círculo
-                backgroundImage: _imagenError ? NetworkImage("https://upload.wikimedia.org/wikipedia/commons/thumb/b/b5/Windows_10_Default_Profile_Picture.svg/2048px-Windows_10_Default_Profile_Picture.svg.png") : NetworkImage(widget.forum.user.mainImage),
+                backgroundImage: _imagenError ? NetworkImage("https://upload.wikimedia.org/wikipedia/commons/thumb/b/b5/Windows_10_Default_Profile_Picture.svg/2048px-Windows_10_Default_Profile_Picture.svg.png") : NetworkImage(widget.forum.user.mainImage!),
                 onBackgroundImageError: (exception, stackTrace) {
                   // Manejar error en caso de que la imagen no se pueda cargar
                   setState(() {

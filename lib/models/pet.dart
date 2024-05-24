@@ -5,7 +5,7 @@ class Pet {
   final String race;
   final double weight;
   final int gender;
-  final bool chip;
+  final int chip;
   final String idUser;
   final String petImg;
   final List<String> eventos;
@@ -32,9 +32,9 @@ class Pet {
       race: json['race'] ?? '',
       weight: (json['weight'] ?? 0.0).toDouble(),
       gender: json['gender'] ?? 0,
-      chip: json['chip'] ?? false,
+      chip: json['chip'] ?? 0,
       idUser: json['id_user'] ?? '',
-      petImg: json['petImg'] ?? '',
+      petImg: json['profileImage'] ?? '',
       eventos: List<String>.from(json['eventos'] ?? []),
     );
   }
@@ -50,7 +50,7 @@ class Pet {
       'gender': gender,
       'chip': chip,
       'id_user': idUser,
-      'petImg': petImg,
+      'profileImage': petImg,
       'eventos': eventos,
     };
   }

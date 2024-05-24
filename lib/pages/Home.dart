@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
-import 'package:google_sign_in/google_sign_in.dart';
+import 'package:pets/models/user.dart';
 import 'package:pets/pages/forum_view.dart';
 import 'package:pets/pages/my_pets_view.dart';
 import 'package:pets/pages/profile_view.dart';
 
 class MyHomePage extends StatefulWidget {
   static String id = "home_page";
+  late User user;
 
-  const MyHomePage({
+  MyHomePage({
     super.key,
+    required this.user,
   });
 
   @override
@@ -25,10 +27,10 @@ class MyHomePageState extends State<MyHomePage> {
   void initState() {
     super.initState();
     _pages = [
-      const MyPetsView(),
-      const PageTwo(),
+      MyPetsView(user: widget.user),
+      PageTwo(),
       ForumPage(),
-      ProfileView(),
+      ProfileView(user: widget.user),
     ];
   }
 
