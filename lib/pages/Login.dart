@@ -147,8 +147,6 @@ class LoginState extends State<LoginPage> {
 
       }
 
-      
-
       // Navegar a la página principal pasando el usuario como argumento
       Navigator.pushReplacement(
         context,

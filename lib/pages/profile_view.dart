@@ -181,6 +181,7 @@ class _ProfileViewState extends State<ProfileView> {
                       // Realizar el cierre de sesión
               
                       Navigator.pushNamedAndRemoveUntil(context, LoginPage.id, (route) => false);
+                      
                     },
                   ),
                   const Divider(

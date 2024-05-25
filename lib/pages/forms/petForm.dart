@@ -1,14 +1,17 @@
 import 'dart:convert';
 import 'dart:typed_data';
-import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+
 import 'package:flutter/services.dart';
 import 'package:pets/models/pet.dart';
 import 'package:http/http.dart' as http;
 import 'package:pets/models/user.dart';
+import 'package:pets/pages/Home.dart';
+import 'package:pets/pages/my_pets_view.dart';
 
 class AddPetForm extends StatefulWidget {
-
   late User user;
 
   AddPetForm({required this.user, super.key});
@@ -124,8 +127,8 @@ class _AddPetFormState extends State<AddPetForm> {
                 ),
                 items: ['Male', 'Female']
                     .map((label) => DropdownMenuItem(
-                          child: Text(label),
                           value: label,
+                          child: Text(label),
                         ))
                     .toList(),
                 onChanged: (value) {
@@ -160,32 +163,39 @@ class _AddPetFormState extends State<AddPetForm> {
               ),
               SizedBox(height: 20),
               ElevatedButton(
-                onPressed: () {
+                onPressed: () async {
                   if (_formKey.currentState!.validate()) {
-                    // Create a new pet
+                    // Crear una nueva mascota
                     Pet newPet = Pet(
-                      id: 0, // Assuming ID is auto-generated
+                      id: 0, // Suponiendo que el ID se genera automáticamente
                       name: _nameController.text,
                       animal: _animalController.text,
                       race: _raceController.text,
                       weight: double.parse(_weightController.text),
                       gender: _selectedGender == 'Male' ? 0 : 1,
                       chip: _hasChip ? 1 : 0,
-                      idUser: '0', // User ID is not used
-                      petImg: '', // Image upload handling not covered
-                      eventos: [], // Events not included
+                      petImg: '', // Manejo de subida de imagen no cubierto
+                      eventos: [], // Eventos no incluidos
                     );
 
-                    // Add the pet
-                    _addPet(newPet);
+                    try {
+                      // Añadir la mascota y conectar con el usuario
+                      await _addPetAndConnect(newPet);
 
-                    // Optionally, clear the form
-                    _formKey.currentState!.reset();
-                    setState(() {
-                      _selectedGender = 'Male';
-                      _hasChip = false;
-                      _selectedImageBytes = null;
-                    });
+                      // Opcionalmente, limpiar el formulario
+                      _formKey.currentState!.reset();
+                      setState(() {
+                        _selectedGender = 'Male';
+                        _hasChip = false;
+                        _selectedImageBytes = null;
+                      });
+                    } catch (e) {
+                      // Manejar errores y mostrar mensaje de error
+                      print('Error adding pet: $e');
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text('Failed to add pet')),
+                      );
+                    }
                   }
                 },
                 style: ElevatedButton.styleFrom(
@@ -195,7 +205,7 @@ class _AddPetFormState extends State<AddPetForm> {
                   'Add Pet',
                   style: TextStyle(color: Colors.black),
                 ),
-              ),
+              )
             ],
           ),
         ),
@@ -203,17 +213,17 @@ class _AddPetFormState extends State<AddPetForm> {
     );
   }
 
-  Future<void> _addPet(Pet pet) async {
+  Future<int> _addPet(Pet pet) async {
     try {
       // URL de tu endpoint para agregar mascotas
-      final url = Uri.parse('http://localhost:3000/pet');
+      final addPetUrl = Uri.parse('http://localhost:3000/pet');
 
       // Convertir el objeto Pet a JSON
       final petJson = pet.toJson();
 
-      // Realizar la solicitud POST
+      // Realizar la solicitud POST para agregar la mascota
       final response = await http.post(
-        url,
+        addPetUrl,
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },
@@ -224,39 +234,83 @@ class _AddPetFormState extends State<AddPetForm> {
       if (response.statusCode == 200) {
         var responseBody = jsonDecode(response.body);
 
-        String userId = widget.user.id as String;
-        String petId = responseBody['id'];
+        // Añadir prints para depuración
+        print('Response body: $responseBody');
 
-        // URL de tu endpoint para agregar conexión a mascotas con el usuario actual
-        final url = Uri.parse(
-            'http://localhost:3000/pet/$userId/$petId'); //TODO PONER LA ID DEL USUARIO
+        int petId = responseBody['id'];
 
-        // Convertir el objeto Pet a JSON
-        final petJson = pet.toJson();
-
-        // Realizar la solicitud POST
-        final response2 = await http.post(
-          url,
-          headers: <String, String>{
-            'Content-Type': 'application/json; charset=UTF-8',
-          },
-          body: jsonEncode(petJson),
-        );
-
-        if (response2.statusCode == 200) {
-          // Mostrar un mensaje de éxito
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Pet added successfully')),
-          );
+        if (kDebugMode) {
+          print('Pet ID: $petId');
         }
-
+        return petId;
       } else {
         // Si la solicitud no fue exitosa, imprimir el código de respuesta
         print('Error adding pet. Status code: ${response.statusCode}');
+        return 0;
       }
     } catch (e) {
       // Manejar cualquier error que ocurra durante la solicitud
       print('Error adding pet: $e');
+      return 0;
+    }
+  }
+
+  Future<void> _connectPetToUser(int userId, int petId) async {
+    if (kDebugMode) {
+      print(userId);
+      print(petId);
+    }
+
+    String userIdStr = userId.toString();
+    String petIdStr = petId.toString();
+
+    try {
+      // URL de tu endpoint para agregar conexión a mascotas con el usuario actual
+      final addPetToUserUrl =
+          Uri.parse('http://localhost:3000/user/$userIdStr/$petIdStr');
+
+      // Realizar la solicitud POST para conectar la mascota con el usuario
+      final response = await http.get(
+        addPetToUserUrl,
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+      );
+
+      // Verificar si la solicitud fue exitosa
+      if (response.statusCode == 200) {
+        // Mostrar un mensaje de éxito
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Pet connected to user successfully')),
+        );
+
+        Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => MyHomePage(user: widget.user)),
+
+      );
+
+      } else {
+        print(
+            'Error connecting pet to user. Status code: ${response.statusCode}');
+      }
+    } catch (e) {
+      // Manejar cualquier error que ocurra durante la solicitud
+      print('Error connecting pet to user: $e');
+    }
+  }
+
+  Future<void> _addPetAndConnect(Pet pet) async {
+    int userId = widget.user.id!;
+
+    // Añadir la mascota
+    int petId = await _addPet(pet);
+
+    // Si la mascota se añadió correctamente, conectar la mascota con el usuario
+    if (petId != 0) {
+      await _connectPetToUser(userId, petId);
+    } else {
+      print('Failed to add pet :(');
     }
   }
 

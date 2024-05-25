@@ -6,7 +6,6 @@ class Pet {
   final double weight;
   final int gender;
   final int chip;
-  final String idUser;
   final String petImg;
   final List<String> eventos;
 
@@ -18,7 +17,6 @@ class Pet {
     required this.weight,
     required this.gender,
     required this.chip,
-    required this.idUser,
     required this.petImg,
     required this.eventos,
   });
@@ -33,7 +31,6 @@ class Pet {
       weight: (json['weight'] ?? 0.0).toDouble(),
       gender: json['gender'] ?? 0,
       chip: json['chip'] ?? 0,
-      idUser: json['id_user'] ?? '',
       petImg: json['profileImage'] ?? '',
       eventos: List<String>.from(json['eventos'] ?? []),
     );
@@ -49,7 +46,6 @@ class Pet {
       'weight': weight,
       'gender': gender,
       'chip': chip,
-      'id_user': idUser,
       'profileImage': petImg,
       'eventos': eventos,
     };

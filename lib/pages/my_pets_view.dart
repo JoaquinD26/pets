@@ -35,7 +35,7 @@ class MyPetsViewState extends State<MyPetsView> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: mascotas.isEmpty
-          ? const Center(child: CircularProgressIndicator())
+          ? AddPetForm(user: widget.user)
           : Column(
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
