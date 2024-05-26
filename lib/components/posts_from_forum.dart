@@ -4,7 +4,7 @@ import 'package:pets/models/forum.dart';
 class PostDetailsPage extends StatefulWidget {
   final Forum forumPost;
 
-  const PostDetailsPage({Key? key, required this.forumPost}) : super(key: key);
+  const PostDetailsPage({super.key, required this.forumPost});
 
   @override
   PostDetailsPageState createState() => PostDetailsPageState();

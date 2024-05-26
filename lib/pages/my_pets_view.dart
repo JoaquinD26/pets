@@ -1,71 +1,136 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:pets/models/pet.dart';
 import 'package:pets/models/user.dart';
-import 'package:pets/pages/forms/petForm.dart';
+import 'package:pets/pages/forms/pet_form.dart';
+import 'package:http/http.dart' as http;
 
 class MyPetsView extends StatefulWidget {
-  static String id = "pets_page";
+  final String id = "pets_page";
+  final User userLog; // Agrega un parámetro para recibir el usuario logeado
 
-  late User user; // Agrega un parámetro para recibir el usuario logeado
-
-  MyPetsView({required this.user, super.key});
+  const MyPetsView({required this.userLog, super.key});
 
   @override
   MyPetsViewState createState() => MyPetsViewState();
 }
 
 class MyPetsViewState extends State<MyPetsView> {
+  late Future<User> _futureUser;
   late List<Pet> mascotas = [];
   int _currentMascotaIndex = 0;
 
   @override
   void initState() {
     super.initState();
-    _cargarMascotas();
+    _futureUser = fetchUserById(widget.userLog.id!);
   }
 
-  void _cargarMascotas() {
-    setState(() {
-      mascotas = widget.user.pets;
-    });
+  Future<User> fetchUserById(int id) async {
+    final response =
+        await http.get(Uri.parse('http://localhost:3000/user/$id'));
+    if (response.statusCode == 200) {
+      final user = User.fromJson(json.decode(response.body));
+      setState(() {
+        mascotas = user.pets!;
+      });
+      return user;
+    } else {
+      throw Exception('Failed to load user: ${response.reasonPhrase}');
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: mascotas.isEmpty
-          ? AddPetForm(user: widget.user)
-          : Column(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                SizedBox(height: 20),
-                IconButton(
-                  icon: const Icon(Icons.add),
-                  onPressed: () => {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => AddPetForm(user: widget.user,)),
-                    )
-                  },
-                ),
-                SizedBox(
-                  height: 300, // Altura fija para el carrusel
-                  child: _buildCarousel(),
-                ),
-                Expanded(
-                  child: SingleChildScrollView(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
+      body: FutureBuilder<User>(
+        future: _futureUser,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(child: CircularProgressIndicator());
+          } else if (snapshot.hasError) {
+            return Center(child: Text('Error: ${snapshot.error}'));
+          } else {
+            return mascotas.isEmpty
+                ? Center(
+                  child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        _buildMascotaInfo(mascotas[_currentMascotaIndex]),
-                        _buildMascotaEventos(mascotas[_currentMascotaIndex]),
+                        Text(
+                          'Aún no tienes mascotas!!',
+                          style: TextStyle(
+                            fontSize: 24,
+                            color: Colors.deepOrange[300],
+                            fontWeight: FontWeight.bold,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                        SizedBox(height: 20),
+                        ElevatedButton(
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    AddPetForm(user: widget.userLog),
+                              ),
+                            );
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.deepOrange[300],
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 20, vertical: 15),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                          ),
+                          child: Text(
+                            'Añade tus mascotas aquí',
+                            style: TextStyle(fontSize: 18, color: Colors.white),
+                          ),
+                        ),
                       ],
                     ),
-                  ),
-                ),
-              ],
-            ),
+                )
+                : Column(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      SizedBox(height: 20),
+                      IconButton(
+                        icon: const Icon(Icons.add),
+                        onPressed: () => {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  AddPetForm(user: widget.userLog),
+                            ),
+                          )
+                        },
+                      ),
+                      SizedBox(
+                        height: 300, // Altura fija para el carrusel
+                        child: _buildCarousel(),
+                      ),
+                      Expanded(
+                        child: SingleChildScrollView(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            children: [
+                              _buildMascotaInfo(mascotas[_currentMascotaIndex]),
+                              _buildMascotaEventos(
+                                  mascotas[_currentMascotaIndex]),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  );
+          }
+        },
+      ),
     );
   }
 

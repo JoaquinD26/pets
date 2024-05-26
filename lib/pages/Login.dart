@@ -4,12 +4,12 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:pets/models/user.dart';
-import 'package:pets/pages/Home.dart';
+import 'package:pets/pages/home.dart';
 
 class LoginPage extends StatefulWidget {
   static String id = "login_page";
 
-  const LoginPage({Key? key}) : super(key: key);
+  const LoginPage({super.key});
 
   @override
   LoginState createState() => LoginState();
@@ -148,9 +148,10 @@ class LoginState extends State<LoginPage> {
       }
 
       // Navegar a la página principal pasando el usuario como argumento
-      Navigator.pushReplacement(
+      Navigator.pushAndRemoveUntil(
         context,
         MaterialPageRoute(builder: (context) => MyHomePage(user: user)),
+        (route) => false
       );
       // Aquí puedes navegar a la pantalla principal o realizar otras acciones
     } else {
@@ -237,7 +238,7 @@ class _RegisterPageState extends State<RegisterPage> {
 
     // Realizar la solicitud POST al servidor
     var response = await http.post(
-      Uri.parse('http://localhost:3000/user/login'),
+      Uri.parse('http://localhost:3000/user'),
       body: jsonEncode(body),
       headers: {'Content-Type': 'application/json'},
     );
@@ -255,9 +256,10 @@ class _RegisterPageState extends State<RegisterPage> {
         print('Inicio de sesión exitoso');
 
       }
-        Navigator.pushReplacement(
+        Navigator.pushAndRemoveUntil(
           context,
           MaterialPageRoute(builder: (context) => MyHomePage(user: user)),
+          (route) => false
         );
         // Aquí puedes navegar a la pantalla de inicio de sesión o realizar otras acciones
       } else {

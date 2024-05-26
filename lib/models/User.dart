@@ -29,8 +29,17 @@ class User {
   });
 
   factory User.fromJson(Map<String, dynamic> json) {
-    var petsFromJson = json['pets'] as List;
-    List<Pet> petList = petsFromJson.map((i) => Pet.fromJson(i)).toList();
+
+    List<Pet> petList = [];
+
+    // Verifica si json['pets'] es nulo
+    var petsFromJson = json['pets'] as List?;
+
+    // Si petsFromJson es nulo, usa una lista vacía
+    petList = petsFromJson != null
+        ? petsFromJson.map((i) => Pet.fromJson(i)).toList()
+        : [];
+
 
     return User(
       id: json['id'],
@@ -43,7 +52,7 @@ class User {
       birthday: json['birthday'],
       mainImage: json['mainimage'],
       foro: [], // Debes definir cómo manejar la lista de foros en tu aplicación
-      pets: petList,
+      pets: petList ?? [],
     );
   }
 

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:pets/components/forumCard.dart';
+import 'package:pets/components/forum_card.dart';
 import 'package:pets/models/forum.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;

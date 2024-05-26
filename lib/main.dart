@@ -1,11 +1,17 @@
 
 import 'package:flutter/material.dart';
 import 'package:pets/pages/Login.dart';
+import 'package:pets/providers/view_provider.dart';
+import 'package:provider/provider.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(
+    ChangeNotifierProvider(
+      create: (context) => ViewProvider(),
+      child: MyApp(),
+    ),
+  );
 }
-
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 

@@ -6,11 +6,11 @@ class MenuRow extends StatelessWidget {
   final VoidCallback onPressed;
 
   const MenuRow({
-    Key? key,
+    super.key,
     required this.icon,
     required this.title,
     required this.onPressed,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

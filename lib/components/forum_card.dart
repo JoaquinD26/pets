@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:pets/components/postsFromForum.dart'; // Asegúrate de importar correctamente tu componente CommentDetailsPage
+import 'package:pets/components/posts_from_forum.dart'; // Asegúrate de importar correctamente tu componente CommentDetailsPage
 import 'package:pets/models/forum.dart';
 
 class ForumPostCard extends StatefulWidget {
   final Forum forum;
 
-  ForumPostCard({required this.forum});
+  const ForumPostCard({super.key, required this.forum});
 
   @override
   ForumPostCardState createState() => ForumPostCardState();

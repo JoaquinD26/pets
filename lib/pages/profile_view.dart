@@ -1,22 +1,22 @@
 import 'package:flutter/material.dart';
-import 'package:pets/components/IconTextButton.dart';
-import 'package:pets/components/menuRow.dart';
+import 'package:pets/components/icon_text_button.dart';
+import 'package:pets/components/menu_row.dart';
 import 'package:pets/models/user.dart';
-import 'package:pets/pages/Login.dart';
-import 'package:pets/utils/TColor.dart';
+import 'package:pets/pages/login.dart';
+import 'package:pets/utils/t_color.dart';
 
 class ProfileView extends StatefulWidget {
-  static String id = "profile_page";
+  final String id = "profile_page";
 
-  late User user; // Agrega un parámetro para recibir el usuario logeado
+  final User userLog; // Agrega un parámetro para recibir el usuario logeado
 
-  ProfileView({required this.user, super.key});
+  const ProfileView({required this.userLog, super.key});
 
   @override
-  _ProfileViewState createState() => _ProfileViewState();
+  ProfileViewState createState() => ProfileViewState();
 }
 
-class _ProfileViewState extends State<ProfileView> {
+class ProfileViewState extends State<ProfileView> {
 
   @override
   void initState() {
@@ -63,7 +63,7 @@ class _ProfileViewState extends State<ProfileView> {
                   CircleAvatar(
                     radius: media.width * 0.125,
                     backgroundColor: TColor.secondary,
-                    backgroundImage: NetworkImage(widget.user.mainImage ?? ""),
+                    backgroundImage: NetworkImage(widget.userLog.mainImage ?? ""),
                     onBackgroundImageError: (exception, stackTrace) {
                       // Manejar error en la carga de la imagen
                     },
@@ -72,7 +72,7 @@ class _ProfileViewState extends State<ProfileView> {
                     height: media.width * 0.04,
                   ),
                   Text(
-                    '${widget.user.name} ${widget.user.lastname}',
+                    '${widget.userLog.name} ${widget.userLog.lastname}',
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       color: TColor.text,
@@ -84,7 +84,7 @@ class _ProfileViewState extends State<ProfileView> {
                     height: media.width * 0.025,
                   ),
                   Text(
-                    widget.user.email,
+                    widget.userLog.email,
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       color: TColor.gray,

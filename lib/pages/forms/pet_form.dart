@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:typed_data';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -8,19 +7,18 @@ import 'package:flutter/services.dart';
 import 'package:pets/models/pet.dart';
 import 'package:http/http.dart' as http;
 import 'package:pets/models/user.dart';
-import 'package:pets/pages/Home.dart';
-import 'package:pets/pages/my_pets_view.dart';
+import 'package:pets/pages/home.dart';
 
 class AddPetForm extends StatefulWidget {
-  late User user;
+  final User user;
 
-  AddPetForm({required this.user, super.key});
+  const AddPetForm({required this.user, super.key});
 
   @override
-  _AddPetFormState createState() => _AddPetFormState();
+  AddPetFormState createState() => AddPetFormState();
 }
 
-class _AddPetFormState extends State<AddPetForm> {
+class AddPetFormState extends State<AddPetForm> {
   final _formKey = GlobalKey<FormState>();
 
   // Controllers for the form fields
@@ -43,6 +41,13 @@ class _AddPetFormState extends State<AddPetForm> {
         _selectedImageBytes = result.files.single.bytes;
       });
     }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+
+
   }
 
   @override
@@ -172,7 +177,7 @@ class _AddPetFormState extends State<AddPetForm> {
                       animal: _animalController.text,
                       race: _raceController.text,
                       weight: double.parse(_weightController.text),
-                      gender: _selectedGender == 'Male' ? 0 : 1,
+                      gender: _selectedGender == 'Male' ? 1 : 0,
                       chip: _hasChip ? 1 : 0,
                       petImg: '', // Manejo de subida de imagen no cubierto
                       eventos: [], // Eventos no incluidos
@@ -284,9 +289,10 @@ class _AddPetFormState extends State<AddPetForm> {
           SnackBar(content: Text('Pet connected to user successfully')),
         );
 
-        Navigator.pushReplacement(
+        Navigator.pushAndRemoveUntil(
         context,
         MaterialPageRoute(builder: (context) => MyHomePage(user: widget.user)),
+        (route) => false,
 
       );
 
