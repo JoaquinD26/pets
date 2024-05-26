@@ -28,7 +28,7 @@ class MyHomePageState extends State<MyHomePage> {
     super.initState();
     _pages = [
       MyPetsView(user: widget.user),
-      PageTwo(),
+      ForumPage(),
       ForumPage(),
       ProfileView(user: widget.user),
     ];
