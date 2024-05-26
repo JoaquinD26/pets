@@ -1,7 +1,6 @@
 
 import 'package:flutter/material.dart';
 import 'package:pets/pages/Login.dart';
-import 'package:pets/pages/products/ItemPage.dart';
 
 void main() {
   runApp(const MyApp());
@@ -21,7 +20,6 @@ class MyApp extends StatelessWidget {
       initialRoute: LoginPage.id,
       routes: {
         LoginPage.id: (_) => const LoginPage(),
-        'itemPage': (context) => ItemPage(),
       },
     );
   }

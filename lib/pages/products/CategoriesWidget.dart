@@ -10,7 +10,7 @@ class CategoriesWidget extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 5),
         child: Row(children: [
-          for (int i = 0; i < 3; i++)
+          for (int i = 0; i < 5; i++)
           // Single Item
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 10),

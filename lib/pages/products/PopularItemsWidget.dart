@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
 import 'package:flutter/material.dart';
+import 'package:pets/pages/products/ItemPage.dart';
 
 class PopularItemsWidget extends StatelessWidget {
   const PopularItemsWidget({super.key});
@@ -39,7 +40,12 @@ class PopularItemsWidget extends StatelessWidget {
                     children: [
                       InkWell(
                         onTap: () {
-                          Navigator.pushNamed(context, "itemPage");
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => ItemPage(),
+                            ),
+                          );
                         },
                         child: Container(
                           alignment: Alignment.center,

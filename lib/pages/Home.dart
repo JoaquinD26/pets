@@ -4,7 +4,7 @@ import 'package:pets/models/user.dart';
 import 'package:pets/pages/forum_view.dart';
 import 'package:pets/pages/my_pets_view.dart';
 import 'package:pets/pages/profile_view.dart';
-import 'package:pets/pages/products/Product_view.dart';
+import 'package:pets/pages/Product_view.dart';
 
 
 class MyHomePage extends StatefulWidget {
