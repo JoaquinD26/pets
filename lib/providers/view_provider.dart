@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-
+//TODO puede sernos util en un futuro, ahora no hace nada.
 class ViewProvider extends ChangeNotifier {
   bool _isVisible = true;
 
