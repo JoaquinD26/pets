@@ -1,11 +1,13 @@
+import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:pets/models/user.dart';
 import 'package:pets/pages/forum_view.dart';
 import 'package:pets/pages/my_pets_view.dart';
 import 'package:pets/pages/profile_view.dart';
-import 'package:flutter/material.dart';
+import 'package:pets/pages/Product_view.dart';
 import 'package:pets/providers/view_provider.dart';
 import 'package:provider/provider.dart';
+
 
 class MyHomePage extends StatefulWidget {
   final String id = "home_page";
@@ -30,7 +32,7 @@ class MyHomePageState extends State<MyHomePage> {
     super.initState();
     _pages = [
       MyPetsView(userLog: widget.user),
-      PageTwo(),
+      ProductView(user: widget.user,),
       ForumPage(),
       ProfileView(userLog: widget.user),
     ];
@@ -44,7 +46,6 @@ class MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-
 
     final bottomNavBarVisibility = Provider.of<ViewProvider>(context);
  
@@ -82,17 +83,6 @@ class MyHomePageState extends State<MyHomePage> {
           iconSize: iconSize,
         ),
       ),
-    );
-  }
-}
-
-class PageTwo extends StatelessWidget {
-  const PageTwo({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const Center(
-      child: Text('Page 2'),
     );
   }
 }
