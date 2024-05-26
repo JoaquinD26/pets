@@ -4,6 +4,8 @@ import 'package:pets/models/user.dart';
 import 'package:pets/pages/forum_view.dart';
 import 'package:pets/pages/my_pets_view.dart';
 import 'package:pets/pages/profile_view.dart';
+import 'package:pets/pages/products/Product_view.dart';
+
 
 class MyHomePage extends StatefulWidget {
   static String id = "home_page";
@@ -28,7 +30,7 @@ class MyHomePageState extends State<MyHomePage> {
     super.initState();
     _pages = [
       MyPetsView(user: widget.user),
-      ForumPage(),
+      ProductView(user: widget.user,),
       ForumPage(),
       ProfileView(user: widget.user),
     ];
