@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:pets/components/commentDetailsPage.dart';
-import 'package:pets/models/forum_model.dart';
+import 'package:pets/components/postsFromForum.dart'; // Asegúrate de importar correctamente tu componente CommentDetailsPage
+import 'package:pets/models/forum.dart';
 
 class ForumPostCard extends StatefulWidget {
-  final ForumPost forumPost;
+  final Forum forum;
 
-  ForumPostCard({required this.forumPost});
+  ForumPostCard({required this.forum});
 
   @override
   ForumPostCardState createState() => ForumPostCardState();
@@ -13,6 +13,7 @@ class ForumPostCard extends StatefulWidget {
 
 class ForumPostCardState extends State<ForumPostCard> {
   bool _liked = false;
+  late bool _imagenError = false;
 
   @override
   Widget build(BuildContext context) {
@@ -23,19 +24,30 @@ class ForumPostCardState extends State<ForumPostCard> {
           _showPostDetails();
         },
         child: Padding(
-          padding: EdgeInsets.all(10),
+          padding: EdgeInsets.all(20),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              CircleAvatar(
+                radius: 20, // Tamaño del círculo
+                backgroundImage: _imagenError ? NetworkImage("https://upload.wikimedia.org/wikipedia/commons/thumb/b/b5/Windows_10_Default_Profile_Picture.svg/2048px-Windows_10_Default_Profile_Picture.svg.png") : NetworkImage(widget.forum.user.mainImage!),
+                onBackgroundImageError: (exception, stackTrace) {
+                  // Manejar error en caso de que la imagen no se pueda cargar
+                  setState(() {
+                    _imagenError = true;
+                  });
+                },
+              ),
+              SizedBox(height: 10),
               Text(
-                widget.forumPost.username,
+                widget.forum.user.id.toString(),
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 16,
                 ),
               ),
               SizedBox(height: 8),
-              Text(widget.forumPost.content),
+              Text(widget.forum.description),
               SizedBox(height: 8),
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
@@ -53,13 +65,13 @@ class ForumPostCardState extends State<ForumPostCard> {
                           _likePost();
                         },
                       ),
-                      Text('${widget.forumPost.likes}'),
+                      Text('${widget.forum.likes}'),
                       const SizedBox(
                         width: 15,
                       ),
                       Icon(Icons.comment),
                       SizedBox(width: 5),
-                      Text('${widget.forumPost.comments.length}'),
+                      Text('${widget.forum.posts.length}'),
                       const SizedBox(
                         width: 10,
                       ),
@@ -75,7 +87,7 @@ class ForumPostCardState extends State<ForumPostCard> {
   }
 
   void _likePost() {
-    // Implementa la lógica para dar "me gusta" al post
+    // Aquí puedes implementar la lógica para dar "me gusta" al post en tu API
   }
 
   void _showPostDetails() {
@@ -84,7 +96,7 @@ class ForumPostCardState extends State<ForumPostCard> {
         pageBuilder: (context, animation, secondaryAnimation) {
           return FadeTransition(
             opacity: animation,
-            child: PostDetailsPage(forumPost: widget.forumPost),
+            child: PostDetailsPage(forumPost: widget.forum),
           );
         },
       ),
