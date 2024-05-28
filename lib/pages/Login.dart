@@ -203,7 +203,7 @@ class _RegisterPageState extends State<RegisterPage> {
                 const Text(
                   'Registro de Usuario',
                   style: TextStyle(
-                    fontFamily: 'Comforta',
+                    fontFamily: 'Comfortaa',
                     color: Colors.blueAccent,
                     fontSize: 20.0,
                     fontWeight: FontWeight.bold,
