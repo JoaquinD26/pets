@@ -13,12 +13,16 @@ class ForumPostCard extends StatefulWidget {
 
 class ForumPostCardState extends State<ForumPostCard> {
   bool _liked = false;
-  late bool _imagenError = false;
+  bool _imagenError = false;
 
   @override
   Widget build(BuildContext context) {
     return Card(
       margin: EdgeInsets.all(10),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(15.0),
+      ),
+      elevation: 5,
       child: InkWell(
         onTap: () {
           _showPostDetails();
@@ -28,35 +32,65 @@ class ForumPostCardState extends State<ForumPostCard> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              CircleAvatar(
-                radius: 20, // Tamaño del círculo
-                backgroundImage: _imagenError ? NetworkImage("https://upload.wikimedia.org/wikipedia/commons/thumb/b/b5/Windows_10_Default_Profile_Picture.svg/2048px-Windows_10_Default_Profile_Picture.svg.png") : NetworkImage(widget.forum.user.mainImage!),
-                onBackgroundImageError: (exception, stackTrace) {
-                  // Manejar error en caso de que la imagen no se pueda cargar
-                  setState(() {
-                    _imagenError = true;
-                  });
-                },
+              Row(
+                children: [
+                  CircleAvatar(
+                    radius: 25,
+                    backgroundImage: _imagenError
+                        ? NetworkImage("https://upload.wikimedia.org/wikipedia/commons/thumb/b/b5/Windows_10_Default_Profile_Picture.svg/2048px-Windows_10_Default_Profile_Picture.svg.png")
+                        : NetworkImage(widget.forum.user.mainImage ?? "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b5/Windows_10_Default_Profile_Picture.svg/2048px-Windows_10_Default_Profile_Picture.svg.png"),
+                    onBackgroundImageError: (exception, stackTrace) {
+                      setState(() {
+                        _imagenError = true;
+                      });
+                    },
+                  ),
+                  SizedBox(width: 10),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        widget.forum.user.name!, // Assuming 'name' exists in the User model
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18,
+                        ),
+                      ),
+                      Text(
+                        widget.forum.date.toLocal().toString().split(' ')[0],
+                        style: TextStyle(
+                          color: Colors.grey,
+                          fontSize: 14,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+              SizedBox(height: 15),
+              Text(
+                widget.forum.name, // Assuming 'name' is the title of the forum
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
               SizedBox(height: 10),
               Text(
-                widget.forum.user.id.toString(),
+                widget.forum.description,
                 style: TextStyle(
-                  fontWeight: FontWeight.bold,
                   fontSize: 16,
                 ),
               ),
-              SizedBox(height: 8),
-              Text(widget.forum.description),
-              SizedBox(height: 8),
+              SizedBox(height: 10),
               Row(
-                mainAxisAlignment: MainAxisAlignment.end,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Row(
                     children: [
                       IconButton(
                         icon: _liked
-                            ? Icon(color: Colors.red, Icons.favorite)
+                            ? Icon(Icons.favorite, color: Colors.red)
                             : Icon(Icons.favorite_border),
                         onPressed: () {
                           setState(() {
@@ -66,15 +100,13 @@ class ForumPostCardState extends State<ForumPostCard> {
                         },
                       ),
                       Text('${widget.forum.likes}'),
-                      const SizedBox(
-                        width: 15,
-                      ),
+                    ],
+                  ),
+                  Row(
+                    children: [
                       Icon(Icons.comment),
                       SizedBox(width: 5),
                       Text('${widget.forum.posts.length}'),
-                      const SizedBox(
-                        width: 10,
-                      ),
                     ],
                   ),
                 ],
@@ -87,7 +119,7 @@ class ForumPostCardState extends State<ForumPostCard> {
   }
 
   void _likePost() {
-    // Aquí puedes implementar la lógica para dar "me gusta" al post en tu API
+    // Implement the logic to like the post in your API
   }
 
   void _showPostDetails() {

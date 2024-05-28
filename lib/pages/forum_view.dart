@@ -37,13 +37,13 @@ class ForumPageState extends State<ForumPage> {
           return Forum.fromJson(forumData);
         }).toList();
 
-        print("HHHHHHHHHHHHHHHHHHHHHHHHHHH");
-        print(loadedForums[0].description);
-        print("HHHHHHHHHHHHHHHHHHHHHHHHHHH");
+       
         // Actualizar el estado con las publicaciones del foro obtenidas de la API
         setState(() {
           forums = loadedForums;
-
+        print("HHHHHHHHHHHHHHHHHHHHHHHHHHH");
+        print(forums.length);
+        print("HHHHHHHHHHHHHHHHHHHHHHHHHHH");
         });
       } else {
         // Si la solicitud no fue exitosa, imprimir el código de respuesta
