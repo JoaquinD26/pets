@@ -42,7 +42,7 @@ class LoginState extends State<LoginPage> {
                   ),
                 ),
                 const SizedBox(height: 20.0),
-                Image.asset("icon/icon.png", height: 150, width: double.infinity,),
+                Image.asset("icon/icon.png", height: 150, width: double.infinity,).animate().flipH(duration: Duration(milliseconds: 400), begin: 0, end: 8, delay: Duration(milliseconds: 100), curve: Curves.elasticInOut),
                 const SizedBox(height: 25.0),
                 _buildEmailTextField(),
                 const SizedBox(height: 25.0),
@@ -74,7 +74,7 @@ class LoginState extends State<LoginPage> {
           borderSide: BorderSide(color: Colors.orange),
         ),
       ),
-    ).animate().flip(duration: Duration(milliseconds: 400), begin: 0, end: 8, delay: Duration(milliseconds: 100), curve: Curves.elasticInOut);
+    ).animate().slideX(begin: -1);
   }
 
   Widget _buildPasswordTextField() {
@@ -92,7 +92,7 @@ class LoginState extends State<LoginPage> {
           borderSide: BorderSide(color: Colors.orange),
         ),
       ),
-    ).animate().flip(duration: Duration(milliseconds: 400), begin: 0, end: 8, delay: Duration(milliseconds: 100), curve: Curves.elasticInOut);
+    ).animate().slideX(begin: 1);
   }
 
   Widget _buildLoginButton() {
@@ -107,7 +107,7 @@ class LoginState extends State<LoginPage> {
         ),
       ),
       child: Text("Iniciar Sesión", style: TextStyle(color: Colors.white),),
-    ).animate(onInit: (controller) => Opacity(opacity: 0), onPlay: (controller) => Opacity(opacity: 1),).slideY(begin: 10 , duration: Duration(milliseconds: 370));
+    ).animate().slideY(begin: 10 , duration: Duration(milliseconds: 370));
   }
 
   Widget _buildRegisterLink() {
