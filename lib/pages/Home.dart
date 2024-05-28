@@ -33,7 +33,7 @@ class MyHomePageState extends State<MyHomePage> {
     _pages = [
       MyPetsView(userLog: widget.user),
       ProductView(user: widget.user,),
-      ForumPage(),
+      ForumPage(userLog: widget.user,),
       ProfileView(userLog: widget.user),
     ];
   }
