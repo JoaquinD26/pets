@@ -33,7 +33,7 @@ class MyPetsViewState extends State<MyPetsView> {
     if (response.statusCode == 200) {
       final user = User.fromJson(json.decode(response.body));
       setState(() {
-        mascotas = user.pets!;
+        mascotas = user.pets;
       });
       return user;
     } else {

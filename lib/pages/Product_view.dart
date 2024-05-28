@@ -3,9 +3,9 @@
 import 'package:flutter/material.dart';
 import 'package:pets/models/user.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:pets/pages/products/CategoriesWidget.dart';
-import 'package:pets/pages/products/NewestItemsWidget.dart';
-import 'package:pets/pages/products/PopularItemsWidget.dart';
+import 'package:pets/pages/products/categories_widget.dart';
+import 'package:pets/pages/products/newest_items_widget.dart';
+import 'package:pets/pages/products/popular_iems_widget.dart';
 
 
 
@@ -64,7 +64,7 @@ class _ProductViewState extends State<ProductView> {
                     ),
                     SizedBox(
                       height: 50,
-                      width: 380,
+                      width: 300,
                       child: Padding(
                         padding: EdgeInsets.symmetric(
                           horizontal: 15,
@@ -77,7 +77,6 @@ class _ProductViewState extends State<ProductView> {
                         ),
                       ),
                     ),
-                    Icon(Icons.filter_list),
                   ],
                 ),
               ),
