@@ -4,7 +4,7 @@ import 'package:pets/models/user.dart';
 import 'package:pets/pages/forum_view.dart';
 import 'package:pets/pages/my_pets_view.dart';
 import 'package:pets/pages/profile_view.dart';
-import 'package:pets/pages/Product_view.dart';
+import 'package:pets/pages/product_view.dart';
 import 'package:pets/providers/view_provider.dart';
 import 'package:provider/provider.dart';
 

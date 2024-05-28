@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-import 'package:pets/models/Product.dart';
-import 'package:pets/pages/products/ItemPage.dart';
+import 'package:pets/models/product.dart';
+import 'package:pets/pages/products/item_page.dart';
 
 class NewestItemsWidget extends StatelessWidget {
   const NewestItemsWidget({Key? key}) : super(key: key);
