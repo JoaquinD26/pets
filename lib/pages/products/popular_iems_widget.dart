@@ -1,21 +1,30 @@
-// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
-
 import 'package:flutter/material.dart';
-import 'package:pets/pages/products/item_page.dart';
+import 'package:pets/models/Product.dart';
+import 'package:pets/pages/products/ItemPage.dart'; // Importa el modelo Product
 
 class PopularItemsWidget extends StatelessWidget {
-  const PopularItemsWidget({super.key});
+  const PopularItemsWidget({Key? key}) : super(key: key);
 
-    @override
+  @override
   Widget build(BuildContext context) {
+    List<Product> products = [
+      Product(
+        id: 1,
+        name: "Pedigree",
+        description: "Taste Our food",
+        price: 15,
+        imageUrl: "images/comidaPerro.png",
+      ),
+      // Agrega más productos aquí según tu lógica de obtención de datos
+    ];
+
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       child: Padding(
         padding: EdgeInsets.symmetric(vertical: 15, horizontal: 5),
         child: Row(
-          children: List.generate(10, (index) =>
-            // Single Item
-            Padding(
+          children: products.map((product) {
+            return Padding(
               padding: EdgeInsets.symmetric(horizontal: 7),
               child: Container(
                 width: 200,
@@ -50,14 +59,14 @@ class PopularItemsWidget extends StatelessWidget {
                         child: Container(
                           alignment: Alignment.center,
                           child: Image.asset(
-                            "images/comidaPerro.png",
+                            product.imageUrl,
                             height: 130,
                           ),
                         ),
                       ),
                       SizedBox(height: 8), // Add some space between image and text
                       Text(
-                        "Pedigree",
+                        product.name,
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           fontSize: 20,
@@ -66,7 +75,7 @@ class PopularItemsWidget extends StatelessWidget {
                       ),
                       SizedBox(height: 4),
                       Text(
-                        "Taste Our food",
+                        product.description,
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           fontSize: 15,
@@ -78,7 +87,7 @@ class PopularItemsWidget extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
-                            "10€",
+                            "${product.price.toString()}€",
                             style: TextStyle(
                               fontSize: 17,
                               color: Colors.red,
@@ -96,11 +105,10 @@ class PopularItemsWidget extends StatelessWidget {
                   ),
                 ),
               ),
-            ),
-          ),
+            );
+          }).toList(),
         ),
       ),
     );
   }
 }
-

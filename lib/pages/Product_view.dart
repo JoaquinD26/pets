@@ -64,7 +64,7 @@ class _ProductViewState extends State<ProductView> {
                     ),
                     SizedBox(
                       height: 50,
-                      width: 380,
+                      width: 300,
                       child: Padding(
                         padding: EdgeInsets.symmetric(
                           horizontal: 15,
@@ -77,7 +77,6 @@ class _ProductViewState extends State<ProductView> {
                         ),
                       ),
                     ),
-                    Icon(Icons.filter_list),
                   ],
                 ),
               ),
