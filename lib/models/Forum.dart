@@ -1,5 +1,5 @@
 import 'package:pets/models/Post.dart';
-import 'package:pets/models/User.dart';
+import 'package:pets/models/user.dart';
 
 class Forum {
   final int id;

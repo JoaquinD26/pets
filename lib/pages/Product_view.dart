@@ -3,9 +3,9 @@
 import 'package:flutter/material.dart';
 import 'package:pets/models/user.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:pets/pages/products/CategoriesWidget.dart';
-import 'package:pets/pages/products/NewestItemsWidget.dart';
-import 'package:pets/pages/products/PopularItemsWidget.dart';
+import 'package:pets/pages/products/categories_widget.dart';
+import 'package:pets/pages/products/newest_items_widget.dart';
+import 'package:pets/pages/products/popular_iems_widget.dart';
 
 
 

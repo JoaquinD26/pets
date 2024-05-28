@@ -1,7 +1,7 @@
 // ignore_for_file: prefer_const_constructors
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-import 'package:pets/pages/products/ItemPage.dart';
+import 'package:pets/pages/products/item_page.dart';
 
 class NewestItemsWidget extends StatelessWidget {
   const NewestItemsWidget({super.key});

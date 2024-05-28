@@ -1,7 +1,10 @@
 import 'dart:async';
 import 'dart:convert';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:http/http.dart' as http;
 import 'package:pets/models/user.dart';
 import 'package:pets/pages/home.dart';
@@ -29,26 +32,17 @@ class LoginState extends State<LoginPage> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Text(
+                Text(
                   "Pets",
                   textAlign: TextAlign.center,
                   style: TextStyle(
-                    fontFamily: 'Comfortaa',
-                    color: Colors.blueAccent,
+                    color: Colors.deepOrange[400],
                     fontSize: 40,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
                 const SizedBox(height: 20.0),
-                const Text(
-                  'Inicio de Sesión',
-                  style: TextStyle(
-                    fontFamily: 'Comfortaa',
-                    color: Colors.blueAccent,
-                    fontSize: 20.0,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
+                Image.asset("icon/icon.png", height: 150, width: double.infinity,),
                 const SizedBox(height: 25.0),
                 _buildEmailTextField(),
                 const SizedBox(height: 25.0),
@@ -65,26 +59,40 @@ class LoginState extends State<LoginPage> {
     );
   }
 
-  Widget _buildEmailTextField() {
+   Widget _buildEmailTextField() {
     return TextField(
       controller: _emailController,
-      decoration: const InputDecoration(
+      decoration: InputDecoration(
         prefixIcon: Icon(Icons.email_outlined),
         labelText: "Email",
         hintText: "Joaquindiazlidon@gmail.com",
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12.0),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12.0),
+          borderSide: BorderSide(color: Colors.orange),
+        ),
       ),
-    );
+    ).animate().flip(duration: Duration(milliseconds: 400), begin: 0, end: 8, delay: Duration(milliseconds: 100), curve: Curves.elasticInOut);
   }
 
   Widget _buildPasswordTextField() {
     return TextField(
       controller: _passwordController,
       obscureText: true,
-      decoration: const InputDecoration(
+      decoration: InputDecoration(
         prefixIcon: Icon(Icons.password_outlined),
         labelText: "Password",
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12.0),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12.0),
+          borderSide: BorderSide(color: Colors.orange),
+        ),
       ),
-    );
+    ).animate().flip(duration: Duration(milliseconds: 400), begin: 0, end: 8, delay: Duration(milliseconds: 100), curve: Curves.elasticInOut);
   }
 
   Widget _buildLoginButton() {
@@ -92,8 +100,14 @@ class LoginState extends State<LoginPage> {
       onPressed: () {
         signIn(_emailController.text, _passwordController.text);
       },
-      child: const Text("Iniciar Sesión"),
-    );
+      style: ElevatedButton.styleFrom(
+        backgroundColor: Colors.deepOrange[400],
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12.0),
+        ),
+      ),
+      child: Text("Iniciar Sesión", style: TextStyle(color: Colors.white),),
+    ).animate(onInit: (controller) => Opacity(opacity: 0), onPlay: (controller) => Opacity(opacity: 1),).slideY(begin: 10 , duration: Duration(milliseconds: 370));
   }
 
   Widget _buildRegisterLink() {
@@ -105,10 +119,10 @@ class LoginState extends State<LoginPage> {
           MaterialPageRoute(builder: (context) => RegisterPage()),
         );
       },
-      child: const Text(
+      child: Text(
         '¿No tienes una cuenta? Regístrate',
         style: TextStyle(
-          color: Colors.blue,
+          color: Colors.deepOrange[300],
           fontWeight: FontWeight.bold,
         ),
       ),
