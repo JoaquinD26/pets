@@ -25,10 +25,10 @@ class Forum {
   factory Forum.fromJson(Map<String, dynamic> json) {
     return Forum(
       id: json['id'],
-      name: json['name'],
-      date: DateTime.parse(json['date']),
-      likes: json['likes'],
-      description: json['description'],
+      name: json['name']?? 'default',
+      date: DateTime.parse(json['date']) ?? DateTime.now(),
+      likes: json['likes']?? 0,
+      description: json['description'] ?? 'default',
       user: json['user'], 
       posts: json['posts'] ?? [],
     );

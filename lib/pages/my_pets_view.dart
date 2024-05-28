@@ -142,7 +142,7 @@ class MyPetsViewState extends State<MyPetsView> {
         autoPlay: true,
         aspectRatio: 16 / 9,
         autoPlayCurve: Curves.fastOutSlowIn,
-        enableInfiniteScroll: true,
+        enableInfiniteScroll: mascotas.length == 1 ? false : true,
         autoPlayAnimationDuration: const Duration(milliseconds: 800),
         viewportFraction: 0.8,
         onPageChanged: (index, _) {
