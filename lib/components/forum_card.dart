@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:pets/components/posts_from_forum.dart'; // Asegúrate de importar correctamente tu componente CommentDetailsPage
+import 'package:pets/components/posts_from_forum.dart';
 import 'package:pets/models/forum.dart';
 
 class ForumPostCard extends StatefulWidget {
   final Forum forum;
 
-  const ForumPostCard({super.key, required this.forum});
+  const ForumPostCard({required this.forum});
 
   @override
   ForumPostCardState createState() => ForumPostCardState();
@@ -30,7 +30,10 @@ class ForumPostCardState extends State<ForumPostCard> {
             children: [
               CircleAvatar(
                 radius: 20, // Tamaño del círculo
-                backgroundImage: _imagenError ? NetworkImage("https://upload.wikimedia.org/wikipedia/commons/thumb/b/b5/Windows_10_Default_Profile_Picture.svg/2048px-Windows_10_Default_Profile_Picture.svg.png") : NetworkImage(widget.forum.user.mainImage!),
+                backgroundImage: _imagenError
+                    ? NetworkImage(
+                        "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b5/Windows_10_Default_Profile_Picture.svg/2048px-Windows_10_Default_Profile_Picture.svg.png")
+                    : NetworkImage(widget.forum.user.mainImage!),
                 onBackgroundImageError: (exception, stackTrace) {
                   // Manejar error en caso de que la imagen no se pueda cargar
                   setState(() {
@@ -55,9 +58,10 @@ class ForumPostCardState extends State<ForumPostCard> {
                   Row(
                     children: [
                       IconButton(
-                        icon: _liked
-                            ? Icon(color: Colors.red, Icons.favorite)
-                            : Icon(Icons.favorite_border),
+                        icon: Icon(
+                          _liked ? Icons.favorite : Icons.favorite_border,
+                          color: _liked ? Colors.red : null,
+                        ),
                         onPressed: () {
                           setState(() {
                             _liked = !_liked;
@@ -65,7 +69,7 @@ class ForumPostCardState extends State<ForumPostCard> {
                           _likePost();
                         },
                       ),
-                      Text('${widget.forum.likes}'),
+                      Text('${widget.forum.likes ?? 0}'), // Evita errores si likes es null
                       const SizedBox(
                         width: 15,
                       ),

@@ -18,8 +18,8 @@ class NewestItemsWidget extends StatelessWidget {
               Padding(
                 padding: EdgeInsets.symmetric(vertical: 10),
                 child: Container(
-                  width: 450,
-                  height: 200,
+                  width: 390,
+                  height: 190,
                   decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(10),

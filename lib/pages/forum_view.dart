@@ -1,12 +1,16 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:pets/components/forum_card.dart';
+import 'package:pets/models/user.dart';
 import 'package:pets/models/forum.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class ForumPage extends StatefulWidget {
   static String id = "forum_page";
-  const ForumPage({super.key});
+  final User userLog;
+
+  ForumPage({required this.userLog, super.key});
 
   @override
   ForumPageState createState() => ForumPageState();
@@ -14,6 +18,7 @@ class ForumPage extends StatefulWidget {
 
 class ForumPageState extends State<ForumPage> {
   List<Forum> forums = [];
+  String post = 'Mensaje nulo';
 
   @override
   void initState() {
@@ -22,31 +27,26 @@ class ForumPageState extends State<ForumPage> {
     loadForums();
   }
 
-  void loadForums() async {
+  Future<void> loadForums() async {
     try {
-      // Realizar la solicitud HTTP GET a la API
       var response = await http.get(Uri.parse('http://localhost:3000/forum'));
 
-      // Verificar si la solicitud fue exitosa (código de respuesta 200)
       if (response.statusCode == 200) {
-        // Decodificar la cadena JSON
         List<dynamic> jsonData = json.decode(response.body);
 
-        // Crear objetos Forum
         List<Forum> loadedForums = jsonData.map((forumData) {
           return Forum.fromJson(forumData);
         }).toList();
 
-        // Actualizar el estado con las publicaciones del foro obtenidas de la API
         setState(() {
           forums = loadedForums;
+          print(forums[0].description);
         });
       } else {
-        // Si la solicitud no fue exitosa, imprimir el código de respuesta
-        print('Error al cargar los foros. Código de respuesta: ${response.statusCode}');
+        print(
+            'Error al cargar los foros. Código de respuesta: ${response.statusCode}');
       }
     } catch (e) {
-      // Manejar cualquier error que ocurra durante la solicitud
       print('Error al cargar los foros: $e');
     }
   }
@@ -128,7 +128,8 @@ class ForumPageState extends State<ForumPage> {
                 SizedBox(height: 16.0),
                 ElevatedButton(
                   onPressed: () {
-                    String post = postController.text;
+                    post = postController.text;
+
                     // Implementa la lógica para enviar el comentario al servidor
                     _postPost(post);
                     Navigator.pop(context);
@@ -143,7 +144,38 @@ class ForumPageState extends State<ForumPage> {
     );
   }
 
-  void _postPost(String post) {
-    // Implementa aquí la lógica para enviar el comentario al servidor
+  Future<void> _postPost(String post) async {
+    try {
+      // Construir el cuerpo de la solicitud
+      Map<String, dynamic> body = {
+        'name': widget.userLog.name,
+        "description": post,
+        "user": {"id": widget.userLog.id}
+      };
+
+      // Realizar la solicitud POST al servidor
+      var response = await http.post(
+        Uri.parse('http://localhost:3000/forum'),
+        body: jsonEncode(body),
+        headers: {'Content-Type': 'application/json'},
+      );
+
+      // Verificar si la solicitud fue exitosa
+      if (response.statusCode == 200) {
+        // Usuario autenticado exitosamente
+
+        // Decodificar la respuesta JSON y crear una instancia de User
+
+        if (kDebugMode) {
+          print('Comentario Añadido');
+        }
+        // Aquí puedes navegar a la pantalla de inicio de sesión o realizar otras acciones
+      } else {
+        // Error al registrar usuario
+        print('Error al añadir foro: ${response.reasonPhrase}');
+      }
+    } catch (e) {
+      print('Error al añadir foro: $e');
+    }
   }
 }

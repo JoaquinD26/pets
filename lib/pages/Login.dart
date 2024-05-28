@@ -119,7 +119,7 @@ class LoginState extends State<LoginPage> {
   try {
     // Construir el cuerpo de la solicitud
     Map<String, dynamic> body = {
-      'email': email,
+      'email': email.toLowerCase(),
       'password': password,
     };
 

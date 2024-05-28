@@ -11,9 +11,9 @@ import 'package:provider/provider.dart';
 
 class MyHomePage extends StatefulWidget {
   final String id = "home_page";
-  final User user;
+  User user;
 
-  const MyHomePage({
+  MyHomePage({
     super.key,
     required this.user,
   });
@@ -33,7 +33,7 @@ class MyHomePageState extends State<MyHomePage> {
     _pages = [
       MyPetsView(userLog: widget.user),
       ProductView(user: widget.user,),
-      ForumPage(),
+      ForumPage(userLog: widget.user),
       ProfileView(userLog: widget.user),
     ];
   }
