@@ -50,7 +50,7 @@ class ItemPage extends StatelessWidget {
                               onRatingUpdate: (index) {},
                             ),
                             Text(
-                              "10€",
+                              "10€ ",
                               style: TextStyle(
                                 fontSize: 20,
                                 fontWeight: FontWeight.bold,
