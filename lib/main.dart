@@ -34,7 +34,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepOrange),
         primarySwatch: Colors.brown,
-        hintColor: Colors.black, // Cambiar el color de acento a azul
+        hintColor: Colors.grey, // Cambiar el color de acento a azul
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
       initialRoute: LoginPage.id,
