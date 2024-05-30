@@ -4,10 +4,14 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:http/http.dart' as http;
 import 'package:pets/models/user.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:pets/pages/Login.dart';
 import 'package:pets/pages/home.dart';
+import 'package:intl/intl.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({Key? key}) : super(key: key);
@@ -30,52 +34,90 @@ class _RegisterPageState extends State<RegisterPage> {
     return SafeArea(
       child: Scaffold(
         body: Center(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20.0),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Text(
-                  'Registro de Usuario',
-                  style: TextStyle(
-                    fontFamily: 'Comfortaa',
-                    color: Colors.orange,
-                    fontSize: 20.0,
-                    fontWeight: FontWeight.bold,
+          child: SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20.0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Text(
+                    'Registro de Usuario',
+                    style: TextStyle(
+                      fontFamily: 'Comfortaa',
+                      color: Colors.orange,
+                      fontSize: 20.0,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
-                ),
-                const SizedBox(height: 20.0),
-                Image.asset(
-                  "icon/icon.png",
-                  height: 150,
-                  width: double.infinity,
-                ).animate().flipH(
-                    duration: Duration(milliseconds: 400),
-                    begin: 0,
-                    end: 8,
-                    delay: Duration(milliseconds: 100),
-                    curve: Curves.elasticInOut),
-                const SizedBox(height: 15.0),
-                _buildTextField("Name", _nameController),
-                const SizedBox(height: 15.0),
-                _buildTextField("Apellidos", _lastNameController),
-                const SizedBox(height: 15.0),
-                _buildTextField("Dirección", _addressController),
-                const SizedBox(height: 15.0),
-                _buildTextField("Código Postal", _postalCodeController),
-                const SizedBox(height: 15.0),
-                _buildTextField("Fecha de Nacimiento", _birthdayController),
-                const SizedBox(height: 15.0),
-                _buildEmailTextField("Email", _emailController),
-                const SizedBox(height: 15.0),
-                _buildPasswordTextField("Contraseña", _passwordController),
-                _buildRegisterButton(),
-              ],
+                  const SizedBox(height: 20.0),
+                  Image.asset(
+                    "icon/icon.png",
+                    height: 130,
+                    width: double.infinity,
+                  ).animate().flipH(
+                      duration: Duration(milliseconds: 400),
+                      begin: 0,
+                      end: 8,
+                      delay: Duration(milliseconds: 100),
+                      curve: Curves.elasticInOut),
+                  const SizedBox(height: 10.0),
+                  _buildTextField("Name", _nameController),
+                  const SizedBox(height: 10.0),
+                  _buildTextField("Apellidos", _lastNameController),
+                  const SizedBox(height: 10.0),
+                  _buildTextField("Dirección", _addressController),
+                  const SizedBox(height: 10.0),
+                  _buildTextField("Código Postal", _postalCodeController),
+                  const SizedBox(height: 10.0),
+                  _buildDateField("Fecha de Nacimiento", _birthdayController),
+                  const SizedBox(height: 10.0),
+                  _buildEmailTextField("Email", _emailController),
+                  const SizedBox(height: 10.0),
+                  _buildPasswordTextField("Contraseña", _passwordController),
+                  _buildRegisterButton(),
+                  _buildLoginLink(),
+                ],
+              ),
             ),
           ),
         ),
       ),
     );
+  }
+
+  Widget _buildDateField(String labelText, TextEditingController controller) {
+    return GestureDetector(
+      onTap: () async {
+        final DateTime now = DateTime.now();
+        final DateTime? picked = await showDatePicker(
+          context: context,
+          initialDate: now,
+          firstDate: DateTime(1900),
+          lastDate: now, // Únicamente permite seleccionar fechas hasta hoy.
+          locale: Locale("es", "ES")
+        );
+        if (picked != null) {
+          final formattedDate = DateFormat('yyyy-MM-dd').format(picked);
+          controller.text = formattedDate;
+        }
+      },
+      child: AbsorbPointer(
+        child: TextField(
+          controller: controller,
+          keyboardType: TextInputType.datetime,
+          decoration: InputDecoration(
+            labelText: labelText,
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12.0),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12.0),
+              borderSide: BorderSide(color: Colors.orange),
+            ),
+          ),
+        ),
+      ),
+    ).animate().slideX(begin: -1);
   }
 
   Widget _buildTextField(String labelText, TextEditingController controller) {
@@ -95,13 +137,14 @@ class _RegisterPageState extends State<RegisterPage> {
     ).animate().slideX(begin: -1);
   }
 
-  Widget _buildEmailTextField(String labelText, TextEditingController controller) {
+  Widget _buildEmailTextField(
+      String labelText, TextEditingController controller) {
     return TextField(
       controller: _emailController,
       decoration: InputDecoration(
         prefixIcon: Icon(Icons.email_outlined),
         labelText: "Email",
-        hintText: "Joaquindiazlidon@gmail.com",
+        hintText: "Email@email.com",
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12.0),
         ),
@@ -113,7 +156,8 @@ class _RegisterPageState extends State<RegisterPage> {
     ).animate().slideX(begin: -1);
   }
 
-  Widget _buildPasswordTextField(String labelText, TextEditingController controller) {
+  Widget _buildPasswordTextField(
+      String labelText, TextEditingController controller) {
     return TextField(
       controller: _passwordController,
       obscureText: true,
@@ -159,7 +203,7 @@ class _RegisterPageState extends State<RegisterPage> {
                 ],
               ),
             );
-          } else if (!RegExp(r'^[a-zA-ZÀ-ÿ]{3,}$').hasMatch(_nameController.text)) {
+          } else if (!RegExp(r'^[a-zA-ZÀ-ÿ\s]{3,}$').hasMatch(_nameController.text)) {
             // Mostrar un mensaje de error si el nombre o los apellidos contienen caracteres que no son letras
             showDialog(
               context: context,
@@ -174,7 +218,7 @@ class _RegisterPageState extends State<RegisterPage> {
                 ],
               ),
             );
-          }else if (!RegExp(r'^[a-zA-ZÀ-ÿ]{3,}$').hasMatch(_lastNameController.text)) {
+          }else if (!RegExp(r'^[a-zA-ZÀ-ÿ\s]{3,}$').hasMatch(_lastNameController.text)) {
             // Mostrar un mensaje de error si el nombre o los apellidos contienen caracteres que no son letras
             showDialog(
               context: context,
@@ -281,6 +325,28 @@ class _RegisterPageState extends State<RegisterPage> {
       ),
     );
   }
+
+  Widget _buildLoginLink() {
+  return Container(
+    margin: EdgeInsets.only(top: 25.0), // Puedes ajustar el valor según lo que necesites
+    child: GestureDetector(
+      onTap: () {
+        // Navegar a la pantalla de registro
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => LoginPage()),
+        );
+      },
+      child: Text(
+        '¿Ya tienes cuenta? Inicia Sesión',
+        style: TextStyle(
+          color: Colors.deepOrange[300],
+          fontWeight: FontWeight.bold,
+        ),
+      ),
+    ),
+  );
+}
 
 
   Future<void> registerUser(String email, String password, String address,
