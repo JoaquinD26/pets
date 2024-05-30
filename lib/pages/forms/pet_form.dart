@@ -8,6 +8,7 @@ import 'package:pets/models/pet.dart';
 import 'package:http/http.dart' as http;
 import 'package:pets/models/user.dart';
 import 'package:pets/pages/home.dart';
+import 'package:pets/utils/custom_snackbar.dart';
 
 class AddPetForm extends StatefulWidget {
   final User user;
@@ -71,7 +72,7 @@ class AddPetFormState extends State<AddPetForm> {
                 ),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return 'Please enter the name';
+                   CustomSnackBar.show(context, 'Please enter the name', true);
                   }
                   return null;
                 },
@@ -85,7 +86,7 @@ class AddPetFormState extends State<AddPetForm> {
                 ),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return 'Please enter the animal';
+                   CustomSnackBar.show(context, 'Please enter the animal', true);
                   }
                   return null;
                 },
@@ -118,7 +119,7 @@ class AddPetFormState extends State<AddPetForm> {
                 ],
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return 'Please enter the weight';
+                   CustomSnackBar.show(context, 'Please enter the weight', true);
                   }
                   return null;
                 },
@@ -196,10 +197,7 @@ class AddPetFormState extends State<AddPetForm> {
                       });
                     } catch (e) {
                       // Manejar errores y mostrar mensaje de error
-                      print('Error adding pet: $e');
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text('Failed to add pet')),
-                      );
+                      CustomSnackBar.show(context, "Error al añadir la mascota", true);
                     }
                   }
                 },
@@ -285,9 +283,7 @@ class AddPetFormState extends State<AddPetForm> {
       // Verificar si la solicitud fue exitosa
       if (response.statusCode == 200) {
         // Mostrar un mensaje de éxito
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Pet connected to user successfully')),
-        );
+        CustomSnackBar.show(context, "Mascota añadida correctamente", false);
 
         Navigator.pushAndRemoveUntil(
         context,
@@ -316,7 +312,7 @@ class AddPetFormState extends State<AddPetForm> {
     if (petId != 0) {
       await _connectPetToUser(userId, petId);
     } else {
-      print('Failed to add pet :(');
+     CustomSnackBar.show(context, "No se pudo añadir la mascota", true);
     }
   }
 

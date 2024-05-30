@@ -12,6 +12,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:pets/pages/Login.dart';
 import 'package:pets/pages/home.dart';
 import 'package:intl/intl.dart';
+import 'package:pets/utils/custom_snackbar.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({Key? key}) : super(key: key);
@@ -90,12 +91,11 @@ class _RegisterPageState extends State<RegisterPage> {
       onTap: () async {
         final DateTime now = DateTime.now();
         final DateTime? picked = await showDatePicker(
-          context: context,
-          initialDate: now,
-          firstDate: DateTime(1900),
-          lastDate: now, // Únicamente permite seleccionar fechas hasta hoy.
-          locale: Locale("es", "ES")
-        );
+            context: context,
+            initialDate: now,
+            firstDate: DateTime(1900),
+            lastDate: now, // Únicamente permite seleccionar fechas hasta hoy.
+            locale: Locale("es", "ES"));
         if (picked != null) {
           final formattedDate = DateFormat('yyyy-MM-dd').format(picked);
           controller.text = formattedDate;
@@ -175,7 +175,6 @@ class _RegisterPageState extends State<RegisterPage> {
     ).animate().slideX(begin: -1);
   }
 
-
   Widget _buildRegisterButton() {
     return Container(
       margin: EdgeInsets.only(top: 20.0), // Ajusta el valor según sea necesario
@@ -189,117 +188,32 @@ class _RegisterPageState extends State<RegisterPage> {
               _lastNameController.text.isEmpty ||
               _postalCodeController.text.isEmpty ||
               _nameController.text.isEmpty) {
-            // Mostrar un diálogo o un mensaje de error si algún campo está vacío
-            showDialog(
-              context: context,
-              builder: (context) => AlertDialog(
-                title: Text('Error'),
-                content: Text('Por favor complete todos los campos.'),
-                actions: [
-                  TextButton(
-                    onPressed: () => Navigator.pop(context),
-                    child: Text('OK'),
-                  ),
-                ],
-              ),
-            );
-          } else if (!RegExp(r'^[a-zA-ZÀ-ÿ\s]{3,}$').hasMatch(_nameController.text)) {
-            // Mostrar un mensaje de error si el nombre o los apellidos contienen caracteres que no son letras
-            showDialog(
-              context: context,
-              builder: (context) => AlertDialog(
-                title: Text('Error'),
-                content: Text('El nombre debe contener solo letras y tener al menos 3 caracteres.'),
-                actions: [
-                  TextButton(
-                    onPressed: () => Navigator.pop(context),
-                    child: Text('OK'),
-                  ),
-                ],
-              ),
-            );
-          }else if (!RegExp(r'^[a-zA-ZÀ-ÿ\s]{3,}$').hasMatch(_lastNameController.text)) {
-            // Mostrar un mensaje de error si el nombre o los apellidos contienen caracteres que no son letras
-            showDialog(
-              context: context,
-              builder: (context) => AlertDialog(
-                title: Text('Error'),
-                content: Text('El apellido debe contener solo letras y tener al menos 3 caracteres.'),
-                actions: [
-                  TextButton(
-                    onPressed: () => Navigator.pop(context),
-                    child: Text('OK'),
-                  ),
-                ],
-              ),
-            );
-          }
-          else if (!RegExp(r'^(?=.*\d)[a-zA-Z0-9À-ÿ\s,.\-]{4,}$').hasMatch(_addressController.text)) {
-            // Mostrar un mensaje de error si el nombre o los apellidos contienen caracteres que no son letras
-            showDialog(
-              context: context,
-              builder: (context) => AlertDialog(
-                title: Text('Error'),
-                content: Text('La dirección tiene que tener numero y tener al menos 4 caracteres'),
-                actions: [
-                  TextButton(
-                    onPressed: () => Navigator.pop(context),
-                    child: Text('OK'),
-                  ),
-                ],
-              ),
-            );
-          }
-          else if (!RegExp(r'^\d{5}$').hasMatch(_postalCodeController.text)) {
-            // Mostrar un mensaje de error si el nombre o los apellidos contienen caracteres que no son letras
-            showDialog(
-              context: context,
-              builder: (context) => AlertDialog(
-                title: Text('Error'),
-                content: Text('El Código Postal tiene que tener 5 digitos'),
-                actions: [
-                  TextButton(
-                    onPressed: () => Navigator.pop(context),
-                    child: Text('OK'),
-                  ),
-                ],
-              ),
-            );
-          }
-          else if (!RegExp(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$').hasMatch(_emailController.text)) {
-            // Mostrar un mensaje de error si el nombre o los apellidos contienen caracteres que no son letras
-            showDialog(
-              context: context,
-              builder: (context) => AlertDialog(
-                title: Text('Error'),
-                content: Text('El formato del email introducido es incorrecto'),
-                actions: [
-                  TextButton(
-                    onPressed: () => Navigator.pop(context),
-                    child: Text('OK'),
-                  ),
-                ],
-              ),
-            );
-          }
-          else if (!RegExp(r'^(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{6,}$').hasMatch(_passwordController.text)) {
-            // Mostrar un mensaje de error si el nombre o los apellidos contienen caracteres que no son letras
-            showDialog(
-              context: context,
-              builder: (context) => AlertDialog(
-                title: Text('Error'),
-                content: Text('La contraseña debe tener al menos una mayúscula, más de cinco caracteres y al menos un dígito.'),
-                actions: [
-                  TextButton(
-                    onPressed: () => Navigator.pop(context),
-                    child: Text('OK'),
-                  ),
-                ],
-              ),
-            );
-          }
-          else {
-                    
+            CustomSnackBar.show(context, 'Por favor complete todos los campos.', true);
+          } else if (!RegExp(r'^[a-zA-ZÀ-ÿ\s]{3,}$')
+              .hasMatch(_nameController.text)) {
+            CustomSnackBar.show(context,
+                'El nombre debe contener solo letras y tener al menos 3 caracteres.', true);
+          } else if (!RegExp(r'^[a-zA-ZÀ-ÿ\s]{3,}$')
+              .hasMatch(_lastNameController.text)) {
+            CustomSnackBar.show(context,
+                'El apellido debe contener solo letras y tener al menos 3 caracteres.', true);
+          } else if (!RegExp(r'^(?=.*\d)[a-zA-Z0-9À-ÿ\s,.\-]{4,}$')
+              .hasMatch(_addressController.text)) {
+            CustomSnackBar.show(context,
+                'La dirección tiene que tener numero y tener al menos 4 caracteres', true);
+          } else if (!RegExp(r'^\d{5}$').hasMatch(_postalCodeController.text)) {
+            CustomSnackBar.show(
+                context, 'El Código Postal tiene que tener 5 digitos', true);
+          } else if (!RegExp(
+                  r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$')
+              .hasMatch(_emailController.text)) {
+            CustomSnackBar.show(
+                context, 'El formato del email introducido es incorrecto', true);
+          } else if (!RegExp(r'^(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{6,}$')
+              .hasMatch(_passwordController.text)) {
+            CustomSnackBar.show(context,
+                'La contraseña debe tener al menos una mayúscula, más de cinco caracteres y al menos un dígito.', true);
+          } else {
             // Todos los campos están completos y la contraseña cumple con el patrón, proceder con el registro
             registerUser(
               _emailController.text,
@@ -327,27 +241,27 @@ class _RegisterPageState extends State<RegisterPage> {
   }
 
   Widget _buildLoginLink() {
-  return Container(
-    margin: EdgeInsets.only(top: 25.0), // Puedes ajustar el valor según lo que necesites
-    child: GestureDetector(
-      onTap: () {
-        // Navegar a la pantalla de registro
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => LoginPage()),
-        );
-      },
-      child: Text(
-        '¿Ya tienes cuenta? Inicia Sesión',
-        style: TextStyle(
-          color: Colors.deepOrange[300],
-          fontWeight: FontWeight.bold,
+    return Container(
+      margin: EdgeInsets.only(
+          top: 25.0), // Puedes ajustar el valor según lo que necesites
+      child: GestureDetector(
+        onTap: () {
+          // Navegar a la pantalla de registro
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => LoginPage()),
+          );
+        },
+        child: Text(
+          '¿Ya tienes cuenta? Inicia Sesión',
+          style: TextStyle(
+            color: Colors.deepOrange[300],
+            fontWeight: FontWeight.bold,
+          ),
         ),
       ),
-    ),
-  );
-}
-
+    );
+  }
 
   Future<void> registerUser(String email, String password, String address,
       String birthday, String lastName, String postalCode, String name) async {

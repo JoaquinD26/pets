@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:pets/pages/login.dart';
@@ -13,26 +12,29 @@ void main() {
     ),
   );
 }
+
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  const MyApp({Key? key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-       localizationsDelegates: [
-      GlobalMaterialLocalizations.delegate,
-      GlobalWidgetsLocalizations.delegate,
-      GlobalCupertinoLocalizations.delegate,
-  ],
-  supportedLocales: [
-    const Locale('en', ''), // English
-    const Locale('es', ''), // Spanish
-    // Add other supported locales here
-  ],
-  locale: Locale('es'), // Set a default locale if needed
+      localizationsDelegates: [
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      supportedLocales: [
+        const Locale('en', ''), // English
+        const Locale('es', ''), // Spanish
+        // Add other supported locales here
+      ],
+      locale: Locale('es'), // Set a default locale if needed
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepOrange),
+        primarySwatch: Colors.brown,
+        hintColor: Colors.black, // Cambiar el color de acento a azul
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
       initialRoute: LoginPage.id,
