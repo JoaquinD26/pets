@@ -1,5 +1,6 @@
+
+import 'package:pets/models/User.dart';
 import 'package:pets/models/post.dart';
-import 'package:pets/models/user.dart';
 
 class Forum {
   final int id;
@@ -22,25 +23,13 @@ class Forum {
 
   // Factory constructor to create a Forum from JSON
   factory Forum.fromJson(Map<String, dynamic> json) {
-
-    // Si el campo user ya es un Map, no es necesario decodificarlo nuevamente.
     User user = User.fromJson(json['user']);
-
-    // // Mapear la lista de posts
-    // List<Post> posts = (jsonDecode(json['post']) as List<dynamic>).map((post) => Post.fromJson(post)).toList();
-
-    // List<dynamic> jsonData = jsonDecode(json['post']);
-
-    List<dynamic> jsonData = json['post'];
+    List<dynamic> jsonData = json['posts'] ?? [];
 
     List<Post> postsForum = [];
-
-    // Verifica si jsonData es una lista y no está vacía
     if (jsonData.isNotEmpty) {
-      // Si jsonData es una lista y no está vacía, convierte cada elemento en un objeto Post
       postsForum = jsonData.map((postData) => Post.fromJson(postData)).toList();
     } else {
-      // Si jsonData no es una lista o está vacía, imprime un mensaje o toma alguna acción adecuada
       print('No hay posts disponibles.');
     }
 
@@ -63,7 +52,8 @@ class Forum {
       'date': date.toIso8601String(),
       'likes': likes,
       'description': description,
-      'user': user,
+      'user': user.toJson(), // Assuming User class has a toJson method
+      'posts': posts.map((post) => post.toJson()).toList(), // Assuming Post class has a toJson method
     };
   }
 }

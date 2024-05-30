@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:pets/components/forum_card.dart';
 import 'package:pets/models/forum.dart';
 import 'dart:convert';
@@ -159,11 +160,21 @@ class ForumPageState extends State<ForumPage> {
 
   Future<void> _postPost(String post) async {
     try {
+
+
+      DateFormat formatter = DateFormat('yyyy-MM-dd HH:mm:ss');
+      var fechaDeHoy = formatter.format(DateTime.now());
+
+      if(kDebugMode){
+          print(fechaDeHoy);
+      }
+      
       // Construir el cuerpo de la solicitud
       Map<String, dynamic> body = {
         "name": widget.userLog.name,
         "description": post,
-        "user": {"id": widget.userLog.id}
+        "user": {"id": widget.userLog.id},
+        "likes": "0",
       };
 
       // Realizar la solicitud POST al servidor
