@@ -1,105 +1,150 @@
+import 'dart:convert';
+
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+
 import 'package:pets/models/forum.dart';
+import 'package:pets/models/post.dart';
+import 'package:pets/models/user.dart';
+import 'package:http/http.dart' as http;
 
 class PostDetailsPage extends StatefulWidget {
   final Forum forumPost;
+  final User userLog;
 
-  const PostDetailsPage({super.key, required this.forumPost});
+  PostDetailsPage({super.key, required this.forumPost, required this.userLog});
 
   @override
   PostDetailsPageState createState() => PostDetailsPageState();
 }
 
+Future<List<Post>> fetchPostsForForum(int forumId) async {
+  try {
+    final response = await http.get(
+      Uri.parse('http://localhost:3000/post/forum/$forumId'),
+    );
+
+    if (response.statusCode == 200) {
+      final List<dynamic> responseData = json.decode(response.body);
+      // Mapea los datos de la respuesta a objetos Post
+      List<Post> posts =
+          responseData.map((data) => Post.fromJson(data)).toList();
+      return posts;
+    } else {
+      throw Exception(
+          'Failed to load posts for forum: ${response.reasonPhrase}');
+    }
+  } catch (e) {
+    throw Exception('Failed to load posts for forum: $e');
+  }
+}
+
 class PostDetailsPageState extends State<PostDetailsPage> {
+  List<Post> postsList = [];
+
   TextEditingController replyController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    _loadComments();
+  }
+
+  Future<void> _loadComments() async {
+    try {
+      List<Post> posts = await fetchPostsForForum(widget.forumPost.id);
+
+      setState(() {
+        postsList = posts;
+      });
+    } catch (e) {
+      print('Error loading comments: $e');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: Text('Detalles del Post'),
+      ),
       backgroundColor: Colors.deepOrange[100],
       body: Padding(
         padding: EdgeInsets.all(16),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            SizedBox(height: 16),
-            Flexible(
-              flex: 1,
-              child: SizedBox(
-                width: double.infinity,
-                child: SingleChildScrollView(
-                  child: Card(
-                    child: Padding(
-                      padding: EdgeInsets.all(16),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            widget.forumPost.user.name!,
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 20,
-                            ),
-                          ),
-                          SizedBox(height: 8),
-                          Text(
-                            widget.forumPost.description,
-                            style: TextStyle(fontSize: 16),
-                          ),
-                        ],
+            Card(
+              child: Padding(
+                padding: EdgeInsets.all(16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        IconButton(
+                          color: Colors.red,
+                          onPressed: () {
+                            print("hola");
+                          },
+                          icon: Icon(Icons.delete),
+                        ),
+                      ],
+                    ),
+                    SizedBox(
+                        height:
+                            16), // Espacio adicional entre el botón y los demás elementos
+                    Text(
+                      widget.forumPost.user.name!,
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 20,
                       ),
                     ),
-                  ),
+                    SizedBox(height: 8),
+                    Text(
+                      widget.forumPost.description,
+                      style: TextStyle(fontSize: 16),
+                    ),
+                  ],
                 ),
               ),
             ),
-            Expanded(
-              flex: 5,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Text(
-                    'Comentarios:',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 18,
-                    ),
-                  ),
-                  SizedBox(height: 8),
-                  Expanded(
-                    child: ListView.builder(
-                      itemCount: widget.forumPost.posts.length,
-                      itemBuilder: (context, index) {
-                        return ListTile(
-                          title:
-                              Text(widget.forumPost.posts[index].name),
-                          subtitle:
-                              Text(widget.forumPost.posts[index].message),
-                        );
-                      },
-                    ),
-                  ),
-                  ElevatedButton.icon(
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                    label: Icon(Icons.cancel, color: Colors.black),
-                    icon: SizedBox(),
-                  ),
-                ],
+            SizedBox(height: 16),
+            Text(
+              'Comentarios:',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 18,
               ),
             ),
-            SizedBox(height: 16),
+            Expanded(
+              child: ListView.builder(
+                itemCount: postsList.length,
+                itemBuilder: (context, index) {
+                  final userName = postsList[index].user.name ??
+                      'Nombre desconocido'; // Si el nombre es nulo, establece un valor predeterminado
+                  return Card(
+                    child: ListTile(
+                      title: Text(userName),
+                      subtitle: Text(postsList[index].text),
+                    ),
+                  );
+                },
+              ),
+            ),
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
+      floatingActionButton: FloatingActionButton.extended(
         onPressed: () {
           _showCommentDialog(context);
         },
+        label: Text('Agregar Comentario'),
+        icon: Icon(Icons.add),
         backgroundColor: Colors.deepOrangeAccent,
-        child: Icon(color: Colors.white, Icons.add),
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.startFloat,
     );
   }
 
@@ -131,27 +176,17 @@ class PostDetailsPageState extends State<PostDetailsPage> {
                   style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
                 ),
                 SizedBox(height: 16.0),
-                Container(
-                  decoration: BoxDecoration(
-                    color: Colors.deepOrange,
-                    borderRadius: BorderRadius.circular(8.0),
-                  ),
-                  child: TextFormField(
-                    textAlign: TextAlign.center,
-                    style: TextStyle(color: Colors.white),
-                    controller: commentController,
-                    decoration: InputDecoration(
-                      hintText: 'Escribe tu respuesta aquí...',
-                      hintStyle: TextStyle(color: Colors.white),
-                      border: InputBorder.none,
-                    ),
+                TextFormField(
+                  textAlign: TextAlign.center,
+                  controller: commentController,
+                  decoration: InputDecoration(
+                    hintText: 'Escribe tu respuesta aquí...',
                   ),
                 ),
                 SizedBox(height: 16.0),
                 ElevatedButton(
                   onPressed: () {
                     String comment = commentController.text;
-                    // Implementa la lógica para enviar el comentario al servidor
                     _replyToComment(comment);
                     Navigator.pop(context);
                   },
@@ -165,10 +200,30 @@ class PostDetailsPageState extends State<PostDetailsPage> {
     );
   }
 
-  void _replyToComment(String reply) {
-    // Implementar la lógica para responder al comentario
-    setState(() {
-      // Agregar la lógica para guardar la respuesta y actualizar la lista de comentarios
-    });
+  Future<void> _replyToComment(String comment) async {
+    try {
+      Map<String, dynamic> body = {
+        "forum": {"id": widget.forumPost.id},
+        "text": comment,
+        "user": {"id": widget.userLog.id}
+      };
+
+      var response = await http.post(
+        Uri.parse('http://localhost:3000/post'),
+        body: jsonEncode(body),
+        headers: {'Content-Type': 'application/json'},
+      );
+
+      if (response.statusCode == 200) {
+        if (kDebugMode) {
+          print('Comentario Añadido');
+        }
+        _loadComments();
+      } else {
+        print('Error al añadir foro: ${response.reasonPhrase}');
+      }
+    } catch (e) {
+      print('Error al añadir foro: $e');
+    }
   }
 }

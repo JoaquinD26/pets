@@ -5,6 +5,8 @@ class ViewProvider extends ChangeNotifier {
 
   bool get isVisible => _isVisible;
 
+  int postLength = 0;
+
   void hideBottomNavBar() {
     _isVisible = false;
     notifyListeners();
@@ -14,4 +16,5 @@ class ViewProvider extends ChangeNotifier {
     _isVisible = true;
     notifyListeners();
   }
+
 }

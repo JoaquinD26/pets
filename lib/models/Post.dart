@@ -1,29 +1,34 @@
+import 'dart:convert';
+
+import 'package:pets/models/Forum.dart';
+import 'package:pets/models/user.dart';
+
 class Post {
   final int id;
-  final String name;
-  final String message;
-  final int likes;
-  final int forumId;
-  final int userId; // Referencia al UserModel por ID
+  final String text;
+  // final int likes;
+  final String date;
+  final Forum? forum;
+  final User user; // Referencia al UserModel
 
   Post({
     required this.id,
-    required this.name,
-    required this.message,
-    required this.likes,
-    required this.forumId,
-    required this.userId,
+    required this.text,
+    // required this.likes,
+    required this.date,
+    required this.forum,
+    required this.user,
   });
 
   // Factory constructor to create a Post from JSON
   factory Post.fromJson(Map<String, dynamic> json) {
     return Post(
       id: json['id'],
-      name: json['name'],
-      message: json['message'],
-      likes: json['likes'],
-      forumId: json['forum']['id'], // assuming forum is a nested object
-      userId: json['user']['id'], // assuming user is a nested object
+      text: utf8.decode(json['text'].toString().codeUnits),
+      date: json['date'],
+      // likes: json['likes'],
+        forum: json['forum'] != null ? Forum.fromJson(json['forum']) : null,
+      user: User.fromJson(json['user'])// Assuming User.fromJson is available
     );
   }
 
@@ -31,11 +36,11 @@ class Post {
   Map<String, dynamic> toJson() {
     return {
       'id': id,
-      'name': name,
-      'message': message,
-      'likes': likes,
-      'forum': {'id': forumId}, // assuming forum is a nested object
-      'user': {'id': userId}, // assuming user is a nested object
+      'text': utf8.encode(text),
+      'date': date,
+      // 'likes': likes,
+      'forum': forum!.toJson(), // assuming forum is a nested object
+      'user': user.toJson(), // Assuming User.toJson is available
     };
   }
 }

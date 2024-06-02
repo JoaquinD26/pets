@@ -12,8 +12,15 @@ import 'package:pets/utils/custom_snackbar.dart';
 
 class AddPetForm extends StatefulWidget {
   final User user;
+  final Pet? pet; // Objeto Pet para editar
+  final bool isEditing; // Indicador de edición
 
-  const AddPetForm({required this.user, super.key});
+  const AddPetForm({
+    required this.user,
+    this.pet, // Pet es opcional para la edición
+    this.isEditing = false, // Por defecto no está editando
+    super.key,
+  });
 
   @override
   AddPetFormState createState() => AddPetFormState();
@@ -47,15 +54,23 @@ class AddPetFormState extends State<AddPetForm> {
   @override
   void initState() {
     super.initState();
-
-
+    if (widget.isEditing && widget.pet != null) {
+      // Inicializar los controladores con los datos del objeto Pet
+      _nameController.text = widget.pet!.name;
+      _animalController.text = widget.pet!.animal;
+      _raceController.text = widget.pet!.race;
+      _weightController.text = widget.pet!.weight.toString();
+      _selectedGender = widget.pet!.gender == 1 ? 'Male' : 'Female';
+      _hasChip = widget.pet!.chip == 1 ? true : false;
+      // Puedes inicializar _selectedImageBytes con la imagen de la mascota si la tienes disponible
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Add Pet'),
+        title: Text(widget.isEditing ? 'Editar Mascota' : 'Añadir Mascota'),
         backgroundColor: Colors.deepOrange[300],
       ),
       body: Padding(
@@ -72,7 +87,7 @@ class AddPetFormState extends State<AddPetForm> {
                 ),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                   CustomSnackBar.show(context, 'Please enter the name', true);
+                    CustomSnackBar.show(context, 'Please enter the name', true);
                   }
                   return null;
                 },
@@ -86,7 +101,8 @@ class AddPetFormState extends State<AddPetForm> {
                 ),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                   CustomSnackBar.show(context, 'Please enter the animal', true);
+                    CustomSnackBar.show(
+                        context, 'Please enter the animal', true);
                   }
                   return null;
                 },
@@ -119,7 +135,8 @@ class AddPetFormState extends State<AddPetForm> {
                 ],
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                   CustomSnackBar.show(context, 'Please enter the weight', true);
+                    CustomSnackBar.show(
+                        context, 'Please enter the weight', true);
                   }
                   return null;
                 },
@@ -172,7 +189,7 @@ class AddPetFormState extends State<AddPetForm> {
                 onPressed: () async {
                   if (_formKey.currentState!.validate()) {
                     // Crear una nueva mascota
-                    Pet newPet = Pet(
+                    Pet pet = Pet(
                       id: 0, // Suponiendo que el ID se genera automáticamente
                       name: _nameController.text,
                       animal: _animalController.text,
@@ -186,7 +203,7 @@ class AddPetFormState extends State<AddPetForm> {
 
                     try {
                       // Añadir la mascota y conectar con el usuario
-                      await _addPetAndConnect(newPet);
+                     !widget.isEditing ? await _addPetAndConnect(pet): await _editPet(pet);
 
                       // Opcionalmente, limpiar el formulario
                       _formKey.currentState!.reset();
@@ -197,7 +214,8 @@ class AddPetFormState extends State<AddPetForm> {
                       });
                     } catch (e) {
                       // Manejar errores y mostrar mensaje de error
-                      CustomSnackBar.show(context, "Error al añadir la mascota", true);
+                      CustomSnackBar.show(
+                          context, "Error al añadir la mascota", true);
                     }
                   }
                 },
@@ -205,7 +223,7 @@ class AddPetFormState extends State<AddPetForm> {
                   backgroundColor: Colors.deepOrange[300],
                 ),
                 child: Text(
-                  'Add Pet',
+                  !widget.isEditing ? 'Add Pet' : 'Edit Pet',
                   style: TextStyle(color: Colors.black),
                 ),
               )
@@ -286,12 +304,11 @@ class AddPetFormState extends State<AddPetForm> {
         CustomSnackBar.show(context, "Mascota añadida correctamente", false);
 
         Navigator.pushAndRemoveUntil(
-        context,
-        MaterialPageRoute(builder: (context) => MyHomePage(user: widget.user)),
-        (route) => false,
-
-      );
-
+          context,
+          MaterialPageRoute(
+              builder: (context) => MyHomePage(user: widget.user)),
+          (route) => false,
+        );
       } else {
         print(
             'Error connecting pet to user. Status code: ${response.statusCode}');
@@ -312,9 +329,47 @@ class AddPetFormState extends State<AddPetForm> {
     if (petId != 0) {
       await _connectPetToUser(userId, petId);
     } else {
-     CustomSnackBar.show(context, "No se pudo añadir la mascota", true);
+      CustomSnackBar.show(context, "No se pudo añadir la mascota", true);
     }
   }
+
+  Future<void> _editPet(Pet pet) async {
+    try {
+      // URL de tu endpoint para agregar mascotas
+      final editPet = Uri.parse('http://localhost:3000/pet/${pet.id}');
+
+      // Convertir el objeto Pet a JSON
+      final petJson = pet.toJson();
+
+      // Realizar la solicitud POST para agregar la mascota
+      final response = await http.put(
+        editPet,
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonEncode(petJson),
+      );
+
+      // Verificar si la solicitud fue exitosa (código de respuesta 200)
+      if (response.statusCode == 200) {
+        var responseBody = jsonDecode(response.body);
+
+        // Añadir prints para depuración
+        print('Response body: $responseBody');
+
+      } else {
+        // Si la solicitud no fue exitosa, imprimir el código de respuesta
+        print('Error editPet pet. Status code: ${response.statusCode}');
+      
+      }
+    } catch (e) {
+      // Manejar cualquier error que ocurra durante la solicitud
+      print('Error editPet pet: $e');
+    
+    }
+  }
+
+  
 
   @override
   void dispose() {
