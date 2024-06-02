@@ -29,6 +29,7 @@ class AddPetFormState extends State<AddPetForm> {
   final TextEditingController _weightController = TextEditingController();
 
   String _selectedGender = 'Male';
+  String _selectedAnimal = "Perro";
   bool _hasChip = false;
   Uint8List? _selectedImageBytes;
 
@@ -78,17 +79,22 @@ class AddPetFormState extends State<AddPetForm> {
                 },
               ),
               SizedBox(height: 16),
-              TextFormField(
-                controller: _animalController,
+              DropdownButtonFormField<String>(
+                value: _selectedAnimal,
                 decoration: InputDecoration(
                   labelText: 'Animal',
                   border: OutlineInputBorder(),
                 ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    CustomSnackBar.show(context, 'Please enter the animal', true);
-                  }
-                  return null;
+                items: ['Perro', 'Gato']
+                    .map((label) => DropdownMenuItem(
+                          value: label,
+                          child: Text(label),
+                        ))
+                    .toList(),
+                onChanged: (value) {
+                  setState(() {
+                    _selectedAnimal = value!;
+                  });
                 },
               ),
               SizedBox(height: 16),
@@ -119,7 +125,7 @@ class AddPetFormState extends State<AddPetForm> {
                 ],
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                   CustomSnackBar.show(context, 'Please enter the weight', true);
+                    CustomSnackBar.show(context, 'Please enter the weight', true);
                   }
                   return null;
                 },
@@ -175,7 +181,7 @@ class AddPetFormState extends State<AddPetForm> {
                     Pet newPet = Pet(
                       id: 0, // Suponiendo que el ID se genera automáticamente
                       name: _nameController.text,
-                      animal: _animalController.text,
+                      animal: _selectedAnimal,
                       race: _raceController.text,
                       weight: double.parse(_weightController.text),
                       gender: _selectedGender == 'Male' ? 1 : 0,
@@ -303,7 +309,7 @@ class AddPetFormState extends State<AddPetForm> {
   }
 
   Future<void> _addPetAndConnect(Pet pet) async {
-    int userId = widget.user.id!;
+    int userId = widget.user.id;
 
     // Añadir la mascota
     int petId = await _addPet(pet);

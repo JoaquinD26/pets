@@ -5,6 +5,7 @@ import 'package:pets/models/pet.dart';
 import 'package:pets/models/user.dart';
 import 'package:pets/pages/forms/pet_form.dart';
 import 'package:http/http.dart' as http;
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class MyPetsView extends StatefulWidget {
   final String id = "pets_page";
@@ -24,7 +25,7 @@ class MyPetsViewState extends State<MyPetsView> {
   @override
   void initState() {
     super.initState();
-    _futureUser = fetchUserById(widget.userLog.id!);
+    _futureUser = fetchUserById(widget.userLog.id);
   }
 
   Future<User> fetchUserById(int id) async {
@@ -54,7 +55,7 @@ class MyPetsViewState extends State<MyPetsView> {
           } else {
             return mascotas.isEmpty
                 ? Center(
-                  child: Column(
+                    child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
@@ -93,21 +94,21 @@ class MyPetsViewState extends State<MyPetsView> {
                         ),
                       ],
                     ),
-                )
+                  )
                 : Column(
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
                       SizedBox(height: 20),
                       IconButton(
                         icon: const Icon(Icons.add),
-                        onPressed: () => {
+                        onPressed: () {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
                               builder: (context) =>
                                   AddPetForm(user: widget.userLog),
                             ),
-                          )
+                          );
                         },
                       ),
                       SizedBox(
@@ -183,46 +184,122 @@ class MyPetsViewState extends State<MyPetsView> {
     );
   }
 
-  Widget _buildMascotaInfo(Pet mascota) {
-    return Container(
-      margin: const EdgeInsets.all(16),
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Colors.grey[200],
-        borderRadius: BorderRadius.circular(8.0),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            mascota.name,
-            style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+Widget _buildMascotaInfo(Pet mascota) {
+  return Container(
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: 22.0),
+          child: Container(
+            width: double.infinity,
+            child: Material(
+              borderRadius: BorderRadius.circular(20.0),
+              elevation: 6.0,
+              child: Container(
+                padding: EdgeInsets.symmetric(
+                  vertical: 20.0,
+                  horizontal: 20.0,
+                ),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(20.0),
+                ),
+                height: 240,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        Text(
+                          mascota.name,
+                          style: TextStyle(
+                            fontSize: 26.0,
+                            color: Theme.of(context).primaryColor,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
+                    ),
+                    
+                    SizedBox(height: 10.0),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        Text(
+                          'Tipo: ${mascota.animal}',
+                          style: TextStyle(
+                            color: Colors.grey,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 10.0),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        Text(
+                          'Raza: ${mascota.race}',
+                          style: TextStyle(
+                            color: Colors.grey,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 10.0),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        Text(
+                          'Peso: ${mascota.weight} kg',
+                          style: TextStyle(
+                            color: Colors.grey,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 10.0),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        Text(
+                          'Género: ${mascota.gender == 1 ? "Macho" : "Hembra"}',
+                          style: TextStyle(
+                            color: Colors.grey,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 10.0),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        Text(
+                          'Chip: ${mascota.chip == 1 ? "Sí" : "No"}',
+                          style: TextStyle(
+                            color: Colors.grey,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 10.0),
+                  ],
+                ),
+              ),
+            ),
           ),
-          const SizedBox(height: 10),
-          Text(
-            'Tipo: ${mascota.animal}',
-            style: const TextStyle(fontSize: 16, color: Colors.grey),
-          ),
-          Text(
-            'Raza: ${mascota.race}',
-            style: const TextStyle(fontSize: 16, color: Colors.grey),
-          ),
-          Text(
-            'Peso: ${mascota.weight} kg',
-            style: const TextStyle(fontSize: 16, color: Colors.grey),
-          ),
-          Text(
-            'Género: ${mascota.gender == 1 ? "Macho" : "Hembra"}',
-            style: const TextStyle(fontSize: 16, color: Colors.grey),
-          ),
-          Text(
-            'Chip: ${mascota.chip == 1 ? "Sí" : "No"}',
-            style: const TextStyle(fontSize: 16, color: Colors.grey),
-          ),
-        ],
-      ),
-    );
-  }
+        ),
+      ],
+    ),
+  );
+}
+
 
   Widget _buildMascotaEventos(Pet mascota) {
     return Container(
