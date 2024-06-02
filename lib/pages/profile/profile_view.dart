@@ -3,6 +3,7 @@ import 'package:pets/components/icon_text_button.dart';
 import 'package:pets/components/menu_row.dart';
 import 'package:pets/models/user.dart';
 import 'package:pets/pages/login.dart';
+import 'package:pets/pages/profile/profile_form.dart';
 import 'package:pets/utils/t_color.dart';
 
 class ProfileView extends StatefulWidget {
@@ -35,7 +36,13 @@ class ProfileViewState extends State<ProfileView> {
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: TextButton(
-              onPressed: () {},
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => ProfileForm(user: widget.userLog,)),
+                );
+              },
+              
               child: Text(
                 "Editar Perfil",
                 style: TextStyle(

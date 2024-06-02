@@ -3,12 +3,9 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:http/http.dart' as http;
 import 'package:pets/models/user.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:pets/pages/Login.dart';
 import 'package:pets/pages/home.dart';
 import 'package:intl/intl.dart';
@@ -292,7 +289,7 @@ class _RegisterPageState extends State<RegisterPage> {
 
         Navigator.pushAndRemoveUntil(
           context,
-          MaterialPageRoute(builder: (context) => MyHomePage(user: user)),
+          MaterialPageRoute(builder: (context) => MyHomePage(user: user,activo: false,)),
           (route) => false,
         );
       } else {

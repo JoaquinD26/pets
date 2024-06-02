@@ -72,7 +72,7 @@ class AddPetFormState extends State<AddPetForm> {
                 ),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                   CustomSnackBar.show(context, 'Please enter the name', true);
+                    CustomSnackBar.show(context, 'Please enter the name', true);
                   }
                   return null;
                 },
@@ -86,7 +86,7 @@ class AddPetFormState extends State<AddPetForm> {
                 ),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                   CustomSnackBar.show(context, 'Please enter the animal', true);
+                    CustomSnackBar.show(context, 'Please enter the animal', true);
                   }
                   return null;
                 },
@@ -287,7 +287,7 @@ class AddPetFormState extends State<AddPetForm> {
 
         Navigator.pushAndRemoveUntil(
         context,
-        MaterialPageRoute(builder: (context) => MyHomePage(user: widget.user)),
+        MaterialPageRoute(builder: (context) => MyHomePage(user: widget.user,activo: false,)),
         (route) => false,
 
       );
@@ -312,7 +312,7 @@ class AddPetFormState extends State<AddPetForm> {
     if (petId != 0) {
       await _connectPetToUser(userId, petId);
     } else {
-     CustomSnackBar.show(context, "No se pudo añadir la mascota", true);
+      CustomSnackBar.show(context, "No se pudo añadir la mascota", true);
     }
   }
 

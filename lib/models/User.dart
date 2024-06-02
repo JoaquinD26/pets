@@ -2,7 +2,7 @@ import 'package:pets/models/forum.dart';
 import 'package:pets/models/pet.dart';
 
 class User {
-  final int? id;
+  final int id;
   final String? name;
   final String? lastname;
   final String email;
@@ -15,7 +15,7 @@ class User {
   final List<Pet> pets;
 
   User({
-    this.id,
+    required this.id,
     required this.name,
     required this.lastname,
     required this.email,
@@ -48,7 +48,7 @@ class User {
       email: json['email'],
       address: json['address'],
       password: json['password'],
-      cp: json['cp'],
+      cp: json['postalCode'],
       birthday: json['birthday'],
       mainImage: json['mainimage'],
       foro: [], // Debes definir cómo manejar la lista de foros en tu aplicación
@@ -64,7 +64,7 @@ class User {
       'email': email,
       'address': address,
       'password': password,
-      'cp': cp,
+      'postalCode': cp,
       'birthday': birthday,
       'mainimage': mainImage,
       'foro': foro!.map((forum) => forum.toJson()).toList(),
