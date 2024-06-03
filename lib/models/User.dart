@@ -8,7 +8,7 @@ class User {
   final String email;
   final String? address;
   final String password;
-  final int? cp;
+  final String cp;
   final String? birthday;
   final String? mainImage;
   final List<Forum>? foro;

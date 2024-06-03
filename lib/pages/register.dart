@@ -185,31 +185,40 @@ class _RegisterPageState extends State<RegisterPage> {
               _lastNameController.text.isEmpty ||
               _postalCodeController.text.isEmpty ||
               _nameController.text.isEmpty) {
-            CustomSnackBar.show(context, 'Por favor complete todos los campos.', true);
+            CustomSnackBar.show(
+                context, 'Por favor complete todos los campos.', true);
           } else if (!RegExp(r'^[a-zA-ZÀ-ÿ\s]{3,}$')
               .hasMatch(_nameController.text)) {
-            CustomSnackBar.show(context,
-                'El nombre debe contener solo letras y tener al menos 3 caracteres.', true);
+            CustomSnackBar.show(
+                context,
+                'El nombre debe contener solo letras y tener al menos 3 caracteres.',
+                true);
           } else if (!RegExp(r'^[a-zA-ZÀ-ÿ\s]{3,}$')
               .hasMatch(_lastNameController.text)) {
-            CustomSnackBar.show(context,
-                'El apellido debe contener solo letras y tener al menos 3 caracteres.', true);
+            CustomSnackBar.show(
+                context,
+                'El apellido debe contener solo letras y tener al menos 3 caracteres.',
+                true);
           } else if (!RegExp(r'^(?=.*\d)[a-zA-Z0-9À-ÿ\s,.\-]{4,}$')
               .hasMatch(_addressController.text)) {
-            CustomSnackBar.show(context,
-                'La dirección tiene que tener numero y tener al menos 4 caracteres', true);
+            CustomSnackBar.show(
+                context,
+                'La dirección tiene que tener numero y tener al menos 4 caracteres',
+                true);
           } else if (!RegExp(r'^\d{5}$').hasMatch(_postalCodeController.text)) {
             CustomSnackBar.show(
                 context, 'El Código Postal tiene que tener 5 digitos', true);
           } else if (!RegExp(
                   r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$')
               .hasMatch(_emailController.text)) {
-            CustomSnackBar.show(
-                context, 'El formato del email introducido es incorrecto', true);
+            CustomSnackBar.show(context,
+                'El formato del email introducido es incorrecto', true);
           } else if (!RegExp(r'^(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{6,}$')
               .hasMatch(_passwordController.text)) {
-            CustomSnackBar.show(context,
-                'La contraseña debe tener al menos una mayúscula, más de cinco caracteres y al menos un dígito.', true);
+            CustomSnackBar.show(
+                context,
+                'La contraseña debe tener al menos una mayúscula, más de cinco caracteres y al menos un dígito.',
+                true);
           } else {
             // Todos los campos están completos y la contraseña cumple con el patrón, proceder con el registro
             registerUser(
@@ -280,23 +289,38 @@ class _RegisterPageState extends State<RegisterPage> {
       );
 
       if (response.statusCode == 200) {
-        Map<String, dynamic> userData = jsonDecode(response.body);
-        User user = User.fromJson(userData);
 
-        if (kDebugMode) {
-          print('Usuario registrado exitosamente');
+        try {
+
+          Map<String, dynamic> userData = jsonDecode(response.body);
+          User user = User.fromJson(userData);
+
+          Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(
+                builder: (context) => MyHomePage(
+                      user: user,
+                      activo: false,
+                    )),
+            (route) => false,
+          );
+
+          CustomSnackBar.show(
+            context, 'Usuario registrado exitosamente', false);
+
+        } catch (FormatException) {
+          CustomSnackBar.show(
+            context, 'Este email ya ha sido registrado', true);
+
         }
-
-        Navigator.pushAndRemoveUntil(
-          context,
-          MaterialPageRoute(builder: (context) => MyHomePage(user: user,activo: false,)),
-          (route) => false,
-        );
       } else {
-        print('Error al registrar usuario: ${response.reasonPhrase}');
+        CustomSnackBar.show(
+            context, 'Error del cliente. Intentelo de nuevo más tarde', true);
       }
     } catch (e) {
-      print('Error al registrar usuario: $e');
+      print(e);
+      CustomSnackBar.show(
+          context, 'Error del servidor. Intentelo de nuevo más tarde', true);
     }
   }
 }
