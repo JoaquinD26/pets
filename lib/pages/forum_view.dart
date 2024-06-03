@@ -48,9 +48,6 @@ class ForumPageState extends State<ForumPage> {
         // Actualizar el estado con las publicaciones del foro obtenidas de la API
         setState(() {
           forums = loadedForums;
-          print("HHHHHHHHHHHHHHHHHHHHHHHHHHH");
-          print(forums.length);
-          print("HHHHHHHHHHHHHHHHHHHHHHHHHHH");
         });
       } else {
         // Si la solicitud no fue exitosa, imprimir el código de respuesta
@@ -76,6 +73,7 @@ class ForumPageState extends State<ForumPage> {
                 itemBuilder: (context, index) {
                   return ForumPostCard(
                     forum: forums[index],
+                    userLog: widget.userLog,
                   );
                 },
               ),

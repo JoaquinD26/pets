@@ -140,7 +140,7 @@ class MyPetsViewState extends State<MyPetsView> {
       options: CarouselOptions(
         height: 400,
         enlargeCenterPage: true,
-        autoPlay: true,
+        autoPlay: false,
         aspectRatio: 16 / 9,
         autoPlayCurve: Curves.fastOutSlowIn,
         enableInfiniteScroll: mascotas.length == 1 ? false : true,
@@ -163,7 +163,20 @@ class MyPetsViewState extends State<MyPetsView> {
   }
 
   Widget _buildMascotaItem(Pet mascota) {
-    return Container(
+  return GestureDetector(
+    onTap: () {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => AddPetForm(
+            user: widget.userLog,
+            pet: mascota, // Pasar el objeto Pet al formulario
+            isEditing: true, // Indicar que se está editando
+          ),
+        ),
+      );
+    },
+    child: Container(
       margin: const EdgeInsets.symmetric(horizontal: 5.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -181,8 +194,10 @@ class MyPetsViewState extends State<MyPetsView> {
           const SizedBox(height: 20),
         ],
       ),
-    );
-  }
+    ),
+  );
+}
+
 
 Widget _buildMascotaInfo(Pet mascota) {
   return Container(

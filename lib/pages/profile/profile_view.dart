@@ -8,7 +8,6 @@ import 'package:pets/utils/t_color.dart';
 
 class ProfileView extends StatefulWidget {
   final String id = "profile_page";
-
   final User userLog; // Agrega un parámetro para recibir el usuario logeado
 
   const ProfileView({required this.userLog, super.key});
@@ -18,7 +17,6 @@ class ProfileView extends StatefulWidget {
 }
 
 class ProfileViewState extends State<ProfileView> {
-
   @override
   void initState() {
     super.initState();
@@ -184,11 +182,12 @@ class ProfileViewState extends State<ProfileView> {
                     icon: Icon(Icons.logout_outlined),
                     title: "Cerrar Sesión",
                     onPressed: () async {
-                      
                       // Realizar el cierre de sesión
-              
-                      Navigator.pushNamedAndRemoveUntil(context, LoginPage.id, (route) => false);
-                      
+                      Navigator.pushNamedAndRemoveUntil(
+                        context, 
+                        LoginPage.id, 
+                        (route) => false
+                      );
                     },
                   ),
                   const Divider(

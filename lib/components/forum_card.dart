@@ -1,11 +1,18 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:pets/components/posts_from_forum.dart'; // Asegúrate de importar correctamente tu componente CommentDetailsPage
 import 'package:pets/models/forum.dart';
+import 'package:pets/models/post.dart';
+import 'package:pets/models/user.dart';
+import 'package:http/http.dart' as http;
+
 
 class ForumPostCard extends StatefulWidget {
   final Forum forum;
+  final User userLog;
 
-  const ForumPostCard({super.key, required this.forum});
+  ForumPostCard({super.key, required this.forum, required this.userLog});
 
   @override
   ForumPostCardState createState() => ForumPostCardState();
@@ -14,6 +21,48 @@ class ForumPostCard extends StatefulWidget {
 class ForumPostCardState extends State<ForumPostCard> {
   bool _liked = false;
   bool _imagenError = false;
+  int numeroPosts = 0;
+  
+
+  Future<int> forumPostsLength(int forumId) async {
+  try {
+    final response = await http.get(
+      Uri.parse('http://localhost:3000/post/forum/$forumId'),
+    );
+
+    if (response.statusCode == 200) {
+      final List<dynamic> responseData = json.decode(response.body);
+      // Mapea los datos de la respuesta a objetos Post
+      List<Post> posts = responseData.map((data) => Post.fromJson(data)).toList();
+      
+      return posts.length;
+
+    } else {
+      throw Exception('Failed to load posts for forum: ${response.reasonPhrase}');
+    }
+  } catch (e) {
+    throw Exception('Failed to load posts for forum: $e');
+  }
+}
+
+  @override
+  void initState() {
+    super.initState();
+      _loadCommentsLength();
+  }
+
+  Future<void> _loadCommentsLength() async {
+    try {
+      int posts = await forumPostsLength(widget.forum.id);
+
+      setState(() {
+        numeroPosts = posts;
+      });
+
+    } catch (e) {
+      print('Error loading comments: $e');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -106,7 +155,7 @@ class ForumPostCardState extends State<ForumPostCard> {
                     children: [
                       Icon(Icons.comment),
                       SizedBox(width: 5),
-                      Text('${widget.forum.posts.length}'),
+                      Text('${numeroPosts}'),
                     ],
                   ),
                 ],
@@ -123,15 +172,15 @@ class ForumPostCardState extends State<ForumPostCard> {
   }
 
   void _showPostDetails() {
-    Navigator.of(context).push(
-      PageRouteBuilder(
-        pageBuilder: (context, animation, secondaryAnimation) {
-          return FadeTransition(
-            opacity: animation,
-            child: PostDetailsPage(forumPost: widget.forum),
-          );
-        },
-      ),
-    );
-  }
+  Navigator.of(context).push(
+    MaterialPageRoute(
+      builder: (context) => PostDetailsPage(forumPost: widget.forum, userLog: widget.userLog),
+    ),
+  ).then((_) {
+
+    _loadCommentsLength();
+    
+  });
+}
+
 }
