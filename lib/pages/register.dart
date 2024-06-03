@@ -185,34 +185,44 @@ class _RegisterPageState extends State<RegisterPage> {
               _lastNameController.text.isEmpty ||
               _postalCodeController.text.isEmpty ||
               _nameController.text.isEmpty) {
-            CustomSnackBar.show(context, 'Por favor complete todos los campos.', true);
+            CustomSnackBar.show(
+                context, 'Por favor complete todos los campos.', true);
           } else if (!RegExp(r'^[a-zA-ZÀ-ÿ\s]{3,}$')
               .hasMatch(_nameController.text)) {
-            CustomSnackBar.show(context,
-                'El nombre debe contener solo letras y tener al menos 3 caracteres.', true);
+            CustomSnackBar.show(
+                context,
+                'El nombre debe contener solo letras y tener al menos 3 caracteres.',
+                true);
           } else if (!RegExp(r'^[a-zA-ZÀ-ÿ\s]{3,}$')
               .hasMatch(_lastNameController.text)) {
-            CustomSnackBar.show(context,
-                'El apellido debe contener solo letras y tener al menos 3 caracteres.', true);
+            CustomSnackBar.show(
+                context,
+                'El apellido debe contener solo letras y tener al menos 3 caracteres.',
+                true);
           } else if (!RegExp(r'^(?=.*\d)[a-zA-Z0-9À-ÿ\s,.\-]{4,}$')
               .hasMatch(_addressController.text)) {
-            CustomSnackBar.show(context,
-                'La dirección tiene que tener numero y tener al menos 4 caracteres', true);
+            CustomSnackBar.show(
+                context,
+                'La dirección tiene que tener numero y tener al menos 4 caracteres',
+                true);
           } else if (!RegExp(r'^\d{5}$').hasMatch(_postalCodeController.text)) {
             CustomSnackBar.show(
                 context, 'El Código Postal tiene que tener 5 digitos', true);
           } else if (!RegExp(
                   r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$')
               .hasMatch(_emailController.text)) {
-            CustomSnackBar.show(
-                context, 'El formato del email introducido es incorrecto', true);
+            CustomSnackBar.show(context,
+                'El formato del email introducido es incorrecto', true);
           } else if (!RegExp(r'^(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{6,}$')
               .hasMatch(_passwordController.text)) {
-            CustomSnackBar.show(context,
-                'La contraseña debe tener al menos una mayúscula, más de cinco caracteres y al menos un dígito.', true);
+            CustomSnackBar.show(
+                context,
+                'La contraseña debe tener al menos una mayúscula, más de cinco caracteres y al menos un dígito.',
+                true);
           } else {
             // Todos los campos están completos y la contraseña cumple con el patrón, proceder con el registro
             registerUser(
+              context,
               _emailController.text,
               _passwordController.text,
               _addressController.text,
@@ -260,10 +270,31 @@ class _RegisterPageState extends State<RegisterPage> {
     );
   }
 
-  Future<void> registerUser(String email, String password, String address,
-      String birthday, String lastName, String postalCode, String name) async {
+  Future<void> registerUser(
+      BuildContext context,
+      String email,
+      String password,
+      String address,
+      String birthday,
+      String lastName,
+      String postalCode,
+      String name) async {
+    print(1);
+    print(email);
+    print(2);
+    print(password);
+    print(3);
+    print(address);
+    print(4);
+    print(birthday);
+    print(5);
+    print(postalCode);
+    print(6);
+    print(name);
+
     try {
       Map<String, dynamic> body = {
+        'id': 0,
         'email': email,
         'name': name,
         'password': password,
@@ -289,11 +320,12 @@ class _RegisterPageState extends State<RegisterPage> {
 
         Navigator.pushAndRemoveUntil(
           context,
-          MaterialPageRoute(builder: (context) => MyHomePage(user: user,activo: false,)),
+          MaterialPageRoute(
+              builder: (context) => MyHomePage(user: user, activo: false)),
           (route) => false,
         );
       } else {
-        print('Error al registrar usuario: ${response.reasonPhrase}');
+        print('Error: Datos de usuario no disponibles en la respuesta.');
       }
     } catch (e) {
       print('Error al registrar usuario: $e');

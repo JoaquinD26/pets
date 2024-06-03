@@ -228,7 +228,7 @@ class _EditProfilePageState extends State<ProfileForm> {
                 _lastNameController.text,
                 _addressController.text,
                 controller.text,
-                int.parse(_postalCodeController.text),
+                _postalCodeController.text,
                 base64Image);
           }
         },
@@ -247,13 +247,13 @@ class _EditProfilePageState extends State<ProfileForm> {
   }
 
   Future<void> updateUser(
-      int userId,
+      String userId,
       String email,
       String name,
       String lastName,
       String address,
       String birthday,
-      int postalCode,
+      String postalCode,
       String? base64Image) async {
     try {
       Map<String, dynamic> body = {

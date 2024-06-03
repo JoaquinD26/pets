@@ -4,6 +4,7 @@ import 'package:pets/models/Forum.dart';
 import 'package:pets/models/user.dart';
 
 class Post {
+  bool likedByUser = false;
   final int id;
   final String text;
   // final int likes;

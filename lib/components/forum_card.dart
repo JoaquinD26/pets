@@ -7,7 +7,6 @@ import 'package:pets/models/post.dart';
 import 'package:pets/models/user.dart';
 import 'package:http/http.dart' as http;
 
-
 class ForumPostCard extends StatefulWidget {
   final Forum forum;
   final User userLog;
@@ -19,36 +18,35 @@ class ForumPostCard extends StatefulWidget {
 }
 
 class ForumPostCardState extends State<ForumPostCard> {
-  bool _liked = false;
   bool _imagenError = false;
   int numeroPosts = 0;
-  
 
   Future<int> forumPostsLength(int forumId) async {
-  try {
-    final response = await http.get(
-      Uri.parse('http://localhost:3000/post/forum/$forumId'),
-    );
+    try {
+      final response = await http.get(
+        Uri.parse('http://localhost:3000/post/forum/$forumId'),
+      );
 
-    if (response.statusCode == 200) {
-      final List<dynamic> responseData = json.decode(response.body);
-      // Mapea los datos de la respuesta a objetos Post
-      List<Post> posts = responseData.map((data) => Post.fromJson(data)).toList();
-      
-      return posts.length;
+      if (response.statusCode == 200) {
+        final List<dynamic> responseData = json.decode(response.body);
+        // Mapea los datos de la respuesta a objetos Post
+        List<Post> posts =
+            responseData.map((data) => Post.fromJson(data)).toList();
 
-    } else {
-      throw Exception('Failed to load posts for forum: ${response.reasonPhrase}');
+        return posts.length;
+      } else {
+        throw Exception(
+            'Failed to load posts for forum: ${response.reasonPhrase}');
+      }
+    } catch (e) {
+      throw Exception('Failed to load posts for forum: $e');
     }
-  } catch (e) {
-    throw Exception('Failed to load posts for forum: $e');
   }
-}
 
   @override
   void initState() {
     super.initState();
-      _loadCommentsLength();
+    _loadCommentsLength();
   }
 
   Future<void> _loadCommentsLength() async {
@@ -58,7 +56,6 @@ class ForumPostCardState extends State<ForumPostCard> {
       setState(() {
         numeroPosts = posts;
       });
-
     } catch (e) {
       print('Error loading comments: $e');
     }
@@ -86,8 +83,10 @@ class ForumPostCardState extends State<ForumPostCard> {
                   CircleAvatar(
                     radius: 25,
                     backgroundImage: _imagenError
-                        ? NetworkImage("https://upload.wikimedia.org/wikipedia/commons/thumb/b/b5/Windows_10_Default_Profile_Picture.svg/2048px-Windows_10_Default_Profile_Picture.svg.png")
-                        : NetworkImage(widget.forum.user.mainImage ?? "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b5/Windows_10_Default_Profile_Picture.svg/2048px-Windows_10_Default_Profile_Picture.svg.png"),
+                        ? NetworkImage(
+                            "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b5/Windows_10_Default_Profile_Picture.svg/2048px-Windows_10_Default_Profile_Picture.svg.png")
+                        : NetworkImage(
+                            "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b5/Windows_10_Default_Profile_Picture.svg/2048px-Windows_10_Default_Profile_Picture.svg.png"),
                     onBackgroundImageError: (exception, stackTrace) {
                       setState(() {
                         _imagenError = true;
@@ -99,7 +98,8 @@ class ForumPostCardState extends State<ForumPostCard> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        widget.forum.user.name!, // Assuming 'name' exists in the User model
+                        widget.forum.user
+                            .name!, // Assuming 'name' exists in the User model
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 18,
@@ -133,31 +133,11 @@ class ForumPostCardState extends State<ForumPostCard> {
               ),
               SizedBox(height: 10),
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                  Row(
-                    children: [
-                      IconButton(
-                        icon: _liked
-                            ? Icon(Icons.favorite, color: Colors.red)
-                            : Icon(Icons.favorite_border),
-                        onPressed: () {
-                          setState(() {
-                            _liked = !_liked;
-                          });
-                          _likePost();
-                        },
-                      ),
-                      Text('${widget.forum.likes}'),
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      Icon(Icons.comment),
-                      SizedBox(width: 5),
-                      Text('${numeroPosts}'),
-                    ],
-                  ),
+                  Icon(Icons.comment),
+                  SizedBox(width: 5),
+                  Text('${numeroPosts}'),
                 ],
               ),
             ],
@@ -167,20 +147,16 @@ class ForumPostCardState extends State<ForumPostCard> {
     );
   }
 
-  void _likePost() {
-    // Implement the logic to like the post in your API
-  }
-
   void _showPostDetails() {
-  Navigator.of(context).push(
-    MaterialPageRoute(
-      builder: (context) => PostDetailsPage(forumPost: widget.forum, userLog: widget.userLog),
-    ),
-  ).then((_) {
-
-    _loadCommentsLength();
-    
-  });
-}
-
+    Navigator.of(context)
+        .push(
+      MaterialPageRoute(
+        builder: (context) =>
+            PostDetailsPage(forumPost: widget.forum, userLog: widget.userLog),
+      ),
+    )
+        .then((_) {
+      _loadCommentsLength();
+    });
+  }
 }

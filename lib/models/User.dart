@@ -2,17 +2,16 @@ import 'package:pets/models/forum.dart';
 import 'package:pets/models/pet.dart';
 
 class User {
-  final int id;
-  final String? name;
-  final String? lastname;
+  final String id;
+  final String name;
+  final String lastname;
   final String email;
-  final String? address;
+  final String address;
   final String password;
-  final int? cp;
-  final String? birthday;
-  final String? mainImage;
-  final List<Forum>? foro;
-  final List<Pet> pets;
+  final String cp;
+  final String birthday;
+  // final List<Forum>? foro;
+  final List<Pet>? pets;
 
   User({
     required this.id,
@@ -23,36 +22,41 @@ class User {
     required this.password,
     required this.cp,
     required this.birthday,
-    required this.mainImage,
-    required this.foro,
+    // required this.foro,
     required this.pets,
   });
 
   factory User.fromJson(Map<String, dynamic> json) {
-
     List<Pet> petList = [];
+    List<Forum> forumList = [];
 
-    // Verifica si json['pets'] es nulo
-    var petsFromJson = json['pets'] as List?;
+    // Verifica si json['pets'] es nulo y convierte a lista de Pet
+    if (json['pets'] != null) {
+      var petsFromJson = json['pets'] as List?;
+      petList = petsFromJson != null
+          ? petsFromJson.map((i) => Pet.fromJson(i)).toList()
+          : [];
+    }
 
-    // Si petsFromJson es nulo, usa una lista vacía
-    petList = petsFromJson != null
-        ? petsFromJson.map((i) => Pet.fromJson(i)).toList()
-        : [];
-
+    // Verifica si json['foro'] es nulo y convierte a lista de Forum
+    // if (json['foro'] != null) {
+    //   var foroFromJson = json['foro'] as List?;
+    //   forumList = foroFromJson != null
+    //       ? foroFromJson.map((i) => Forum.fromJson(i)).toList()
+    //       : [];
+    // }
 
     return User(
-      id: json['id'],
+      id: json['id'].toString(),
       name: json['name'],
       lastname: json['lastName'],
       email: json['email'],
       address: json['address'],
       password: json['password'],
-      cp: json['postalCode'],
+      cp: json['postalCode'].toString(), // Conversión a String
       birthday: json['birthday'],
-      mainImage: json['mainimage'],
-      foro: [], // Debes definir cómo manejar la lista de foros en tu aplicación
-      pets: petList ?? [],
+      // foro: forumList,
+      pets: petList,
     );
   }
 
@@ -66,9 +70,8 @@ class User {
       'password': password,
       'postalCode': cp,
       'birthday': birthday,
-      'mainimage': mainImage,
-      'foro': foro!.map((forum) => forum.toJson()).toList(),
-      'pets': pets.map((pet) => pet.toJson()).toList(),
+      // 'foro': foro?.map((forum) => forum.toJson()).toList() ?? [],
+      'pets': pets?.map((pet) => pet.toJson()).toList() ?? [],
     };
   }
 }

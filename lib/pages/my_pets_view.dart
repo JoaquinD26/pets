@@ -5,7 +5,6 @@ import 'package:pets/models/pet.dart';
 import 'package:pets/models/user.dart';
 import 'package:pets/pages/forms/pet_form.dart';
 import 'package:http/http.dart' as http;
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class MyPetsView extends StatefulWidget {
   final String id = "pets_page";
@@ -28,13 +27,13 @@ class MyPetsViewState extends State<MyPetsView> {
     _futureUser = fetchUserById(widget.userLog.id);
   }
 
-  Future<User> fetchUserById(int id) async {
+  Future<User> fetchUserById(String id) async {
     final response =
         await http.get(Uri.parse('http://localhost:3000/user/$id'));
     if (response.statusCode == 200) {
       final user = User.fromJson(json.decode(response.body));
       setState(() {
-        mascotas = user.pets;
+        mascotas = user.pets!;
       });
       return user;
     } else {

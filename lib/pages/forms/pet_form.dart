@@ -280,7 +280,7 @@ class AddPetFormState extends State<AddPetForm> {
     }
   }
 
-  Future<void> _connectPetToUser(int userId, int petId) async {
+  Future<void> _connectPetToUser(String userId, int petId) async {
     if (kDebugMode) {
       print(userId);
       print(petId);
@@ -325,7 +325,7 @@ class AddPetFormState extends State<AddPetForm> {
   }
 
   Future<void> _addPetAndConnect(Pet pet) async {
-    int userId = widget.user.id;
+    String userId = widget.user.id;
 
     // Añadir la mascota
     int petId = await _addPet(pet);

@@ -192,7 +192,6 @@ class ForumPageState extends State<ForumPage> {
         // Recargar los foros después de añadir el comentario
         loadForums();
       } else {
-        // Error al registrar usuario
         print('Error al añadir foro: ${response.reasonPhrase}');
       }
     } catch (e) {

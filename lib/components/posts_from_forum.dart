@@ -7,6 +7,7 @@ import 'package:pets/models/forum.dart';
 import 'package:pets/models/post.dart';
 import 'package:pets/models/user.dart';
 import 'package:http/http.dart' as http;
+import 'package:pets/utils/custom_snackbar.dart';
 
 class PostDetailsPage extends StatefulWidget {
   final Forum forumPost;
@@ -80,18 +81,6 @@ class PostDetailsPageState extends State<PostDetailsPage> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        IconButton(
-                          color: Colors.red,
-                          onPressed: () {
-                            print("hola");
-                          },
-                          icon: Icon(Icons.delete),
-                        ),
-                      ],
-                    ),
                     SizedBox(
                         height:
                             16), // Espacio adicional entre el botón y los demás elementos
@@ -126,9 +115,43 @@ class PostDetailsPageState extends State<PostDetailsPage> {
                   final userName = postsList[index].user.name ??
                       'Nombre desconocido'; // Si el nombre es nulo, establece un valor predeterminado
                   return Card(
-                    child: ListTile(
-                      title: Text(userName),
-                      subtitle: Text(postsList[index].text),
+                    child: Column(
+                      children: [
+                        postsList[index].user.id == widget.userLog.id ? 
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            IconButton(
+                              color: Colors.red,
+                              onPressed: () {
+
+                                _deletePost(postsList[index].id);
+                               
+                              },
+                              icon: Icon(Icons.delete),
+                            ),
+                          ],
+                        ) : Container(),
+                        ListTile(
+                          title: Text(userName),
+                          subtitle: Text(postsList[index].text),
+                        ),
+                        Row(
+                        children: [
+                          IconButton(
+                            icon: postsList[index].likedByUser
+                                ? Icon(Icons.favorite, color: Colors.red)
+                                : Icon(Icons.favorite_border),
+                            onPressed: () {
+                              
+                              _likePost(postsList[index],  widget.userLog);
+                              
+                            },
+                          ),
+                      Text('${widget.forumPost.likes}'),
+                    ],
+                  ),
+                      ],
                     ),
                   );
                 },
@@ -200,6 +223,48 @@ class PostDetailsPageState extends State<PostDetailsPage> {
     );
   }
 
+  Future<void> _likePost(Post post, User user) async {
+    if (!post.likedByUser) {
+      try {
+        var response =
+            await http.put(Uri.parse("http://localhost:3000/post/${post.id}/like/${user.id}"));
+        if (response.statusCode == 200) {
+          // Acción exitosa
+          setState(() {
+
+            post.likedByUser = true;
+
+          });
+        } else {
+          // Manejo de error si la respuesta no es exitosa
+          print('Error al dar like: ${response.statusCode}');
+        }
+      } catch (e) {
+        // Manejo de excepción
+        print('Excepción al dar like: $e');
+      }
+    } else {
+      try {
+        var response =
+            await http.put(Uri.parse("http://localhost:3000/post/${post.id}/dislike/${user.id}"));
+        if (response.statusCode == 200) {
+          // Acción exitosa
+          setState(() {
+            
+           post.likedByUser = false;
+
+          });
+        } else {
+          // Manejo de error si la respuesta no es exitosa
+          print('Error al dar dislike: ${response.statusCode}');
+        }
+      } catch (e) {
+        // Manejo de excepción
+        print('Excepción al dar dislike: $e');
+      }
+    }
+  }
+
   Future<void> _replyToComment(String comment) async {
     try {
       Map<String, dynamic> body = {
@@ -226,4 +291,27 @@ class PostDetailsPageState extends State<PostDetailsPage> {
       print('Error al añadir foro: $e');
     }
   }
+
+  Future<void> _deletePost(int int) async {
+    try {
+      var response = await http.delete(
+        Uri.parse('http://localhost:3000/post/$int'),
+        headers: {'Content-Type': 'application/json'},
+      );
+
+      if (response.statusCode == 200) {
+        if (kDebugMode) {
+          
+          CustomSnackBar.show(context, 'Comentario Borrado', true);
+
+        }
+        _loadComments();
+      } else {
+        print('Error al eliminar post: ${response.reasonPhrase}');
+      }
+    } catch (e) {
+      print('Error al eliminar post: $e');
+    }
+  }
+
 }

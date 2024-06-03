@@ -68,7 +68,7 @@ class ProfileViewState extends State<ProfileView> {
                   CircleAvatar(
                     radius: media.width * 0.125,
                     backgroundColor: TColor.secondary,
-                    backgroundImage: NetworkImage(widget.userLog.mainImage ?? ""),
+                    backgroundImage: NetworkImage(""),
                     onBackgroundImageError: (exception, stackTrace) {
                       // Manejar error en la carga de la imagen
                     },
