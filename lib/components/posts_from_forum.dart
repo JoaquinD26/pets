@@ -66,9 +66,13 @@ class PostDetailsPageState extends State<PostDetailsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Detalles del Post'),
+        title: Text(
+          'Detalles del Post',
+          style: TextStyle(color: Colors.white),
+        ),
+        backgroundColor: Colors.deepOrange[300],
+        iconTheme: IconThemeData(color: Colors.white),
       ),
-      backgroundColor: Colors.deepOrange[100],
       body: Padding(
         padding: EdgeInsets.all(16),
         child: Column(
@@ -113,11 +117,12 @@ class PostDetailsPageState extends State<PostDetailsPage> {
             ),
             SizedBox(height: 16),
             Text(
-              'Comentarios:',
+              'Comentarios',
               style: TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 18,
               ),
+              textAlign: TextAlign.center,
             ),
             Expanded(
               child: ListView.builder(
@@ -141,8 +146,12 @@ class PostDetailsPageState extends State<PostDetailsPage> {
         onPressed: () {
           _showCommentDialog(context);
         },
-        label: Text('Agregar Comentario'),
-        icon: Icon(Icons.add),
+        label: Text(
+          'Agregar Comentario',
+          style: TextStyle(
+              color: Colors.white), // Estilo del texto con color blanco
+        ),
+        icon: Icon(Icons.add, color: Colors.white), // Color del ícono a blanco
         backgroundColor: Colors.deepOrangeAccent,
       ),
     );

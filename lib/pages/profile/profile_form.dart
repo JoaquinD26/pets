@@ -76,8 +76,12 @@ class _EditProfilePageState extends State<ProfileForm> {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          title: Text("Editar Perfil"),
+          title: Text(
+            'Editar Perfil',
+            style: TextStyle(color: Colors.white),
+          ),
           backgroundColor: Colors.deepOrange[300],
+          iconTheme: IconThemeData(color: Colors.white),
         ),
         body: Center(
           child: SingleChildScrollView(
@@ -280,16 +284,17 @@ class _EditProfilePageState extends State<ProfileForm> {
         Map<String, dynamic> userData = jsonDecode(response.body);
         User updatedUser = User.fromJson(userData);
 
-
         CustomSnackBar.show(context, 'Usuario actualizado exitosamente', false);
 
         Navigator.pushAndRemoveUntil(
           context,
           MaterialPageRoute(
-              builder: (context) => MyHomePage(user: updatedUser,activo: true,)),
+              builder: (context) => MyHomePage(
+                    user: updatedUser,
+                    activo: true,
+                  )),
           (route) => false,
         );
-
       } else {
         CustomSnackBar.show(
             context, 'Error al actualizar usuario. Intentelo de nuevo', true);
