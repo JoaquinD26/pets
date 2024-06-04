@@ -294,7 +294,6 @@ class _RegisterPageState extends State<RegisterPage> {
 
     try {
       Map<String, dynamic> body = {
-        'id': 0,
         'email': email,
         'name': name,
         'password': password,
@@ -311,24 +310,38 @@ class _RegisterPageState extends State<RegisterPage> {
       );
 
       if (response.statusCode == 200) {
-        Map<String, dynamic> userData = jsonDecode(response.body);
-        User user = User.fromJson(userData);
 
-        if (kDebugMode) {
-          print('Usuario registrado exitosamente');
+        try {
+          
+          Map<String, dynamic> userData = jsonDecode(response.body);
+          User user = User.fromJson(userData);
+
+          Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(
+                builder: (context) => MyHomePage(
+                      user: user,
+                      activo: false,
+                    )),
+            (route) => false,
+          );
+
+          CustomSnackBar.show(
+            context, 'Usuario registrado exitosamente', false);
+
+        } catch (FormatException) {
+          CustomSnackBar.show(
+            context, 'Este email ya ha sido registrado', true);
+
         }
-
-        Navigator.pushAndRemoveUntil(
-          context,
-          MaterialPageRoute(
-              builder: (context) => MyHomePage(user: user, activo: false)),
-          (route) => false,
-        );
       } else {
-        print('Error: Datos de usuario no disponibles en la respuesta.');
+        CustomSnackBar.show(
+            context, 'Error del cliente. Intentelo de nuevo más tarde', true);
       }
     } catch (e) {
-      print('Error al registrar usuario: $e');
+      print(e);
+      CustomSnackBar.show(
+          context, 'Error del servidor. Intentelo de nuevo más tarde', true);
     }
   }
 }

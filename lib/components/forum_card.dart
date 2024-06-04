@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:pets/components/posts_from_forum.dart'; // Asegúrate de importar correctamente tu componente CommentDetailsPage
 import 'package:pets/models/forum.dart';
 import 'package:pets/models/post.dart';
@@ -63,84 +64,95 @@ class ForumPostCardState extends State<ForumPostCard> {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      margin: EdgeInsets.all(10),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(15.0),
+    return Container(
+      width: 360,
+      height: 300,
+      margin: EdgeInsets.all(15),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(30),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.5),
+            spreadRadius: 3,
+            blurRadius: 10,
+            offset: Offset(0, 3),
+          ),
+        ],
       ),
-      elevation: 5,
-      child: InkWell(
-        onTap: () {
-          _showPostDetails();
-        },
-        child: Padding(
-          padding: EdgeInsets.all(20),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                children: [
-                  CircleAvatar(
-                    radius: 25,
-                    backgroundImage: _imagenError
-                        ? NetworkImage(
-                            "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b5/Windows_10_Default_Profile_Picture.svg/2048px-Windows_10_Default_Profile_Picture.svg.png")
-                        : NetworkImage(
-                            "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b5/Windows_10_Default_Profile_Picture.svg/2048px-Windows_10_Default_Profile_Picture.svg.png"),
-                    onBackgroundImageError: (exception, stackTrace) {
-                      setState(() {
-                        _imagenError = true;
-                      });
-                    },
-                  ),
-                  SizedBox(width: 10),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        widget.forum.user
-                            .name!, // Assuming 'name' exists in the User model
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 18,
+      child: Card(
+        color: Colors.white,
+        margin: EdgeInsets.all(10),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(30.0),
+        ),
+        elevation: 0,
+        child: InkWell(
+          hoverColor: Colors.transparent,
+          onTap: () {
+            _showPostDetails();
+          },
+          child: Padding(
+            padding: EdgeInsets.all(20),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    CircleAvatar(
+                      radius: 25,
+                      backgroundImage: _imagenError
+                          ? NetworkImage(
+                              "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b5/Windows_10_Default_Profile_Picture.svg/2048px-Windows_10_Default_Profile_Picture.svg.png")
+                          : NetworkImage(widget.forum.user.mainImage ??
+                              "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b5/Windows_10_Default_Profile_Picture.svg/2048px-Windows_10_Default_Profile_Picture.svg.png"),
+                      onBackgroundImageError: (exception, stackTrace) {
+                        setState(() {
+                          _imagenError = true;
+                        });
+                      },
+                    ),
+                    SizedBox(width: 10),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          widget.forum.user.name!,
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 18,
+                          ),
                         ),
-                      ),
-                      Text(
-                        widget.forum.date.toLocal().toString().split(' ')[0],
-                        style: TextStyle(
-                          color: Colors.grey,
-                          fontSize: 14,
+                        Text(
+                          widget.forum.date.toLocal().toString().split(' ')[0],
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 14,
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
+                  ],
+                ),
+                SizedBox(height: 15),
+                Text(
+                  widget.forum.name,
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
                   ),
-                ],
-              ),
-              SizedBox(height: 15),
-              Text(
-                widget.forum.name, // Assuming 'name' is the title of the forum
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
                 ),
-              ),
-              SizedBox(height: 10),
-              Text(
-                widget.forum.description,
-                style: TextStyle(
-                  fontSize: 16,
+                SizedBox(height: 10),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Icon(Icons.comment),
+                    SizedBox(width: 5),
+                    Text('${numeroPosts}'),
+                  ],
                 ),
-              ),
-              SizedBox(height: 10),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  Icon(Icons.comment),
-                  SizedBox(width: 5),
-                  Text('${numeroPosts}'),
-                ],
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

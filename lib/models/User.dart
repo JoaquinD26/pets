@@ -9,9 +9,10 @@ class User {
   final String address;
   final String password;
   final String cp;
-  final String birthday;
-  // final List<Forum>? foro;
-  final List<Pet>? pets;
+  final String? birthday;
+  final String? mainImage;
+  final List<Forum>? foro;
+  final List<Pet> pets;
 
   User({
     required this.id,
@@ -22,8 +23,9 @@ class User {
     required this.password,
     required this.cp,
     required this.birthday,
-    // required this.foro,
+    required this.foro,
     required this.pets,
+    required this.mainImage
   });
 
   factory User.fromJson(Map<String, dynamic> json) {
@@ -55,8 +57,9 @@ class User {
       password: json['password'],
       cp: json['postalCode'].toString(), // Conversión a String
       birthday: json['birthday'],
-      // foro: forumList,
+      foro: forumList,
       pets: petList,
+      mainImage: json['mainimage'],
     );
   }
 
@@ -72,6 +75,7 @@ class User {
       'birthday': birthday,
       // 'foro': foro?.map((forum) => forum.toJson()).toList() ?? [],
       'pets': pets?.map((pet) => pet.toJson()).toList() ?? [],
+      'mainimage':mainImage
     };
   }
 }
