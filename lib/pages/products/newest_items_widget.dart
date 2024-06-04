@@ -1,26 +1,49 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-import 'package:pets/models/category.dart';
+import 'package:http/http.dart' as http;
 import 'package:pets/models/product.dart';
 import 'package:pets/pages/products/item_page.dart';
 
-class NewestItemsWidget extends StatelessWidget {
+class NewestItemsWidget extends StatefulWidget {
   const NewestItemsWidget({Key? key}) : super(key: key);
+
+  @override
+  State<NewestItemsWidget> createState() => _NewestItemsWidgetState();
+}
+
+class _NewestItemsWidgetState extends State<NewestItemsWidget> {
+  List<Product> products = [];
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    fetchProducts();
+  }
+
+  Future<void> fetchProducts() async {
+    final response = await http.get(Uri.parse('http://localhost:3000/product'));
+    if (response.statusCode == 200) {
+      List<dynamic> jsonData = json.decode(response.body);
+
+      List<Product> loadedProducts = jsonData.map((productData) {
+        return Product.fromJson(productData);
+      }).toList();
+      print("Pruebaa");
+      print(jsonData);
+      setState(() {
+        products = loadedProducts;
+      });
+    } else {
+      throw Exception('Failed to load products');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     // Supongamos que tienes una lista de productos
-    List<Product> products = [
-      Product(
-        id: 1,
-        name: "Pienso Pedigree",
-        description: "Try our feed, we provide you with our excellent foods",
-        price: 20,
-        imageUrl: "images/comidaPerro.png", type: '', link: '', category: Category(id: 1, name: "YourCategoryName"),
-      ),
-      // Agrega más productos aquí según tu lógica de obtención de datos
-    ];
-
     return SingleChildScrollView(
       child: Padding(
         padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
@@ -56,7 +79,7 @@ class NewestItemsWidget extends StatelessWidget {
                       },
                       child: Container(
                         alignment: Alignment.center,
-                        child: Image.asset(
+                        child: Image.network(
                           product.imageUrl, // Usa la URL del producto
                           height: 100, // Reducida la altura de la imagen
                           width: 120, // Reducido el ancho de la imagen
