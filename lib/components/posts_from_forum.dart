@@ -122,40 +122,73 @@ class PostDetailsPageState extends State<PostDetailsPage> {
                   return Card(
                     child: Column(
                       children: [
-                        postsList[index].user.id == widget.userLog.id ? 
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            IconButton(
-                              color: Colors.red,
-                              onPressed: () {
-
-                                _deletePost(postsList[index].id);
-                               
-                              },
-                              icon: Icon(Icons.delete),
-                            ),
-                          ],
-                        ) : Container(),
+                        postsList[index].user.id == widget.userLog.id
+                            ? Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  IconButton(
+                                    color: Colors.red,
+                                    onPressed: () {
+                                      showDialog(
+                                        context: context,
+                                        builder: (BuildContext context) {
+                                          return AlertDialog(
+                                            title:
+                                                Text('Confirmar eliminación'),
+                                            content: Text(
+                                                '¿Estás seguro de que quieres eliminar este comentario?'),
+                                            actions: [
+                                              TextButton(
+                                                onPressed: () {
+                                                  Navigator.of(context)
+                                                      .pop(); // Cierra el cuadro de diálogo
+                                                },
+                                                child: Text('Cancelar'),
+                                              ),
+                                              ElevatedButton(
+                                                onPressed: () {
+                                                  // Implementa la lógica para eliminar el comentario del servidor
+                                                  _deletePost(
+                                                      postsList[index].id);
+                                                  Navigator.of(context)
+                                                      .pop(); // Cierra el cuadro de diálogo
+                                                },
+                                                style: ElevatedButton.styleFrom(
+                                                  foregroundColor: Colors.white,
+                                                  backgroundColor: Colors
+                                                      .red, // Color del texto del botón
+                                                ),
+                                                child: Text('Eliminar'),
+                                              ),
+                                            ],
+                                          );
+                                        },
+                                      );
+                                    },
+                                    icon: Icon(Icons.delete),
+                                  ),
+                                ],
+                              )
+                            : Container(),
                         ListTile(
                           title: Text(userName),
                           subtitle: Text(postsList[index].text),
                         ),
                         Row(
-                        children: [
-                          IconButton(
-                            icon: postsList[index].likedByUser
-                                ? Icon(Icons.favorite, color: Colors.red)
-                                : Icon(Icons.favorite_border),
-                            onPressed: () {
-                              
-                              _likePost(postsList[index],  widget.userLog);
-                              
-                            },
-                          ),
-                      Text('${widget.forumPost.likes}'),
-                    ],
-                  ),
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            IconButton(
+                              icon: postsList[index].likedByUser
+                                  ? Icon(Icons.favorite, color: Colors.red)
+                                  : Icon(Icons.favorite_border),
+                              onPressed: () {
+                                _likePost(postsList[index], widget.userLog);
+                              },
+                            ),
+                            Text('${widget.forumPost.likes}'),
+                            SizedBox(width: 20,)
+                          ],
+                        ),
                       ],
                     ),
                   );
@@ -181,14 +214,14 @@ class PostDetailsPageState extends State<PostDetailsPage> {
   }
 
   void _showCommentDialog(BuildContext context) {
-    TextEditingController commentController = TextEditingController();
+    TextEditingController postController = TextEditingController();
 
     showModalBottomSheet(
       isScrollControlled: true,
       context: context,
       builder: (BuildContext context) {
         return FractionallySizedBox(
-          heightFactor: 0.9, // Altura del 90% de la pantalla
+          heightFactor: 0.6, // Altura del 60% de la pantalla
           alignment: Alignment.topCenter, // Aparece desde arriba
           child: Container(
             padding: EdgeInsets.all(16.0),
@@ -208,21 +241,53 @@ class PostDetailsPageState extends State<PostDetailsPage> {
                   style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
                 ),
                 SizedBox(height: 16.0),
-                TextFormField(
-                  textAlign: TextAlign.center,
-                  controller: commentController,
-                  decoration: InputDecoration(
-                    hintText: 'Escribe tu respuesta aquí...',
+                Container(
+                  height: 200,
+                  decoration: BoxDecoration(
+                    color: Colors.grey[200],
+                    borderRadius: BorderRadius.circular(8.0),
+                  ),
+                  child: TextFormField(
+                    textAlign: TextAlign.center,
+                    style: TextStyle(color: Colors.deepOrange),
+                    controller: postController,
+                    maxLines: null,
+                    decoration: InputDecoration(
+                      hintText: 'Escribe tu respuesta al foro aquí...',
+                      hintStyle: TextStyle(color: Colors.deepOrange),
+                      border: InputBorder.none,
+                    ),
                   ),
                 ),
                 SizedBox(height: 16.0),
                 ElevatedButton(
                   onPressed: () {
-                    String comment = commentController.text;
-                    _replyToComment(comment);
+                    String post = postController.text;
+
+                    // Implementa la lógica para enviar el comentario al servidor
+                    _replyToComment(post);
                     Navigator.pop(context);
                   },
-                  child: Text('Enviar'),
+                  style: ElevatedButton.styleFrom(
+                    foregroundColor: Colors.white,
+                    backgroundColor:
+                        Colors.deepOrange, // Color del texto del botón
+                    shadowColor: Colors.deepOrangeAccent, // Color de la sombra
+                    elevation: 5, // Elevación del botón
+                    shape: RoundedRectangleBorder(
+                      borderRadius:
+                          BorderRadius.circular(30.0), // Bordes redondeados
+                    ),
+                    padding: EdgeInsets.symmetric(
+                        horizontal: 32.0, vertical: 12.0), // Espaciado interno
+                  ),
+                  child: Text(
+                    'Enviar',
+                    style: TextStyle(
+                      fontSize: 16.0, // Tamaño de la fuente del texto del botón
+                      fontWeight: FontWeight.bold, // Grosor de la fuente
+                    ),
+                  ),
                 ),
               ],
             ),
@@ -235,14 +300,12 @@ class PostDetailsPageState extends State<PostDetailsPage> {
   Future<void> _likePost(Post post, User user) async {
     if (!post.likedByUser) {
       try {
-        var response =
-            await http.put(Uri.parse("http://localhost:3000/post/${post.id}/like/${user.id}"));
+        var response = await http.put(
+            Uri.parse("http://localhost:3000/post/${post.id}/like/${user.id}"));
         if (response.statusCode == 200) {
           // Acción exitosa
           setState(() {
-
             post.likedByUser = true;
-
           });
         } else {
           // Manejo de error si la respuesta no es exitosa
@@ -254,14 +317,12 @@ class PostDetailsPageState extends State<PostDetailsPage> {
       }
     } else {
       try {
-        var response =
-            await http.put(Uri.parse("http://localhost:3000/post/${post.id}/dislike/${user.id}"));
+        var response = await http.put(Uri.parse(
+            "http://localhost:3000/post/${post.id}/dislike/${user.id}"));
         if (response.statusCode == 200) {
           // Acción exitosa
           setState(() {
-            
-           post.likedByUser = false;
-
+            post.likedByUser = false;
           });
         } else {
           // Manejo de error si la respuesta no es exitosa
@@ -310,9 +371,7 @@ class PostDetailsPageState extends State<PostDetailsPage> {
 
       if (response.statusCode == 200) {
         if (kDebugMode) {
-          
           CustomSnackBar.show(context, 'Comentario Borrado', true);
-
         }
         _loadComments();
       } else {
@@ -322,5 +381,4 @@ class PostDetailsPageState extends State<PostDetailsPage> {
       print('Error al eliminar post: $e');
     }
   }
-
 }

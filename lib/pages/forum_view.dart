@@ -52,7 +52,8 @@ class ForumPageState extends State<ForumPage> {
         });
       } else {
         // Si la solicitud no fue exitosa, imprimir el código de respuesta
-        print('Error al cargar los foros. Código de respuesta: ${response.statusCode}');
+        print(
+            'Error al cargar los foros. Código de respuesta: ${response.statusCode}');
       }
     } catch (e) {
       // Manejar cualquier error que ocurra durante la solicitud
@@ -63,60 +64,59 @@ class ForumPageState extends State<ForumPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-
       body: RefreshIndicator(
         onRefresh: loadForums,
         child: Column(
           children: [
             Padding(
-            padding: EdgeInsets.symmetric(
-              vertical: 10,
-              horizontal: 15,
-            ),
-            child: Container(
-              width: double.infinity,
-              height: 50,
-              decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(20),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey.withOpacity(0.5),
-                      spreadRadius: 2,
-                      blurRadius: 10,
-                      offset: Offset(0, 3),
-                    ),
-                  ]),
-              child: Padding(
-                padding: EdgeInsets.symmetric(
-                  horizontal: 10,
-                ),
-                child: Row(
-                  children: [
-                    Icon(
-                      CupertinoIcons.search,
-                      color: Colors.red,
-                    ),
-                    SizedBox(
-                      height: 50,
-                      width: 300,
-                      child: Padding(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: 15,
-                        ),
-                        child: TextFormField(
-                          decoration: InputDecoration(
-                            hintText: "What would you like to have?",
-                            border: InputBorder.none,
+              padding: EdgeInsets.symmetric(
+                vertical: 10,
+                horizontal: 15,
+              ),
+              child: Container(
+                width: double.infinity,
+                height: 50,
+                decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(20),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(0.5),
+                        spreadRadius: 2,
+                        blurRadius: 10,
+                        offset: Offset(0, 3),
+                      ),
+                    ]),
+                child: Padding(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 10,
+                  ),
+                  child: Row(
+                    children: [
+                      Icon(
+                        CupertinoIcons.search,
+                        color: Colors.red,
+                      ),
+                      SizedBox(
+                        height: 50,
+                        width: 300,
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 15,
+                          ),
+                          child: TextFormField(
+                            decoration: InputDecoration(
+                              hintText: "What would you like to have?",
+                              border: InputBorder.none,
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             ),
-          ),
             Flexible(
               child: ListView.builder(
                 itemCount: forums.length,
@@ -139,11 +139,12 @@ class ForumPageState extends State<ForumPage> {
         backgroundColor: Colors.deepOrangeAccent,
         child: Icon(color: Colors.white, Icons.add),
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     );
   }
 
   void _showPostDialog(BuildContext context) {
+    TextEditingController titleController = TextEditingController();
     TextEditingController postController = TextEditingController();
 
     showModalBottomSheet(
@@ -151,7 +152,7 @@ class ForumPageState extends State<ForumPage> {
       context: context,
       builder: (BuildContext context) {
         return FractionallySizedBox(
-          heightFactor: 0.9, // Altura del 90% de la pantalla
+          heightFactor: 0.6, // Altura del 60% de la pantalla
           alignment: Alignment.topCenter, // Aparece desde arriba
           child: Container(
             padding: EdgeInsets.all(16.0),
@@ -173,16 +174,35 @@ class ForumPageState extends State<ForumPage> {
                 SizedBox(height: 16.0),
                 Container(
                   decoration: BoxDecoration(
-                    color: Colors.deepOrange,
+                    color: Colors.deepOrange[300],
                     borderRadius: BorderRadius.circular(8.0),
                   ),
                   child: TextFormField(
                     textAlign: TextAlign.center,
                     style: TextStyle(color: Colors.white),
+                    controller: titleController,
+                    decoration: InputDecoration(
+                      hintText: 'Título del comentario...',
+                      hintStyle: TextStyle(color: Colors.white),
+                      border: InputBorder.none,
+                    ),
+                  ),
+                ),
+                SizedBox(height: 16.0),
+                Container(
+                  height: 200,
+                  decoration: BoxDecoration(
+                    color: Colors.grey[200],
+                    borderRadius: BorderRadius.circular(8.0),
+                  ),
+                  child: TextFormField(
+                    textAlign: TextAlign.center,
+                    style: TextStyle(color: Colors.deepOrange),
                     controller: postController,
+                    maxLines: null,
                     decoration: InputDecoration(
                       hintText: 'Escribe tu comentario aquí...',
-                      hintStyle: TextStyle(color: Colors.white),
+                      hintStyle: TextStyle(color: Colors.deepOrange),
                       border: InputBorder.none,
                     ),
                   ),
@@ -190,13 +210,33 @@ class ForumPageState extends State<ForumPage> {
                 SizedBox(height: 16.0),
                 ElevatedButton(
                   onPressed: () {
-                    post = postController.text;
+                    String title = titleController.text;
+                    String post = postController.text;
 
                     // Implementa la lógica para enviar el comentario al servidor
-                    _postPost(post);
+                    _postPost(title, post);
                     Navigator.pop(context);
                   },
-                  child: Text('Enviar'),
+                  style: ElevatedButton.styleFrom(
+                    foregroundColor: Colors.white,
+                    backgroundColor:
+                        Colors.deepOrange, // Color del texto del botón
+                    shadowColor: Colors.deepOrangeAccent, // Color de la sombra
+                    elevation: 5, // Elevación del botón
+                    shape: RoundedRectangleBorder(
+                      borderRadius:
+                          BorderRadius.circular(30.0), // Bordes redondeados
+                    ),
+                    padding: EdgeInsets.symmetric(
+                        horizontal: 32.0, vertical: 12.0), // Espaciado interno
+                  ),
+                  child: Text(
+                    'Enviar',
+                    style: TextStyle(
+                      fontSize: 16.0, // Tamaño de la fuente del texto del botón
+                      fontWeight: FontWeight.bold, // Grosor de la fuente
+                    ),
+                  ),
                 ),
               ],
             ),
@@ -206,20 +246,18 @@ class ForumPageState extends State<ForumPage> {
     );
   }
 
-  Future<void> _postPost(String post) async {
+  Future<void> _postPost(String title, String post) async {
     try {
-
-
       DateFormat formatter = DateFormat('yyyy-MM-dd HH:mm:ss');
       var fechaDeHoy = formatter.format(DateTime.now());
 
-      if(kDebugMode){
-          print(fechaDeHoy);
+      if (kDebugMode) {
+        print(fechaDeHoy);
       }
-      
+
       // Construir el cuerpo de la solicitud
       Map<String, dynamic> body = {
-        "name": widget.userLog.name,
+        "name": title,
         "description": post,
         "user": {"id": widget.userLog.id},
         "likes": "0",

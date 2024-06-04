@@ -18,7 +18,10 @@ class ForumPostCard extends StatefulWidget {
   ForumPostCardState createState() => ForumPostCardState();
 }
 
+
+
 class ForumPostCardState extends State<ForumPostCard> {
+  bool _liked = false;
   bool _imagenError = false;
   int numeroPosts = 0;
 
@@ -27,6 +30,8 @@ class ForumPostCardState extends State<ForumPostCard> {
       final response = await http.get(
         Uri.parse('http://localhost:3000/post/forum/$forumId'),
       );
+
+
 
       if (response.statusCode == 200) {
         final List<dynamic> responseData = json.decode(response.body);
@@ -117,7 +122,7 @@ class ForumPostCardState extends State<ForumPostCard> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          widget.forum.user.name!,
+                          widget.forum.user.name,
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 18,
@@ -143,12 +148,27 @@ class ForumPostCardState extends State<ForumPostCard> {
                   ),
                 ),
                 SizedBox(height: 10),
+                Expanded(
+                  child: SingleChildScrollView(
+                    child: Text(
+                      widget.forum.description,
+                      style: TextStyle(
+                        fontSize: 16,
+                      ),
+                    ),
+                  ),
+                ),
+                SizedBox(height: 10),
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
+                  mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    Icon(Icons.comment),
-                    SizedBox(width: 5),
-                    Text('${numeroPosts}'),
+                    Row(
+                      children: [
+                        Icon(Icons.comment),
+                        SizedBox(width: 5),
+                        Text('${numeroPosts}'),
+                      ],
+                    ),
                   ],
                 ),
               ],
