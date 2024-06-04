@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:pets/models/category.dart';
 import 'package:pets/models/product.dart';
 import 'package:pets/pages/products/item_page.dart';
 
@@ -15,7 +16,7 @@ class NewestItemsWidget extends StatelessWidget {
         name: "Pienso Pedigree",
         description: "Try our feed, we provide you with our excellent foods",
         price: 20,
-        imageUrl: "images/comidaPerro.png",
+        imageUrl: "images/comidaPerro.png", type: '', link: '', category: Category(id: 1, name: "YourCategoryName"),
       ),
       // Agrega más productos aquí según tu lógica de obtención de datos
     ];

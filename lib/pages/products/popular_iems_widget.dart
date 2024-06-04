@@ -12,41 +12,34 @@ class PopularItemsWidget extends StatefulWidget {
 }
 
 class _PopularItemsWidgetState extends State<PopularItemsWidget> {
-
   List<Product> products = [];
 
+  @override
+  void initState() {
+    super.initState();
+    fetchProducts();
+  }
 
   Future<void> fetchProducts() async {
     final response = await http.get(Uri.parse('http://localhost:3000/product'));
     if (response.statusCode == 200) {
-
       List<dynamic> jsonData = json.decode(response.body);
-
 
       List<Product> loadedProducts = jsonData.map((productData) {
         return Product.fromJson(productData);
       }).toList();
-
+      print("Pruebaa");
+      print(jsonData);
       setState(() {
         products = loadedProducts;
       });
-
     } else {
       throw Exception('Failed to load products');
     }
-
-  }
-
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-     fetchProducts();
   }
 
   @override
   Widget build(BuildContext context) {
-
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       child: Padding(
@@ -87,13 +80,14 @@ class _PopularItemsWidgetState extends State<PopularItemsWidget> {
                         },
                         child: Container(
                           alignment: Alignment.center,
-                          child: Image.asset(
+                          child: Image.network(
                             product.imageUrl,
                             height: 130,
                           ),
                         ),
                       ),
-                      SizedBox(height: 8), // Add some space between image and text
+                      SizedBox(
+                          height: 8), // Add some space between image and text
                       Text(
                         product.name,
                         textAlign: TextAlign.center,
