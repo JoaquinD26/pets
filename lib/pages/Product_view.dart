@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -41,8 +42,7 @@ class _ProductViewState extends State<ProductView> {
 
       setState(() {
         allProducts = loadedProducts;
-        displayedProducts =
-            loadedProducts; // Inicializa displayedProducts con todos los productos
+        displayedProducts = loadedProducts; // Inicializa displayedProducts con todos los productos
       });
     } else {
       throw Exception('Failed to load products');
@@ -135,7 +135,7 @@ class _ProductViewState extends State<ProductView> {
             ),
           ),
           // Categories Widget
-          CategoriesWidget(),
+          CategoriesWidget(onCategorySelected: onCategorySelected),
 
           if (!isSearching)
             Column(
@@ -182,5 +182,13 @@ class _ProductViewState extends State<ProductView> {
         ],
       ),
     );
+  }
+
+  void onCategorySelected(int categoryId) {
+    setState(() {
+      displayedProducts = allProducts
+          .where((product) => product.category.id == categoryId)
+          .toList();
+    });
   }
 }
