@@ -1,22 +1,37 @@
-// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
-
 import 'package:clippy_flutter/arc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:pets/models/Product.dart';
+
 class ItemPage extends StatelessWidget {
-  const ItemPage({super.key});
+  
+  final Product product;
+  const ItemPage({Key? key, required this.product}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: Text(
+          product.name,
+          style: TextStyle(color: Colors.white),
+        ),
+        backgroundColor: Colors.deepOrange[300],
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back, color: Colors.white),
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+        ),
+      ),
       body: Padding(
         padding: EdgeInsets.only(top: 5),
         child: ListView(
           children: [
             Padding(
               padding: EdgeInsets.all(16),
-              child: Image.asset(
-                "images/comidaPerro.png",
+              child: Image.network(
+                "${product.imageUrl}",
                 height: 300,
               ),
             ),
@@ -50,7 +65,7 @@ class ItemPage extends StatelessWidget {
                               onRatingUpdate: (index) {},
                             ),
                             Text(
-                              "10€ ",
+                              "\$${product.price}",
                               style: TextStyle(
                                 fontSize: 20,
                                 fontWeight: FontWeight.bold,
@@ -68,7 +83,7 @@ class ItemPage extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
-                              "Pienso",
+                              "${product.name}",
                               style: TextStyle(
                                 fontSize: 28,
                                 fontWeight: FontWeight.bold,
@@ -82,7 +97,7 @@ class ItemPage extends StatelessWidget {
                           vertical: 12,
                         ),
                         child: Text(
-                          "El bienestar de nuestras mascotas es una prioridad para cualquier dueño responsable, y una alimentación adecuada es fundamental para garantizar su salud y felicidad. Pedigree, una marca líder en nutrición animal, ofrece una gama de productos diseñados para satisfacer las necesidades nutricionales de los perros de todas las razas y tamaños. Uno de sus productos estrella es el pienso para perros Pedigree, formulado específicamente para proporcionar una dieta equilibrada y nutritiva.",
+                          "${product.description}",
                           style: TextStyle(fontSize: 16),
                           textAlign: TextAlign.justify,
                         ),

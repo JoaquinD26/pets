@@ -1,29 +1,45 @@
 import 'package:flutter/material.dart';
-import 'package:pets/models/product.dart';
+import 'package:pets/models/Product.dart';
 import 'package:pets/pages/products/item_page.dart';
 
-class PopularItemsWidget extends StatelessWidget {
-  const PopularItemsWidget({Key? key}) : super(key: key);
+class RecentItemsWidget extends StatefulWidget {
+  final List<Product> products;
+
+  const RecentItemsWidget({Key? key, required this.products})
+      : super(key: key);
+
+  @override
+  State<RecentItemsWidget> createState() => _RecentItemsWidgetState();
+}
+
+class _RecentItemsWidgetState extends State<RecentItemsWidget> {
+  late List<Product> products;
+
+  @override
+  void initState() {
+    super.initState();
+
+    products = List.from(widget.products);
+    products.sort((a, b) => b.id.compareTo(a.id));// Orden descendente
+
+    
+  }
+
+  @override
+  void didUpdateWidget(covariant RecentItemsWidget oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    products = widget.products;
+    products.sort((a, b) => b.id.compareTo(a.id));// Orden descendente
+  }
 
   @override
   Widget build(BuildContext context) {
-    List<Product> products = [
-      Product(
-        id: 1,
-        name: "Pedigree",
-        description: "Taste Our food",
-        price: 15,
-        imageUrl: "images/comidaPerro.png",
-      ),
-      // Agrega más productos aquí según tu lógica de obtención de datos
-    ];
-
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       child: Padding(
         padding: EdgeInsets.symmetric(vertical: 15, horizontal: 5),
         child: Row(
-          children: products.map((product) {
+          children: widget.products.map((product) {
             return Padding(
               padding: EdgeInsets.symmetric(horizontal: 7),
               child: Container(
@@ -52,19 +68,20 @@ class PopularItemsWidget extends StatelessWidget {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => ItemPage(),
+                              builder: (context) => ItemPage(product: product),
                             ),
                           );
                         },
                         child: Container(
                           alignment: Alignment.center,
-                          child: Image.asset(
+                          child: Image.network(
                             product.imageUrl,
                             height: 130,
                           ),
                         ),
                       ),
-                      SizedBox(height: 8), // Add some space between image and text
+                      SizedBox(
+                          height: 8), // Add some space between image and text
                       Text(
                         product.name,
                         textAlign: TextAlign.center,
@@ -74,14 +91,6 @@ class PopularItemsWidget extends StatelessWidget {
                         ),
                       ),
                       SizedBox(height: 4),
-                      Text(
-                        product.description,
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontSize: 15,
-                          // fontWeight: FontWeight.bold,
-                        ),
-                      ),
                       SizedBox(height: 12),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,

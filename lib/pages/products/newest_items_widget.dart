@@ -1,30 +1,46 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-import 'package:pets/models/product.dart';
+import 'package:pets/models/Product.dart';
 import 'package:pets/pages/products/item_page.dart';
 
-class NewestItemsWidget extends StatelessWidget {
-  const NewestItemsWidget({Key? key}) : super(key: key);
+
+class NewestItemsWidget extends StatefulWidget {
+  final List<Product> displayedProducts;
+
+  const NewestItemsWidget({Key? key, required this.displayedProducts}) : super(key: key);
+
+  @override
+  State<NewestItemsWidget> createState() => _NewestItemsWidgetState();
+}
+
+class _NewestItemsWidgetState extends State<NewestItemsWidget> {
+  late List<Product> displayedProducts;
+
+  @override
+  void initState() {
+    super.initState();
+    displayedProducts = List.from(widget.displayedProducts);
+    displayedProducts.sort((a, b) => a.name.compareTo(b.name));// ORDEN DE ABECEDARIO
+
+  }
+
+  @override
+  void didUpdateWidget(covariant NewestItemsWidget oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    displayedProducts = widget.displayedProducts;
+    displayedProducts.sort((a, b) => a.name.compareTo(b.name));// ORDEN DE ABECEDARIO
+
+
+  }
 
   @override
   Widget build(BuildContext context) {
     // Supongamos que tienes una lista de productos
-    List<Product> products = [
-      Product(
-        id: 1,
-        name: "Pienso Pedigree",
-        description: "Try our feed, we provide you with our excellent foods",
-        price: 20,
-        imageUrl: "images/comidaPerro.png",
-      ),
-      // Agrega más productos aquí según tu lógica de obtención de datos
-    ];
-
     return SingleChildScrollView(
       child: Padding(
         padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
         child: Column(
-          children: products.map((product) {
+          children: displayedProducts.map((product) {
             return Padding(
               padding: EdgeInsets.symmetric(vertical: 10),
               child: Container(
@@ -49,13 +65,13 @@ class NewestItemsWidget extends StatelessWidget {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => ItemPage(),
+                            builder: (context) => ItemPage(product: product),
                           ),
                         );
                       },
                       child: Container(
                         alignment: Alignment.center,
-                        child: Image.asset(
+                        child: Image.network(
                           product.imageUrl, // Usa la URL del producto
                           height: 100, // Reducida la altura de la imagen
                           width: 120, // Reducido el ancho de la imagen
@@ -75,26 +91,7 @@ class NewestItemsWidget extends StatelessWidget {
                               fontWeight: FontWeight.bold,
                             ),
                           ),
-                          Text(
-                            product.description, // Descripción del producto
-                            style: TextStyle(
-                              fontSize: 14, // Reducido el tamaño del texto
-                              // fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          RatingBar.builder(
-                            initialRating: 4,
-                            minRating: 1,
-                            direction: Axis.horizontal,
-                            itemCount: 5,
-                            itemSize: 16, // Reducido el tamaño de las estrellas
-                            itemPadding: EdgeInsets.symmetric(horizontal: 4),
-                            itemBuilder: (context, _) => Icon(
-                              Icons.star,
-                              color: Colors.red,
-                            ),
-                            onRatingUpdate: (index) {},
-                          ),
+                          
                         ],
                       ),
                     ),
