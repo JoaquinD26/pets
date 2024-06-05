@@ -7,6 +7,7 @@ import 'package:flutter/services.dart' show rootBundle;
 import 'dart:typed_data';
 
 import 'package:pets/models/category.dart';
+import 'package:pets/models/config.dart';
 
 class CategoriesWidget extends StatefulWidget {
   final Function(int) onCategorySelected;
@@ -29,8 +30,12 @@ class _CategoriesWidgetState extends State<CategoriesWidget> {
   }
 
   Future<void> fetchCategories() async {
+    final configString = await rootBundle.loadString('assets/config.json');
+    final configJson = json.decode(configString);
+    final config = Config.fromJson(configJson);
+
     final response =
-        await http.get(Uri.parse('http://localhost:3000/product/category'));
+        await http.get(Uri.parse('http://${config.host}:3000/product/category'));
     if (response.statusCode == 200) {
       List<dynamic> jsonData = json.decode(response.body);
       List<Category> fetchedCategories = jsonData.map((categoryData) {

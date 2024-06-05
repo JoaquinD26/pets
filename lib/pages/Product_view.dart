@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
+import 'package:pets/models/config.dart';
 import 'dart:convert';
 import 'package:pets/models/user.dart';
 import 'package:pets/models/Product.dart';
@@ -31,7 +33,11 @@ class _ProductViewState extends State<ProductView> {
   }
 
   Future<void> fetchProducts() async {
-    final response = await http.get(Uri.parse('http://localhost:3000/product'));
+    final configString = await rootBundle.loadString('assets/config.json');
+    final configJson = json.decode(configString);
+    final config = Config.fromJson(configJson);
+    
+    final response = await http.get(Uri.parse('http://${config.host}:3000/product'));
     if (response.statusCode == 200) {
       List<dynamic> jsonData = json.decode(response.body);
 
@@ -72,6 +78,7 @@ class _ProductViewState extends State<ProductView> {
         onRefresh: fetchProducts,
         child: ListView(
           children: [
+            SizedBox(height: 20,),
             // Search
             Padding(
               padding: EdgeInsets.symmetric(

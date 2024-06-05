@@ -77,6 +77,8 @@ class ForumPageState extends State<ForumPage> {
         onRefresh: loadForums,
         child: Column(
           children: [
+            SizedBox(height: 20,),
+            // Search
             Padding(
               padding: EdgeInsets.symmetric(
                 vertical: 10,
