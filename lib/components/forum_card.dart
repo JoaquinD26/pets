@@ -1,8 +1,10 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:pets/components/posts_from_forum.dart'; // Asegúrate de importar correctamente tu componente CommentDetailsPage
+import 'package:pets/models/config.dart';
 import 'package:pets/models/forum.dart';
 import 'package:pets/models/post.dart';
 import 'package:pets/models/user.dart';
@@ -18,20 +20,21 @@ class ForumPostCard extends StatefulWidget {
   ForumPostCardState createState() => ForumPostCardState();
 }
 
-
-
 class ForumPostCardState extends State<ForumPostCard> {
   bool _liked = false;
   bool _imagenError = false;
   int numeroPosts = 0;
 
   Future<int> forumPostsLength(int forumId) async {
+    
+    final configString = await rootBundle.loadString('assets/config.json');
+    final configJson = json.decode(configString);
+    final config = Config.fromJson(configJson);
+
     try {
       final response = await http.get(
-        Uri.parse('http://localhost:3000/post/forum/$forumId'),
+        Uri.parse('http://${config.host}:3000/post/forum/$forumId'),
       );
-
-
 
       if (response.statusCode == 200) {
         final List<dynamic> responseData = json.decode(response.body);
@@ -160,7 +163,7 @@ class ForumPostCardState extends State<ForumPostCard> {
                 ),
                 SizedBox(height: 10),
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     Row(
                       children: [

@@ -3,9 +3,11 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:http/http.dart' as http;
+import 'package:pets/models/config.dart';
 import 'package:pets/models/user.dart';
 import 'package:pets/pages/home.dart';
 import 'package:pets/pages/register.dart';
@@ -144,6 +146,11 @@ class LoginState extends State<LoginPage> {
   }
 
   Future<void> signIn(String email, String password) async {
+
+   final configString = await rootBundle.loadString('assets/config.json');
+   final configJson = json.decode(configString);
+   final config = Config.fromJson(configJson);
+
     try {
       // Construir el cuerpo de la solicitud
       Map<String, dynamic> body = {
@@ -153,7 +160,7 @@ class LoginState extends State<LoginPage> {
 
       // Realizar la solicitud POST al servidor
       var response = await http.post(
-        Uri.parse('http://localhost:3000/user/login'),
+        Uri.parse('http://${config.host}:3000/user/login'),
         body: jsonEncode(body),
         headers: {'Content-Type': 'application/json'},
       );

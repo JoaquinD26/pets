@@ -2,6 +2,8 @@ import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:pets/models/config.dart';
 
 import 'package:pets/models/forum.dart';
 import 'package:pets/models/post.dart';
@@ -19,10 +21,17 @@ class PostDetailsPage extends StatefulWidget {
   PostDetailsPageState createState() => PostDetailsPageState();
 }
 
+Future<Config> loadConfig() async {
+  final configString = await rootBundle.loadString('assets/config.json');
+  final configJson = json.decode(configString);
+  return Config.fromJson(configJson);
+}
+
 Future<List<Post>> fetchPostsForForum(int forumId) async {
+  final config = await loadConfig();
   try {
     final response = await http.get(
-      Uri.parse('http://localhost:3000/post/forum/$forumId'),
+      Uri.parse('http://${config.host}:3000/post/forum/$forumId'),
     );
 
     if (response.statusCode == 200) {
@@ -40,9 +49,10 @@ Future<List<Post>> fetchPostsForForum(int forumId) async {
 }
 
 Future<int> fetchLikesPostsForForum(int postId) async {
+  final config = await loadConfig();
   try {
     final response = await http.get(
-      Uri.parse('http://localhost:3000/post/$postId/countLikes'),
+      Uri.parse('http://${config.host}:3000/post/$postId/countLikes'),
     );
 
     if (response.statusCode == 200) {
@@ -57,9 +67,10 @@ Future<int> fetchLikesPostsForForum(int postId) async {
 }
 
 // Future<bool> fetchLikeStatus(int postId, String userId) async {
+//   final config = await loadConfig();
 //   try {
 //     final response = await http.get(
-//       Uri.parse('http://localhost:3000/post/$postId//$userId'),
+//       Uri.parse('http://${config.host}:3000/post/$postId//$userId'),
 //     );
 
 //     if (response.statusCode == 200) {
@@ -87,6 +98,7 @@ class PostDetailsPageState extends State<PostDetailsPage> {
   }
 
   Future<void> _loadComments() async {
+    
     try {
       List<Post> posts = await fetchPostsForForum(widget.forumPost.id);
 
@@ -295,12 +307,9 @@ class PostDetailsPageState extends State<PostDetailsPage> {
                                 },
                               ),
                               Text('$likes'),
-                              SizedBox(
-                                width: 20,
-                              ),
+                              SizedBox(width: 20,)
                             ],
                           ),
-                          
                         ],
                       ),
                     ),
@@ -309,34 +318,45 @@ class PostDetailsPageState extends State<PostDetailsPage> {
               },
             ),
           ),
-          SizedBox(
-            height: 80,
-          ),
+          SizedBox(height: 12,)
         ],
       ),
-      floatingActionButton: FloatingActionButton.extended(
+      floatingActionButton: FloatingActionButton(
         onPressed: () {
           _showCommentDialog(context);
+         
         },
-        label: Text(
-          'Agregar Comentario',
-          style: TextStyle(color: Colors.white),
-        ),
-        icon: Icon(Icons.add, color: Colors.white),
         backgroundColor: Colors.deepOrangeAccent,
+        child: Icon(color: Colors.white, Icons.add),
       ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
     );
   }
 
   void _showCommentDialog(BuildContext context) {
-    TextEditingController postController = TextEditingController();
+  TextEditingController postController = TextEditingController();
 
-    showModalBottomSheet(
-      isScrollControlled: true,
-      context: context,
-      builder: (BuildContext context) {
-        return FractionallySizedBox(
-          heightFactor: 0.6,
+  showModalBottomSheet(
+    isScrollControlled: true,
+    context: context,
+    builder: (BuildContext context) {
+      // Variable para mantener el nodo de enfoque del campo de texto
+      FocusNode commentFocusNode = FocusNode();
+
+      // Función para cerrar el nodo de enfoque del campo de texto
+      void closeFocusNode() {
+        commentFocusNode.unfocus();
+      }
+
+      // Enfoca automáticamente el campo de texto una vez que el modal se ha construido
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        commentFocusNode.requestFocus();
+      });
+
+      return GestureDetector(
+        onTap: closeFocusNode, // Cierra el teclado al tocar fuera del campo de texto
+        child: FractionallySizedBox(
+          heightFactor: 0.7,
           alignment: Alignment.topCenter,
           child: Container(
             padding: EdgeInsets.all(16.0),
@@ -358,6 +378,7 @@ class PostDetailsPageState extends State<PostDetailsPage> {
                 SizedBox(height: 16.0),
                 TextField(
                   controller: postController,
+                  focusNode: commentFocusNode, // Establece el nodo de enfoque del campo de texto
                   maxLines: 3,
                   decoration: InputDecoration(
                     border: OutlineInputBorder(),
@@ -379,8 +400,7 @@ class PostDetailsPageState extends State<PostDetailsPage> {
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(30.0),
                     ),
-                    padding:
-                        EdgeInsets.symmetric(horizontal: 32.0, vertical: 12.0),
+                    padding: EdgeInsets.symmetric(horizontal: 32.0, vertical: 12.0),
                   ),
                   child: Text(
                     'Enviar',
@@ -393,16 +413,19 @@ class PostDetailsPageState extends State<PostDetailsPage> {
               ],
             ),
           ),
-        );
-      },
-    );
-  }
+        ),
+      );
+    },
+  );
+}
 
   Future<void> _likePost(Post post, User user) async {
+      final config = await loadConfig();
+
     if (!likeStatusMap[post.id]!) {
       try {
         var response = await http.put(
-            Uri.parse("http://localhost:3000/post/${post.id}/like/${user.id}"));
+            Uri.parse("http://${config.host}:3000/post/${post.id}/like/${user.id}"));
         if (response.statusCode == 200) {
           setState(() {
             likeStatusMap[post.id] = true;
@@ -417,7 +440,7 @@ class PostDetailsPageState extends State<PostDetailsPage> {
     } else {
       try {
         var response = await http.put(Uri.parse(
-            "http://localhost:3000/post/${post.id}/dislike/${user.id}"));
+            "http://${config.host}:3000/post/${post.id}/dislike/${user.id}"));
         if (response.statusCode == 200) {
           setState(() {
             likeStatusMap[post.id] = false;
@@ -433,6 +456,7 @@ class PostDetailsPageState extends State<PostDetailsPage> {
   }
 
   Future<void> _replyToComment(String comment) async {
+    final config = await loadConfig();
     try {
       Map<String, dynamic> body = {
         "forum": {"id": widget.forumPost.id},
@@ -441,7 +465,7 @@ class PostDetailsPageState extends State<PostDetailsPage> {
       };
 
       var response = await http.post(
-        Uri.parse('http://localhost:3000/post'),
+        Uri.parse('http://${config.host}:3000/post'),
         body: jsonEncode(body),
         headers: {'Content-Type': 'application/json'},
       );
@@ -460,9 +484,11 @@ class PostDetailsPageState extends State<PostDetailsPage> {
   }
 
   Future<void> _deletePost(int postId) async {
+      final config = await loadConfig();
+
     try {
       var response = await http.delete(
-        Uri.parse('http://localhost:3000/post/$postId'),
+        Uri.parse('http://${config.host}:3000/post/$postId'),
         headers: {'Content-Type': 'application/json'},
       );
 

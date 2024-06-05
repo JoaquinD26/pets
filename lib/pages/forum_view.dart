@@ -1,8 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:pets/components/forum_card.dart';
+import 'package:pets/models/config.dart';
 import 'package:pets/models/forum.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
@@ -28,10 +30,17 @@ class ForumPageState extends State<ForumPage> {
     loadForums();
   }
 
+  
+
   Future<void> loadForums() async {
+    
+   final configString = await rootBundle.loadString('assets/config.json');
+   final configJson = json.decode(configString);
+   final config = Config.fromJson(configJson);
+   
     try {
       // Realizar la solicitud HTTP GET a la API
-      var response = await http.get(Uri.parse('http://localhost:3000/forum'));
+      var response = await http.get(Uri.parse('http://${config.host}:3000/forum'));
 
       // Verificar si la solicitud fue exitosa (código de respuesta 200)
       if (response.statusCode == 200) {
@@ -139,21 +148,36 @@ class ForumPageState extends State<ForumPage> {
         backgroundColor: Colors.deepOrangeAccent,
         child: Icon(color: Colors.white, Icons.add),
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
     );
   }
 
   void _showPostDialog(BuildContext context) {
-    TextEditingController titleController = TextEditingController();
-    TextEditingController postController = TextEditingController();
+  TextEditingController titleController = TextEditingController();
+  TextEditingController postController = TextEditingController();
 
-    showModalBottomSheet(
-      isScrollControlled: true,
-      context: context,
-      builder: (BuildContext context) {
-        return FractionallySizedBox(
-          heightFactor: 0.6, // Altura del 60% de la pantalla
-          alignment: Alignment.topCenter, // Aparece desde arriba
+  showModalBottomSheet(
+    isScrollControlled: true,
+    context: context,
+    builder: (BuildContext context) {
+      // Variable para mantener el nodo de enfoque del primer campo de texto
+      FocusNode titleFocusNode = FocusNode();
+
+      // Función para cerrar el nodo de enfoque del primer campo de texto
+      void closeFocusNode() {
+        titleFocusNode.unfocus();
+      }
+
+      // Enfoca automáticamente el primer campo de texto una vez que el modal se ha construido
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        titleFocusNode.requestFocus();
+      });
+
+      return GestureDetector(
+        onTap: closeFocusNode, // Cierra el teclado al tocar fuera del campo de texto
+        child: FractionallySizedBox(
+          heightFactor: 0.9,
+          alignment: Alignment.topCenter,
           child: Container(
             padding: EdgeInsets.all(16.0),
             decoration: BoxDecoration(
@@ -181,6 +205,7 @@ class ForumPageState extends State<ForumPage> {
                     textAlign: TextAlign.center,
                     style: TextStyle(color: Colors.white),
                     controller: titleController,
+                    focusNode: titleFocusNode, // Establece el nodo de enfoque del primer campo de texto
                     decoration: InputDecoration(
                       hintText: 'Título del comentario...',
                       hintStyle: TextStyle(color: Colors.white),
@@ -219,34 +244,38 @@ class ForumPageState extends State<ForumPage> {
                   },
                   style: ElevatedButton.styleFrom(
                     foregroundColor: Colors.white,
-                    backgroundColor:
-                        Colors.deepOrange, // Color del texto del botón
-                    shadowColor: Colors.deepOrangeAccent, // Color de la sombra
-                    elevation: 5, // Elevación del botón
+                    backgroundColor: Colors.deepOrange,
+                    shadowColor: Colors.deepOrangeAccent,
+                    elevation: 5,
                     shape: RoundedRectangleBorder(
-                      borderRadius:
-                          BorderRadius.circular(30.0), // Bordes redondeados
+                      borderRadius: BorderRadius.circular(30.0),
                     ),
-                    padding: EdgeInsets.symmetric(
-                        horizontal: 32.0, vertical: 12.0), // Espaciado interno
+                    padding: EdgeInsets.symmetric(horizontal: 32.0, vertical: 12.0),
                   ),
                   child: Text(
                     'Enviar',
                     style: TextStyle(
-                      fontSize: 16.0, // Tamaño de la fuente del texto del botón
-                      fontWeight: FontWeight.bold, // Grosor de la fuente
+                      fontSize: 16.0,
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
                 ),
               ],
             ),
           ),
-        );
-      },
-    );
-  }
+        ),
+      );
+    },
+  );
+}
+
 
   Future<void> _postPost(String title, String post) async {
+
+    final configString = await rootBundle.loadString('assets/config.json');
+    final configJson = json.decode(configString);
+    final config = Config.fromJson(configJson);
+
     try {
       DateFormat formatter = DateFormat('yyyy-MM-dd HH:mm:ss');
       var fechaDeHoy = formatter.format(DateTime.now());
@@ -265,7 +294,7 @@ class ForumPageState extends State<ForumPage> {
 
       // Realizar la solicitud POST al servidor
       var response = await http.post(
-        Uri.parse('http://localhost:3000/forum'),
+        Uri.parse('http://${config.host}:3000/forum'),
         body: jsonEncode(body),
         headers: {'Content-Type': 'application/json'},
       );

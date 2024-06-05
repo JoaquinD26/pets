@@ -4,10 +4,12 @@ import 'dart:typed_data';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
+import 'package:pets/models/config.dart';
 import 'package:pets/models/user.dart';
 import 'package:pets/pages/Home.dart';
 import 'package:pets/pages/profile/profile_view.dart';
@@ -274,8 +276,12 @@ class _EditProfilePageState extends State<ProfileForm> {
         body['imgUser'] = base64Image;
       }
 
+      final configString = await rootBundle.loadString('assets/config.json');
+      final configJson = json.decode(configString);
+      final config = Config.fromJson(configJson);
+
       var response = await http.put(
-        Uri.parse('http://localhost:3000/user/$userId'),
+        Uri.parse('http://${config.host}:3000/user/$userId'),
         body: jsonEncode(body),
         headers: {'Content-Type': 'application/json'},
       );

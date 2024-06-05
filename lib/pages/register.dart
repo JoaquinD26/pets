@@ -3,8 +3,10 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:http/http.dart' as http;
+import 'package:pets/models/config.dart';
 import 'package:pets/models/user.dart';
 import 'package:pets/pages/Login.dart';
 import 'package:pets/pages/home.dart';
@@ -279,18 +281,18 @@ class _RegisterPageState extends State<RegisterPage> {
       String lastName,
       String postalCode,
       String name) async {
-    print(1);
-    print(email);
-    print(2);
-    print(password);
-    print(3);
-    print(address);
-    print(4);
-    print(birthday);
-    print(5);
-    print(postalCode);
-    print(6);
-    print(name);
+    // print(1);
+    // print(email);
+    // print(2);
+    // print(password);
+    // print(3);
+    // print(address);
+    // print(4);
+    // print(birthday);
+    // print(5);
+    // print(postalCode);
+    // print(6);
+    // print(name);
 
     try {
       Map<String, dynamic> body = {
@@ -302,9 +304,13 @@ class _RegisterPageState extends State<RegisterPage> {
         'lastName': lastName,
         'postalCode': postalCode,
       };
+      
+      final configString = await rootBundle.loadString('assets/config.json');
+      final configJson = json.decode(configString);
+      final config = Config.fromJson(configJson);
 
       var response = await http.post(
-        Uri.parse('http://localhost:3000/user'),
+        Uri.parse('http://${config.host}:3000/user'),
         body: jsonEncode(body),
         headers: {'Content-Type': 'application/json'},
       );
