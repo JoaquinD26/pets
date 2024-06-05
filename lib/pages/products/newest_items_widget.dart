@@ -1,44 +1,35 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-import 'package:http/http.dart' as http;
 import 'package:pets/models/product.dart';
 import 'package:pets/pages/products/item_page.dart';
 
 class NewestItemsWidget extends StatefulWidget {
-  const NewestItemsWidget({Key? key}) : super(key: key);
+  final List<Product> displayedProducts;
+
+  const NewestItemsWidget({Key? key, required this.displayedProducts}) : super(key: key);
 
   @override
   State<NewestItemsWidget> createState() => _NewestItemsWidgetState();
 }
 
 class _NewestItemsWidgetState extends State<NewestItemsWidget> {
-  List<Product> products = [];
+  late List<Product> displayedProducts;
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
-    fetchProducts();
+    displayedProducts = List.from(widget.displayedProducts);
+    displayedProducts.sort((a, b) => a.name.compareTo(b.name));// ORDEN DE ABECEDARIO
+
   }
 
-  Future<void> fetchProducts() async {
-    final response = await http.get(Uri.parse('http://localhost:3000/product'));
-    if (response.statusCode == 200) {
-      List<dynamic> jsonData = json.decode(response.body);
+  @override
+  void didUpdateWidget(covariant NewestItemsWidget oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    displayedProducts = widget.displayedProducts;
+    displayedProducts.sort((a, b) => a.name.compareTo(b.name));// ORDEN DE ABECEDARIO
 
-      List<Product> loadedProducts = jsonData.map((productData) {
-        return Product.fromJson(productData);
-      }).toList();
-      print("Pruebaa");
-      print(jsonData);
-      setState(() {
-        products = loadedProducts;
-      });
-    } else {
-      throw Exception('Failed to load products');
-    }
+
   }
 
   @override
@@ -48,7 +39,7 @@ class _NewestItemsWidgetState extends State<NewestItemsWidget> {
       child: Padding(
         padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
         child: Column(
-          children: products.map((product) {
+          children: displayedProducts.map((product) {
             return Padding(
               padding: EdgeInsets.symmetric(vertical: 10),
               child: Container(

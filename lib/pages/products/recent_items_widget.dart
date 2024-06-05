@@ -1,41 +1,35 @@
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
 import 'package:pets/models/product.dart';
 import 'package:pets/pages/products/item_page.dart';
 
-class PopularItemsWidget extends StatefulWidget {
-  const PopularItemsWidget({Key? key}) : super(key: key);
+class RecentItemsWidget extends StatefulWidget {
+  final List<Product> products;
+
+  const RecentItemsWidget({Key? key, required this.products})
+      : super(key: key);
 
   @override
-  State<PopularItemsWidget> createState() => _PopularItemsWidgetState();
+  State<RecentItemsWidget> createState() => _RecentItemsWidgetState();
 }
 
-class _PopularItemsWidgetState extends State<PopularItemsWidget> {
-  List<Product> products = [];
+class _RecentItemsWidgetState extends State<RecentItemsWidget> {
+  late List<Product> products;
 
   @override
   void initState() {
     super.initState();
-    fetchProducts();
+
+    products = List.from(widget.products);
+    products.sort((a, b) => b.id.compareTo(a.id));// Orden descendente
+
+    
   }
 
-  Future<void> fetchProducts() async {
-    final response = await http.get(Uri.parse('http://localhost:3000/product'));
-    if (response.statusCode == 200) {
-      List<dynamic> jsonData = json.decode(response.body);
-
-      List<Product> loadedProducts = jsonData.map((productData) {
-        return Product.fromJson(productData);
-      }).toList();
-      print("Pruebaa");
-      print(jsonData);
-      setState(() {
-        products = loadedProducts;
-      });
-    } else {
-      throw Exception('Failed to load products');
-    }
+  @override
+  void didUpdateWidget(covariant RecentItemsWidget oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    products = widget.products;
+    products.sort((a, b) => b.id.compareTo(a.id));// Orden descendente
   }
 
   @override
@@ -45,7 +39,7 @@ class _PopularItemsWidgetState extends State<PopularItemsWidget> {
       child: Padding(
         padding: EdgeInsets.symmetric(vertical: 15, horizontal: 5),
         child: Row(
-          children: products.map((product) {
+          children: widget.products.map((product) {
             return Padding(
               padding: EdgeInsets.symmetric(horizontal: 7),
               child: Container(

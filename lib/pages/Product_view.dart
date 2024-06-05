@@ -1,35 +1,72 @@
-// ignore_for_file: library_private_types_in_public_api, must_be_immutable
-
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 import 'package:pets/models/user.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:pets/models/product.dart';
 import 'package:pets/pages/products/categories_widget.dart';
 import 'package:pets/pages/products/newest_items_widget.dart';
-import 'package:pets/pages/products/popular_iems_widget.dart';
+import 'package:pets/pages/products/recent_items_widget.dart'; // Importa el widget PopularItemsWidget
 
-
-
+// ignore: must_be_immutable
 class ProductView extends StatefulWidget {
   static String id = "product_page";
 
   late User user; // Agrega un parámetro para recibir el usuario logeado
 
-  ProductView({required this.user, super.key});
+  ProductView({required this.user, Key? key}) : super(key: key);
 
   @override
   _ProductViewState createState() => _ProductViewState();
 }
 
 class _ProductViewState extends State<ProductView> {
+  late List<Product> allProducts = [];
+  late List<Product> displayedProducts = [];
+  bool isSearching = false;
 
   @override
   void initState() {
     super.initState();
+    fetchProducts();
   }
+
+  Future<void> fetchProducts() async {
+    final response = await http.get(Uri.parse('http://localhost:3000/product'));
+    if (response.statusCode == 200) {
+      List<dynamic> jsonData = json.decode(response.body);
+
+      List<Product> loadedProducts = jsonData.map((productData) {
+        return Product.fromJson(productData);
+      }).toList();
+
+      setState(() {
+        allProducts = loadedProducts;
+        displayedProducts =
+            loadedProducts; // Inicializa displayedProducts con todos los productos
+      });
+    } else {
+      throw Exception('Failed to load products');
+    }
+  }
+
+  void searchProducts(String query) {
+    setState(() {
+      isSearching = query.isNotEmpty;
+      if (query.isEmpty) {
+        // Si la consulta está vacía, mostrar todos los productos
+        displayedProducts = allProducts;
+      } else {
+        // Filtrar productos por nombre
+        displayedProducts = allProducts
+            .where((product) =>
+                product.name.toLowerCase().contains(query.toLowerCase()))
+            .toList();
+      }
+    });
+  } // Agreg
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       body: ListView(
         children: [
@@ -43,16 +80,17 @@ class _ProductViewState extends State<ProductView> {
               width: double.infinity,
               height: 50,
               decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(20),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey.withOpacity(0.5),
-                      spreadRadius: 2,
-                      blurRadius: 10,
-                      offset: Offset(0, 3),
-                    ),
-                  ]),
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(20),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey.withOpacity(0.5),
+                    spreadRadius: 2,
+                    blurRadius: 10,
+                    offset: Offset(0, 3),
+                  ),
+                ],
+              ),
               child: Padding(
                 padding: EdgeInsets.symmetric(
                   horizontal: 10,
@@ -60,7 +98,7 @@ class _ProductViewState extends State<ProductView> {
                 child: Row(
                   children: [
                     Icon(
-                      CupertinoIcons.search,
+                      Icons.search,
                       color: Colors.red,
                     ),
                     SizedBox(
@@ -71,8 +109,9 @@ class _ProductViewState extends State<ProductView> {
                           horizontal: 15,
                         ),
                         child: TextFormField(
+                          onChanged: searchProducts,
                           decoration: InputDecoration(
-                            hintText: "What would you like to have?",
+                            hintText: "¿Qué te gustaría buscar?",
                             border: InputBorder.none,
                           ),
                         ),
@@ -84,50 +123,62 @@ class _ProductViewState extends State<ProductView> {
             ),
           ),
 
-          // Category
+          // Categories
           Padding(
             padding: EdgeInsets.only(top: 20, left: 10),
             child: Text(
-              "Categories",
+              "Categorias",
               style: TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 20,
               ),
             ),
           ),
-
-          // Category Widget
+          // Categories Widget
           CategoriesWidget(),
 
-          // Popular Items
-          Padding(
-            padding: EdgeInsets.only(top: 20, left: 10),
-            child: Text(
-              "Popular",
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 20,
-              ),
+          if (!isSearching)
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: EdgeInsets.only(
+                      left: 10), // Solo aplicamos padding a la izquierda
+                  child: Text(
+                    "Productos recién añadidos.",
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 20,
+                    ),
+                  ),
+                ),
+                RecentItemsWidget(products: displayedProducts),
+              ],
             ),
-          ),
-
-          // Popular Items Widget
-          PopularItemsWidget(),
 
           // Newest Items
           Padding(
             padding: EdgeInsets.only(top: 20, left: 10),
             child: Text(
-              "Newest",
+              "Todos los productos",
               style: TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 20,
               ),
             ),
           ),
-
           // Newest Item Widget
-          NewestItemsWidget(),
+          displayedProducts.isEmpty
+              ? Center(
+                  child: Text(
+                    "No se encontraron resultados",
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                )
+              : NewestItemsWidget(displayedProducts: displayedProducts),
         ],
       ),
     );
