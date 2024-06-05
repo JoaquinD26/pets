@@ -1,9 +1,8 @@
-
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:pets/models/user.dart';
-import 'package:pets/models/product.dart';
+import 'package:pets/models/Product.dart';
 import 'package:pets/pages/products/categories_widget.dart';
 import 'package:pets/pages/products/newest_items_widget.dart';
 import 'package:pets/pages/products/recent_items_widget.dart'; // Importa el widget PopularItemsWidget
@@ -42,7 +41,8 @@ class _ProductViewState extends State<ProductView> {
 
       setState(() {
         allProducts = loadedProducts;
-        displayedProducts = loadedProducts; // Inicializa displayedProducts con todos los productos
+        displayedProducts =
+            loadedProducts; // Inicializa displayedProducts con todos los productos
       });
     } else {
       throw Exception('Failed to load products');
@@ -68,118 +68,121 @@ class _ProductViewState extends State<ProductView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: ListView(
-        children: [
-          // Search
-          Padding(
-            padding: EdgeInsets.symmetric(
-              vertical: 10,
-              horizontal: 15,
-            ),
-            child: Container(
-              width: double.infinity,
-              height: 50,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(20),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.grey.withOpacity(0.5),
-                    spreadRadius: 2,
-                    blurRadius: 10,
-                    offset: Offset(0, 3),
-                  ),
-                ],
+      body: RefreshIndicator(
+        onRefresh: fetchProducts,
+        child: ListView(
+          children: [
+            // Search
+            Padding(
+              padding: EdgeInsets.symmetric(
+                vertical: 10,
+                horizontal: 15,
               ),
-              child: Padding(
-                padding: EdgeInsets.symmetric(
-                  horizontal: 10,
-                ),
-                child: Row(
-                  children: [
-                    Icon(
-                      Icons.search,
-                      color: Colors.red,
-                    ),
-                    SizedBox(
-                      height: 50,
-                      width: 300,
-                      child: Padding(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: 15,
-                        ),
-                        child: TextFormField(
-                          onChanged: searchProducts,
-                          decoration: InputDecoration(
-                            hintText: "¿Qué te gustaría buscar?",
-                            border: InputBorder.none,
-                          ),
-                        ),
-                      ),
+              child: Container(
+                width: double.infinity,
+                height: 50,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(20),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(0.5),
+                      spreadRadius: 2,
+                      blurRadius: 10,
+                      offset: Offset(0, 3),
                     ),
                   ],
                 ),
-              ),
-            ),
-          ),
-
-          // Categories
-          Padding(
-            padding: EdgeInsets.only(top: 20, left: 10),
-            child: Text(
-              "Categorias",
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 20,
-              ),
-            ),
-          ),
-          // Categories Widget
-          CategoriesWidget(onCategorySelected: onCategorySelected),
-
-          if (!isSearching)
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Padding(
-                  padding: EdgeInsets.only(
-                      left: 10), // Solo aplicamos padding a la izquierda
-                  child: Text(
-                    "Productos recién añadidos.",
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 20,
-                    ),
+                child: Padding(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 10,
+                  ),
+                  child: Row(
+                    children: [
+                      Icon(
+                        Icons.search,
+                        color: Colors.red,
+                      ),
+                      SizedBox(
+                        height: 50,
+                        width: 300,
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 15,
+                          ),
+                          child: TextFormField(
+                            onChanged: searchProducts,
+                            decoration: InputDecoration(
+                              hintText: "¿Qué te gustaría buscar?",
+                              border: InputBorder.none,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-                RecentItemsWidget(products: displayedProducts),
-              ],
-            ),
-
-          // Newest Items
-          Padding(
-            padding: EdgeInsets.only(top: 20, left: 10),
-            child: Text(
-              "Todos los productos",
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 20,
               ),
             ),
-          ),
-          // Newest Item Widget
-          displayedProducts.isEmpty
-              ? Center(
-                  child: Text(
-                    "No se encontraron resultados",
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
+
+            // Categories
+            Padding(
+              padding: EdgeInsets.only(top: 20, left: 10),
+              child: Text(
+                "Categorias",
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 20,
+                ),
+              ),
+            ),
+            // Categories Widget
+            CategoriesWidget(onCategorySelected: onCategorySelected),
+
+            if (!isSearching)
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: EdgeInsets.only(
+                        left: 10), // Solo aplicamos padding a la izquierda
+                    child: Text(
+                      "Productos recién añadidos.",
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 20,
+                      ),
                     ),
                   ),
-                )
-              : NewestItemsWidget(displayedProducts: displayedProducts),
-        ],
+                  RecentItemsWidget(products: displayedProducts),
+                ],
+              ),
+
+            // Newest Items
+            Padding(
+              padding: EdgeInsets.only(top: 20, left: 10),
+              child: Text(
+                "Todos los productos",
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 20,
+                ),
+              ),
+            ),
+            // Newest Item Widget
+            displayedProducts.isEmpty
+                ? Center(
+                    child: Text(
+                      "No se encontraron resultados",
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  )
+                : NewestItemsWidget(displayedProducts: displayedProducts),
+          ],
+        ),
       ),
     );
   }

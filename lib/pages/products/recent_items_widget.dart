@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:pets/models/product.dart';
+import 'package:pets/models/Product.dart';
 import 'package:pets/pages/products/item_page.dart';
 
 class RecentItemsWidget extends StatefulWidget {
@@ -68,7 +68,7 @@ class _RecentItemsWidgetState extends State<RecentItemsWidget> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => ItemPage(),
+                              builder: (context) => ItemPage(product: product),
                             ),
                           );
                         },
@@ -91,14 +91,6 @@ class _RecentItemsWidgetState extends State<RecentItemsWidget> {
                         ),
                       ),
                       SizedBox(height: 4),
-                      Text(
-                        product.description,
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontSize: 15,
-                          // fontWeight: FontWeight.bold,
-                        ),
-                      ),
                       SizedBox(height: 12),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,

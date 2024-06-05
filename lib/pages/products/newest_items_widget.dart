@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-import 'package:pets/models/product.dart';
+import 'package:pets/models/Product.dart';
 import 'package:pets/pages/products/item_page.dart';
+
 
 class NewestItemsWidget extends StatefulWidget {
   final List<Product> displayedProducts;
@@ -64,7 +65,7 @@ class _NewestItemsWidgetState extends State<NewestItemsWidget> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => ItemPage(),
+                            builder: (context) => ItemPage(product: product),
                           ),
                         );
                       },
@@ -90,26 +91,7 @@ class _NewestItemsWidgetState extends State<NewestItemsWidget> {
                               fontWeight: FontWeight.bold,
                             ),
                           ),
-                          Text(
-                            product.description, // Descripción del producto
-                            style: TextStyle(
-                              fontSize: 14, // Reducido el tamaño del texto
-                              // fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          RatingBar.builder(
-                            initialRating: 4,
-                            minRating: 1,
-                            direction: Axis.horizontal,
-                            itemCount: 5,
-                            itemSize: 16, // Reducido el tamaño de las estrellas
-                            itemPadding: EdgeInsets.symmetric(horizontal: 4),
-                            itemBuilder: (context, _) => Icon(
-                              Icons.star,
-                              color: Colors.red,
-                            ),
-                            onRatingUpdate: (index) {},
-                          ),
+                          
                         ],
                       ),
                     ),

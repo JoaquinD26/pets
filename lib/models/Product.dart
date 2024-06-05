@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:pets/models/category.dart';
 
 class Product {
@@ -26,7 +28,7 @@ class Product {
     return Product(
       id: json['id'],
       name: json['name'],
-      description: json['description'] ?? '', // default to empty string if null
+      description: utf8.decode(json['description'].codeUnits), // Decode using utf8
       price: json['price'],
       imageUrl: json['image'], // assuming this is the correct field for image URL
       type: json['type'],
