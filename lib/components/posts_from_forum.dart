@@ -27,7 +27,6 @@ Future<List<Post>> fetchPostsForForum(int forumId) async {
 
     if (response.statusCode == 200) {
       final List<dynamic> responseData = json.decode(response.body);
-      // Mapea los datos de la respuesta a objetos Post
       List<Post> posts =
           responseData.map((data) => Post.fromJson(data)).toList();
       return posts;
@@ -40,8 +39,44 @@ Future<List<Post>> fetchPostsForForum(int forumId) async {
   }
 }
 
+Future<int> fetchLikesPostsForForum(int postId) async {
+  try {
+    final response = await http.get(
+      Uri.parse('http://localhost:3000/post/$postId/countLikes'),
+    );
+
+    if (response.statusCode == 200) {
+      final int likes = json.decode(response.body);
+      return likes;
+    } else {
+      throw Exception('Failed to load likes: ${response.reasonPhrase}');
+    }
+  } catch (e) {
+    throw Exception('Failed to load likes: $e');
+  }
+}
+
+// Future<bool> fetchLikeStatus(int postId, String userId) async {
+//   try {
+//     final response = await http.get(
+//       Uri.parse('http://localhost:3000/post/$postId//$userId'),
+//     );
+
+//     if (response.statusCode == 200) {
+//       final bool liked = json.decode(response.body);
+//       return liked;
+//     } else {
+//       throw Exception('Failed to load like status: ${response.reasonPhrase}');
+//     }
+//   } catch (e) {
+//     throw Exception('Failed to load like status: $e');
+//   }
+// }
+
 class PostDetailsPageState extends State<PostDetailsPage> {
   List<Post> postsList = [];
+  Map<int, int> likesMap = {};
+  Map<int, bool> likeStatusMap = {};
 
   TextEditingController replyController = TextEditingController();
 
@@ -58,10 +93,40 @@ class PostDetailsPageState extends State<PostDetailsPage> {
       setState(() {
         postsList = posts;
       });
+
+      // Load likes and like status for each post
+      for (Post post in posts) {
+        _loadLikes(post.id);
+        // _loadLikeStatus(post.id, widget.userLog.id);
+      }
     } catch (e) {
       print('Error loading comments: $e');
     }
   }
+
+  Future<void> _loadLikes(int postId) async {
+    try {
+      int likes = await fetchLikesPostsForForum(postId);
+
+      setState(() {
+        likesMap[postId] = likes;
+      });
+    } catch (e) {
+      print('Error loading likes: $e');
+    }
+  }
+
+  // Future<void> _loadLikeStatus(int postId, String userId) async {
+  //   try {
+  //     bool liked = await fetchLikeStatus(postId, userId);
+
+  //     setState(() {
+  //       likeStatusMap[postId] = liked;
+  //     });
+  //   } catch (e) {
+  //     print('Error loading like status: $e');
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -74,25 +139,52 @@ class PostDetailsPageState extends State<PostDetailsPage> {
         backgroundColor: Colors.deepOrange[300],
         iconTheme: IconThemeData(color: Colors.white),
       ),
-      body: Padding(
-        padding: EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Card(
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Container(
+            height: 180,
+            margin: EdgeInsets.all(15),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(10),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.grey.withOpacity(0.5),
+                  spreadRadius: 3,
+                  blurRadius: 10,
+                  offset: Offset(0, 3),
+                ),
+              ],
+            ),
+            child: Card(
+              color: Colors.white,
+              margin: EdgeInsets.all(10),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10.0),
+              ),
+              elevation: 0,
               child: Padding(
                 padding: EdgeInsets.all(16),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    SizedBox(
-                        height:
-                            16), // Espacio adicional entre el botón y los demás elementos
+                    SizedBox(height: 16),
                     Text(
-                      widget.forumPost.user.name!,
+                      widget.forumPost.user.name,
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 20,
+                      ),
+                    ),
+                    SizedBox(
+                      height: 30,
+                    ),
+                    Text(
+                      widget.forumPost.name,
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 12,
                       ),
                     ),
                     SizedBox(height: 8),
@@ -104,99 +196,123 @@ class PostDetailsPageState extends State<PostDetailsPage> {
                 ),
               ),
             ),
-            SizedBox(height: 16),
-            Text(
-              'Comentarios',
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 18,
-              ),
-              textAlign: TextAlign.center,
+          ),
+          SizedBox(height: 16),
+          Text(
+            'Comentarios',
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 18,
             ),
-            Expanded(
-              child: ListView.builder(
-                itemCount: postsList.length,
-                itemBuilder: (context, index) {
-                  final userName = postsList[index].user.name ??
-                      'Nombre desconocido'; // Si el nombre es nulo, establece un valor predeterminado
-                  return Card(
-                    child: Column(
-                      children: [
-                        postsList[index].user.id == widget.userLog.id
-                            ? Row(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                children: [
-                                  IconButton(
-                                    color: Colors.red,
-                                    onPressed: () {
-                                      showDialog(
-                                        context: context,
-                                        builder: (BuildContext context) {
-                                          return AlertDialog(
-                                            title:
-                                                Text('Confirmar eliminación'),
-                                            content: Text(
-                                                '¿Estás seguro de que quieres eliminar este comentario?'),
-                                            actions: [
-                                              TextButton(
-                                                onPressed: () {
-                                                  Navigator.of(context)
-                                                      .pop(); // Cierra el cuadro de diálogo
-                                                },
-                                                child: Text('Cancelar'),
-                                              ),
-                                              ElevatedButton(
-                                                onPressed: () {
-                                                  // Implementa la lógica para eliminar el comentario del servidor
-                                                  _deletePost(
-                                                      postsList[index].id);
-                                                  Navigator.of(context)
-                                                      .pop(); // Cierra el cuadro de diálogo
-                                                },
-                                                style: ElevatedButton.styleFrom(
-                                                  foregroundColor: Colors.white,
-                                                  backgroundColor: Colors
-                                                      .red, // Color del texto del botón
-                                                ),
-                                                child: Text('Eliminar'),
-                                              ),
-                                            ],
-                                          );
-                                        },
-                                      );
-                                    },
-                                    icon: Icon(Icons.delete),
-                                  ),
-                                ],
-                              )
-                            : Container(),
-                        ListTile(
-                          title: Text(userName),
-                          subtitle: Text(postsList[index].text),
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            IconButton(
-                              icon: postsList[index].likedByUser
-                                  ? Icon(Icons.favorite, color: Colors.red)
-                                  : Icon(Icons.favorite_border),
-                              onPressed: () {
-                                _likePost(postsList[index], widget.userLog);
-                              },
-                            ),
-                            Text('${widget.forumPost.likes}'),
-                            SizedBox(width: 20,)
-                          ],
-                        ),
-                      ],
+            textAlign: TextAlign.center,
+          ),
+          Expanded(
+            child: ListView.builder(
+              itemCount: postsList.length,
+              itemBuilder: (context, index) {
+                final post = postsList[index];
+                final userName = post.user.name ?? 'Nombre desconocido';
+                final likes = likesMap[post.id] ?? 0;
+                final likedByUser = likeStatusMap[post.id] ?? false;
+
+                return Container(
+                  margin: EdgeInsets.all(15),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(20),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(0.5),
+                        spreadRadius: 3,
+                        blurRadius: 10,
+                        offset: Offset(0, 3),
+                      ),
+                    ],
+                  ),
+                  child: Card(
+                    color: Colors.white,
+                    
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20.0),
                     ),
-                  );
-                },
-              ),
+                    elevation: 0,
+                    child: InkWell(
+                      mouseCursor:MaterialStateMouseCursor.clickable ,
+                      
+                      // focusColor: Colors.transparent,
+                      hoverColor: post.user.id == widget.userLog.id ? Colors.red[100] :Colors.transparent,
+                      // splashColor: Colors.transparent,
+                      // highlightColor: Colors.transparent,
+                      borderRadius: BorderRadius.circular(20),
+                      onLongPress: () {
+                        post.user.id == widget.userLog.id
+                            ? showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return AlertDialog(
+                                    title: Text('Confirmar eliminación'),
+                                    content: Text(
+                                        '¿Estás seguro de que quieres eliminar este comentario?'),
+                                    actions: [
+                                      TextButton(
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                        },
+                                        child: Text('Cancelar'),
+                                      ),
+                                      ElevatedButton(
+                                        onPressed: () {
+                                          _deletePost(post.id);
+                                          Navigator.of(context).pop();
+                                        },
+                                        style: ElevatedButton.styleFrom(
+                                          foregroundColor: Colors.white,
+                                          backgroundColor: Colors.red,
+                                        ),
+                                        child: Text('Eliminar'),
+                                      ),
+                                    ],
+                                  );
+                                },
+                              )
+                            : Container();
+                      },
+                      child: Column(
+                        children: [
+                          ListTile(
+                            title: Text(userName),
+                            subtitle: Text(post.text),
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              IconButton(
+                                icon: likedByUser
+                                    ? Icon(Icons.favorite, color: Colors.red)
+                                    : Icon(Icons.favorite_border),
+                                onPressed: () {
+                                  _likePost(post, widget.userLog);
+                                },
+                              ),
+                              Text('$likes'),
+                              SizedBox(
+                                width: 20,
+                              ),
+                            ],
+                          ),
+                          
+                        ],
+                      ),
+                    ),
+                  ),
+                );
+              },
             ),
-          ],
-        ),
+          ),
+          SizedBox(
+            height: 80,
+          ),
+        ],
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () {
@@ -204,10 +320,9 @@ class PostDetailsPageState extends State<PostDetailsPage> {
         },
         label: Text(
           'Agregar Comentario',
-          style: TextStyle(
-              color: Colors.white), // Estilo del texto con color blanco
+          style: TextStyle(color: Colors.white),
         ),
-        icon: Icon(Icons.add, color: Colors.white), // Color del ícono a blanco
+        icon: Icon(Icons.add, color: Colors.white),
         backgroundColor: Colors.deepOrangeAccent,
       ),
     );
@@ -221,8 +336,8 @@ class PostDetailsPageState extends State<PostDetailsPage> {
       context: context,
       builder: (BuildContext context) {
         return FractionallySizedBox(
-          heightFactor: 0.6, // Altura del 60% de la pantalla
-          alignment: Alignment.topCenter, // Aparece desde arriba
+          heightFactor: 0.6,
+          alignment: Alignment.topCenter,
           child: Container(
             padding: EdgeInsets.all(16.0),
             decoration: BoxDecoration(
@@ -241,51 +356,37 @@ class PostDetailsPageState extends State<PostDetailsPage> {
                   style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
                 ),
                 SizedBox(height: 16.0),
-                Container(
-                  height: 200,
-                  decoration: BoxDecoration(
-                    color: Colors.grey[200],
-                    borderRadius: BorderRadius.circular(8.0),
-                  ),
-                  child: TextFormField(
-                    textAlign: TextAlign.center,
-                    style: TextStyle(color: Colors.deepOrange),
-                    controller: postController,
-                    maxLines: null,
-                    decoration: InputDecoration(
-                      hintText: 'Escribe tu respuesta al foro aquí...',
-                      hintStyle: TextStyle(color: Colors.deepOrange),
-                      border: InputBorder.none,
-                    ),
+                TextField(
+                  controller: postController,
+                  maxLines: 3,
+                  decoration: InputDecoration(
+                    border: OutlineInputBorder(),
+                    hintText: 'Escribe tu comentario aquí',
                   ),
                 ),
                 SizedBox(height: 16.0),
                 ElevatedButton(
                   onPressed: () {
                     String post = postController.text;
-
-                    // Implementa la lógica para enviar el comentario al servidor
                     _replyToComment(post);
                     Navigator.pop(context);
                   },
                   style: ElevatedButton.styleFrom(
                     foregroundColor: Colors.white,
-                    backgroundColor:
-                        Colors.deepOrange, // Color del texto del botón
-                    shadowColor: Colors.deepOrangeAccent, // Color de la sombra
-                    elevation: 5, // Elevación del botón
+                    backgroundColor: Colors.deepOrange,
+                    shadowColor: Colors.deepOrangeAccent,
+                    elevation: 5,
                     shape: RoundedRectangleBorder(
-                      borderRadius:
-                          BorderRadius.circular(30.0), // Bordes redondeados
+                      borderRadius: BorderRadius.circular(30.0),
                     ),
-                    padding: EdgeInsets.symmetric(
-                        horizontal: 32.0, vertical: 12.0), // Espaciado interno
+                    padding:
+                        EdgeInsets.symmetric(horizontal: 32.0, vertical: 12.0),
                   ),
                   child: Text(
                     'Enviar',
                     style: TextStyle(
-                      fontSize: 16.0, // Tamaño de la fuente del texto del botón
-                      fontWeight: FontWeight.bold, // Grosor de la fuente
+                      fontSize: 16.0,
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
                 ),
@@ -298,21 +399,19 @@ class PostDetailsPageState extends State<PostDetailsPage> {
   }
 
   Future<void> _likePost(Post post, User user) async {
-    if (!post.likedByUser) {
+    if (!likeStatusMap[post.id]!) {
       try {
         var response = await http.put(
             Uri.parse("http://localhost:3000/post/${post.id}/like/${user.id}"));
         if (response.statusCode == 200) {
-          // Acción exitosa
           setState(() {
-            post.likedByUser = true;
+            likeStatusMap[post.id] = true;
+            likesMap[post.id] = (likesMap[post.id] ?? 0) + 1;
           });
         } else {
-          // Manejo de error si la respuesta no es exitosa
           print('Error al dar like: ${response.statusCode}');
         }
       } catch (e) {
-        // Manejo de excepción
         print('Excepción al dar like: $e');
       }
     } else {
@@ -320,16 +419,14 @@ class PostDetailsPageState extends State<PostDetailsPage> {
         var response = await http.put(Uri.parse(
             "http://localhost:3000/post/${post.id}/dislike/${user.id}"));
         if (response.statusCode == 200) {
-          // Acción exitosa
           setState(() {
-            post.likedByUser = false;
+            likeStatusMap[post.id] = false;
+            likesMap[post.id] = (likesMap[post.id] ?? 0) - 1;
           });
         } else {
-          // Manejo de error si la respuesta no es exitosa
           print('Error al dar dislike: ${response.statusCode}');
         }
       } catch (e) {
-        // Manejo de excepción
         print('Excepción al dar dislike: $e');
       }
     }
@@ -362,10 +459,10 @@ class PostDetailsPageState extends State<PostDetailsPage> {
     }
   }
 
-  Future<void> _deletePost(int int) async {
+  Future<void> _deletePost(int postId) async {
     try {
       var response = await http.delete(
-        Uri.parse('http://localhost:3000/post/$int'),
+        Uri.parse('http://localhost:3000/post/$postId'),
         headers: {'Content-Type': 'application/json'},
       );
 

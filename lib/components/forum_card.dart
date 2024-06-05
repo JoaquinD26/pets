@@ -75,7 +75,7 @@ class ForumPostCardState extends State<ForumPostCard> {
       margin: EdgeInsets.all(15),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(30),
+        borderRadius: BorderRadius.circular(10),
         boxShadow: [
           BoxShadow(
             color: Colors.grey.withOpacity(0.5),
@@ -89,7 +89,7 @@ class ForumPostCardState extends State<ForumPostCard> {
         color: Colors.white,
         margin: EdgeInsets.all(10),
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(30.0),
+          borderRadius: BorderRadius.circular(10.0),
         ),
         elevation: 0,
         child: InkWell(
