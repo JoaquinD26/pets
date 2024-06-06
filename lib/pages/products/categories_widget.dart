@@ -34,8 +34,8 @@ class _CategoriesWidgetState extends State<CategoriesWidget> {
     final configJson = json.decode(configString);
     final config = Config.fromJson(configJson);
 
-    final response =
-        await http.get(Uri.parse('http://${config.host}:3000/product/category'));
+    final response = await http
+        .get(Uri.parse('http://${config.host}:3000/product/category'));
     if (response.statusCode == 200) {
       List<dynamic> jsonData = json.decode(response.body);
       List<Category> fetchedCategories = jsonData.map((categoryData) {
@@ -133,7 +133,7 @@ class _CategoriesWidgetState extends State<CategoriesWidget> {
                     categoryName, // Utiliza el nombre de la categoría obtenido dinámicamente
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
-                      fontSize: 16,
+                      fontSize: 14,
                     ),
                   ),
                 ],
