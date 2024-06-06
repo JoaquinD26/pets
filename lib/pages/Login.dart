@@ -31,40 +31,42 @@ class LoginState extends State<LoginPage> {
     return SafeArea(
       child: Scaffold(
         body: Center(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20.0),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  "Pets",
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    color: Colors.deepOrange[400],
-                    fontSize: 40,
-                    fontWeight: FontWeight.bold,
+          child: SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20.0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    "Pets",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: Colors.deepOrange[400],
+                      fontSize: 40,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
-                ),
-                const SizedBox(height: 20.0),
-                Image.asset(
-                  "icon/icon.png",
-                  height: 150,
-                  width: double.infinity,
-                ).animate().flipH(
-                    duration: Duration(milliseconds: 400),
-                    begin: 0,
-                    end: 8,
-                    delay: Duration(milliseconds: 100),
-                    curve: Curves.elasticInOut),
-                const SizedBox(height: 25.0),
-                _buildEmailTextField(),
-                const SizedBox(height: 25.0),
-                _buildPasswordTextField(),
-                const SizedBox(height: 25.0),
-                _buildLoginButton(),
-                const SizedBox(height: 25.0),
-                _buildRegisterLink(),
-              ],
+                  const SizedBox(height: 20.0),
+                  Image.asset(
+                    "assets/icon/icon.png",
+                    height: 150,
+                    width: double.infinity,
+                  ).animate().flipH(
+                      duration: Duration(milliseconds: 400),
+                      begin: 0,
+                      end: 8,
+                      delay: Duration(milliseconds: 100),
+                      curve: Curves.elasticInOut),
+                  const SizedBox(height: 25.0),
+                  _buildEmailTextField(),
+                  const SizedBox(height: 25.0),
+                  _buildPasswordTextField(),
+                  const SizedBox(height: 25.0),
+                  _buildLoginButton(),
+                  const SizedBox(height: 25.0),
+                  _buildRegisterLink(),
+                ],
+              ),
             ),
           ),
         ),
