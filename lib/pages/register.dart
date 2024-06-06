@@ -51,7 +51,7 @@ class _RegisterPageState extends State<RegisterPage> {
                   ),
                   const SizedBox(height: 20.0),
                   Image.asset(
-                    "icon/icon.png",
+                    "/assetsicon/icon.png",
                     height: 130,
                     width: double.infinity,
                   ).animate().flipH(
