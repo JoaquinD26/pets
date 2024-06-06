@@ -74,8 +74,8 @@ class MyHomePageState extends State<MyHomePage> {
               text: 'My Pets',
             ),
             GButton(
-              icon: Icons.search,
-              text: 'Search',
+              icon: Icons.shopping_bag_outlined,
+              text: 'Shop',
             ),
             GButton(
               icon: Icons.forum_outlined,

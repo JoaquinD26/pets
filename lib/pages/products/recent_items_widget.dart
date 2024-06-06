@@ -63,7 +63,7 @@ class _RecentItemsWidgetState extends State<RecentItemsWidget> {
                     padding: EdgeInsets.symmetric(horizontal: 7),
                     child: Container(
                       width: 200,
-                      height: 250,
+                      height: 300,
                       decoration: BoxDecoration(
                         color: Colors.white,
                         borderRadius: BorderRadius.circular(10),

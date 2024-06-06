@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 class Pet {
   final int id;
   final String name;
@@ -27,7 +29,7 @@ class Pet {
       id: json['id'] ?? 0,
       name: json['name'] ?? '',
       animal: json['animal'] ?? '',
-      race: json['race'] ?? '',
+      race: json['race'] != null ? utf8.decode(json['race'].toString().codeUnits)  : '',
       weight: (json['weight'] ?? 0.0).toDouble(),
       gender: json['gender'] ?? 0,
       chip: json['chip'] ?? 0,

@@ -160,7 +160,7 @@ class PostDetailsPageState extends State<PostDetailsPage> {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Container(
-            height: 180,
+            height: 240,
             margin: EdgeInsets.all(15),
             decoration: BoxDecoration(
               color: Colors.white,
@@ -183,45 +183,38 @@ class PostDetailsPageState extends State<PostDetailsPage> {
               elevation: 0,
               child: Padding(
                 padding: EdgeInsets.all(16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SizedBox(height: 16),
-                    Text(
-                      widget.forumPost.user.name,
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 20,
+                child: SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SizedBox(height: 16),
+                      Text(
+                        widget.forumPost.user.name,
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 20,
+                        ),
                       ),
-                    ),
-                    SizedBox(
-                      height: 30,
-                    ),
-                    Text(
-                      widget.forumPost.name,
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 12,
+                      SizedBox(
+                        height: 30,
                       ),
-                    ),
-                    SizedBox(height: 8),
-                    Text(
-                      widget.forumPost.description,
-                      style: TextStyle(fontSize: 16),
-                    ),
-                  ],
+                      Text(
+                        widget.forumPost.name,
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 12,
+                        ),
+                      ),
+                      SizedBox(height: 8),
+                      Text(
+                        widget.forumPost.description,
+                        style: TextStyle(fontSize: 16),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
-          ),
-          SizedBox(height: 16),
-          Text(
-            'Comentarios',
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 18,
-            ),
-            textAlign: TextAlign.center,
           ),
           Expanded(
             child: ListView.builder(

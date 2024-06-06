@@ -87,7 +87,8 @@ class ItemPage extends StatelessWidget {
                             Padding(
                               padding: EdgeInsets.only(top: 60, bottom: 10),
                               child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 children: [
                                   RatingBar.builder(
                                     initialRating: 4,
@@ -95,7 +96,8 @@ class ItemPage extends StatelessWidget {
                                     direction: Axis.horizontal,
                                     itemCount: 5,
                                     itemSize: 18,
-                                    itemPadding: EdgeInsets.symmetric(horizontal: 4),
+                                    itemPadding:
+                                        EdgeInsets.symmetric(horizontal: 4),
                                     itemBuilder: (context, _) => Icon(
                                       Icons.star,
                                       color: Colors.red,
@@ -118,13 +120,17 @@ class ItemPage extends StatelessWidget {
                                 bottom: 20,
                               ),
                               child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Text(
-                                    product.name,
-                                    style: TextStyle(
-                                      fontSize: 28,
-                                      fontWeight: FontWeight.bold,
+                                  Expanded(
+                                    child: Text(
+                                      product.name,
+                                      style: TextStyle(
+                                        fontSize: 28,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                      softWrap: true,
                                     ),
                                   ),
                                 ],

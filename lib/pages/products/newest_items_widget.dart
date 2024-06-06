@@ -61,7 +61,7 @@ class _NewestItemsWidgetState extends State<NewestItemsWidget> {
                     padding: EdgeInsets.symmetric(vertical: 10),
                     child: Container(
                       width: 360, // Reducido el ancho del contenedor
-                      height: 140, // Reducida la altura del contenedor
+                      height: 200, // Reducida la altura del contenedor
                       decoration: BoxDecoration(
                         color: Colors.white,
                         borderRadius: BorderRadius.circular(10),
