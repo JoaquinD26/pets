@@ -25,7 +25,7 @@ class Post {
   factory Post.fromJson(Map<String, dynamic> json) {
     return Post(
       id: json['id'],
-      text: utf8.decode(json['text'].toString().codeUnits),
+      text: json['text'] != null ?  utf8.decode(json['text'].toString().codeUnits) : "No llegó",
       date: json['date'],
       // likes: json['likes'],
         forum: json['forum'] != null ? Forum.fromJson(json['forum']) : null,

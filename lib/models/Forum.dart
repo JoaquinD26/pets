@@ -1,4 +1,6 @@
 
+import 'dart:convert';
+
 import 'package:pets/models/User.dart';
 
 class Forum {
@@ -24,10 +26,10 @@ class Forum {
 
     return Forum(
       id: json['id'],
-      name: json['name'] ?? '',
+      name: json['name'] != null ? utf8.decode(json['name'].toString().codeUnits) : "No llegó",
       date: json['date'] != null ? DateTime.parse(json['date']) : DateTime.now(),
       likes: json['likes'] ?? 0,
-      description: json['description'] ?? "No llegó",
+      description: json['description'] != null ? utf8.decode(json['description'].toString().codeUnits) : "No llegó",
       user: user,
     );
   }

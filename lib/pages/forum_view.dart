@@ -9,6 +9,7 @@ import 'package:pets/models/forum.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:pets/models/user.dart';
+import 'package:pets/utils/custom_snackbar.dart';
 
 class ForumPage extends StatefulWidget {
   static String id = "forum_page";
@@ -126,15 +127,14 @@ class ForumPageState extends State<ForumPage> {
                   child: Row(
                     children: [
                       Icon(CupertinoIcons.search, color: Colors.red),
-                      SizedBox(
-                        height: 50,
-                        width: 300,
+                      Expanded(
+                        // height: 50,
+                        // width: 300,
                         child: Padding(
                           padding: EdgeInsets.symmetric(horizontal: 15),
                           child: TextFormField(
                             controller: searchController,
                             decoration: InputDecoration(
-                              hintText: "What would you like to have?",
                               border: InputBorder.none,
                             ),
                           ),
@@ -156,7 +156,7 @@ class ForumPageState extends State<ForumPage> {
                 },
               ),
             ),
-            SizedBox(height: 20),
+            SizedBox(height: 30),
           ],
         ),
       ),
@@ -167,13 +167,14 @@ class ForumPageState extends State<ForumPage> {
         backgroundColor: Colors.deepOrangeAccent,
         child: Icon(color: Colors.white, Icons.add),
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }
 
   void _showPostDialog(BuildContext context) {
     TextEditingController titleController = TextEditingController();
     TextEditingController postController = TextEditingController();
+    final _formKey = GlobalKey<FormState>();
 
     showModalBottomSheet(
       isScrollControlled: true,
@@ -217,52 +218,79 @@ class ForumPageState extends State<ForumPage> {
                         TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
                   ),
                   SizedBox(height: 16.0),
-                  Container(
-                    decoration: BoxDecoration(
-                      color: Colors.deepOrange[300],
-                      borderRadius: BorderRadius.circular(8.0),
-                    ),
-                    child: TextFormField(
-                      textAlign: TextAlign.center,
-                      style: TextStyle(color: Colors.white),
-                      controller: titleController,
-                      focusNode:
-                          titleFocusNode, // Establece el nodo de enfoque del primer campo de texto
-                      decoration: InputDecoration(
-                        hintText: 'Título del comentario...',
-                        hintStyle: TextStyle(color: Colors.white),
-                        border: InputBorder.none,
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: 16.0),
-                  Container(
-                    height: 200,
-                    decoration: BoxDecoration(
-                      color: Colors.grey[200],
-                      borderRadius: BorderRadius.circular(8.0),
-                    ),
-                    child: TextFormField(
-                      textAlign: TextAlign.center,
-                      style: TextStyle(color: Colors.deepOrange),
-                      controller: postController,
-                      maxLines: null,
-                      decoration: InputDecoration(
-                        hintText: 'Escribe tu comentario aquí...',
-                        hintStyle: TextStyle(color: Colors.deepOrange),
-                        border: InputBorder.none,
-                      ),
+                  Form(
+                    key: _formKey,
+                    child: Column(
+                      children: [
+                        Container(
+                          decoration: BoxDecoration(
+                            color: Colors.deepOrange[300],
+                            borderRadius: BorderRadius.circular(8.0),
+                          ),
+                          child: TextFormField(
+                            textAlign: TextAlign.center,
+                            style: TextStyle(color: Colors.white),
+                            controller: titleController,
+                            focusNode:
+                                titleFocusNode, // Establece el nodo de enfoque del primer campo de texto
+                            decoration: InputDecoration(
+                              hintText: 'Título del comentario...',
+                              hintStyle: TextStyle(color: Colors.white),
+                              border: InputBorder.none,
+                            ),
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                CustomSnackBar.show(context,
+                                    "Escriba su título antes de enviar", true);
+                                return "";
+                              }
+                              return null;
+                            },
+                          ),
+                        ),
+                        SizedBox(height: 16.0),
+                        Container(
+                          height: 200,
+                          decoration: BoxDecoration(
+                            color: Colors.grey[200],
+                            borderRadius: BorderRadius.circular(8.0),
+                          ),
+                          child: TextFormField(
+                            textAlign: TextAlign.center,
+                            style: TextStyle(color: Colors.deepOrange),
+                            controller: postController,
+                            maxLines: null,
+                            decoration: InputDecoration(
+                              hintText: 'Escribe tu comentario aquí...',
+                              hintStyle: TextStyle(color: Colors.deepOrange),
+                              border: InputBorder.none,
+                            ),
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                CustomSnackBar.show(
+                                    context,
+                                    "Escriba su comentario antes de enviar",
+                                    true);
+                                return "";
+                              }
+                              return null;
+                            },
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                   SizedBox(height: 16.0),
                   ElevatedButton(
                     onPressed: () {
-                      String title = titleController.text;
-                      String post = postController.text;
+                      if (_formKey.currentState!.validate()) {
+                        String title = titleController.text;
+                        String post = postController.text;
 
-                      // Implementa la lógica para enviar el comentario al servidor
-                      _postPost(title, post);
-                      Navigator.pop(context);
+                        // Implementa la lógica para enviar el comentario al servidor
+                        _postPost(title, post);
+                        Navigator.pop(context);
+                      }
                     },
                     style: ElevatedButton.styleFrom(
                       foregroundColor: Colors.white,

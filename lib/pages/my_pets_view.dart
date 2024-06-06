@@ -76,29 +76,38 @@ class MyPetsViewState extends State<MyPetsView> {
                           textAlign: TextAlign.center,
                         ),
                         SizedBox(height: 20),
-                        ElevatedButton(
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) =>
-                                    AddPetForm(user: widget.userLog),
-                              ),
-                            );
-                          },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.deepOrange[300],
-                            padding: EdgeInsets.symmetric(
-                                horizontal: 20, vertical: 15),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10),
-                            ),
+                        Text(
+                          'Pulsa + para añadir tus mascotas',
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: Colors.deepOrange[300],
+                            fontWeight: FontWeight.bold,
                           ),
-                          child: Text(
-                            'Añade tus mascotas aquí',
-                            style: TextStyle(fontSize: 18, color: Colors.white),
-                          ),
+                          textAlign: TextAlign.center,
                         ),
+                        // ElevatedButton(
+                        //   onPressed: () {
+                        //     Navigator.push(
+                        //       context,
+                        //       MaterialPageRoute(
+                        //         builder: (context) =>
+                        //             AddPetForm(user: widget.userLog),
+                        //       ),
+                        //     );
+                        //   },
+                        //   style: ElevatedButton.styleFrom(
+                        //     backgroundColor: Colors.deepOrange[300],
+                        //     padding: EdgeInsets.symmetric(
+                        //         horizontal: 20, vertical: 15),
+                        //     shape: RoundedRectangleBorder(
+                        //       borderRadius: BorderRadius.circular(10),
+                        //     ),
+                        //   ),
+                        //   child: Text(
+                        //     'Añade tus mascotas aquí',
+                        //     style: TextStyle(fontSize: 18, color: Colors.white),
+                        //   ),
+                        // ),
                       ],
                     ),
                   )
@@ -177,7 +186,7 @@ class MyPetsViewState extends State<MyPetsView> {
         backgroundColor: Colors.deepOrangeAccent,
         child: Icon(color: Colors.white, Icons.add),
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }
 
