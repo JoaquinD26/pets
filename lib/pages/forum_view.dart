@@ -23,51 +23,73 @@ class ForumPageState extends State<ForumPage> {
   List<Forum> forums = [];
   String post = 'Mensaje nulo';
 
-  @override
-  void initState() {
-    super.initState();
-    // Load forum posts when the page initializes
-    loadForums();
-  }
-
-  
+  List<Forum> filteredForums = [];
+  TextEditingController searchController = TextEditingController();
 
   Future<void> loadForums() async {
-    
-   final configString = await rootBundle.loadString('assets/config.json');
-   final configJson = json.decode(configString);
-   final config = Config.fromJson(configJson);
-   
+    final configString = await rootBundle.loadString('assets/config.json');
+    final configJson = json.decode(configString);
+    final config = Config.fromJson(configJson);
+
     try {
-      // Realizar la solicitud HTTP GET a la API
-      var response = await http.get(Uri.parse('http://${config.host}:3000/forum'));
+      var response =
+          await http.get(Uri.parse('http://${config.host}:3000/forum'));
 
-      // Verificar si la solicitud fue exitosa (código de respuesta 200)
       if (response.statusCode == 200) {
-        // Decodificar la cadena JSON
         List<dynamic> jsonData = json.decode(response.body);
-
-        // Crear objetos Forum
         List<Forum> loadedForums = jsonData.map((forumData) {
           return Forum.fromJson(forumData);
         }).toList();
 
-        // Invertir el orden de la lista
         loadedForums = loadedForums.reversed.toList();
 
-        // Actualizar el estado con las publicaciones del foro obtenidas de la API
         setState(() {
           forums = loadedForums;
+          filteredForums = loadedForums;
         });
       } else {
-        // Si la solicitud no fue exitosa, imprimir el código de respuesta
         print(
             'Error al cargar los foros. Código de respuesta: ${response.statusCode}');
       }
     } catch (e) {
-      // Manejar cualquier error que ocurra durante la solicitud
       print('Error al cargar los foros: $e');
     }
+  }
+
+  void filterForums(String query) {
+    if (query.isEmpty) {
+      setState(() {
+        filteredForums = forums;
+      });
+    } else {
+      setState(() {
+        filteredForums = forums.where((forum) {
+          final titleLower = forum.name.toLowerCase();
+          final userLower = forum.user.name.toLowerCase();
+          final descriptionLower = forum.description.toLowerCase();
+          final queryLower = query.toLowerCase();
+
+          return titleLower.contains(queryLower) ||
+              userLower.contains(queryLower) ||
+              descriptionLower.contains(queryLower);
+        }).toList();
+      });
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    loadForums();
+    searchController.addListener(() {
+      filterForums(searchController.text);
+    });
+  }
+
+  @override
+  void dispose() {
+    searchController.dispose();
+    super.dispose();
   }
 
   @override
@@ -77,7 +99,7 @@ class ForumPageState extends State<ForumPage> {
         onRefresh: loadForums,
         child: Column(
           children: [
-            SizedBox(height: 20,),
+            SizedBox(height: 20),
             // Search
             Padding(
               padding: EdgeInsets.symmetric(
@@ -88,34 +110,29 @@ class ForumPageState extends State<ForumPage> {
                 width: double.infinity,
                 height: 50,
                 decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(20),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.grey.withOpacity(0.5),
-                        spreadRadius: 2,
-                        blurRadius: 10,
-                        offset: Offset(0, 3),
-                      ),
-                    ]),
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(20),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(0.5),
+                      spreadRadius: 2,
+                      blurRadius: 10,
+                      offset: Offset(0, 3),
+                    ),
+                  ],
+                ),
                 child: Padding(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: 10,
-                  ),
+                  padding: EdgeInsets.symmetric(horizontal: 10),
                   child: Row(
                     children: [
-                      Icon(
-                        CupertinoIcons.search,
-                        color: Colors.red,
-                      ),
+                      Icon(CupertinoIcons.search, color: Colors.red),
                       SizedBox(
                         height: 50,
                         width: 300,
                         child: Padding(
-                          padding: EdgeInsets.symmetric(
-                            horizontal: 15,
-                          ),
+                          padding: EdgeInsets.symmetric(horizontal: 15),
                           child: TextFormField(
+                            controller: searchController,
                             decoration: InputDecoration(
                               hintText: "What would you like to have?",
                               border: InputBorder.none,
@@ -130,10 +147,10 @@ class ForumPageState extends State<ForumPage> {
             ),
             Flexible(
               child: ListView.builder(
-                itemCount: forums.length,
+                itemCount: filteredForums.length,
                 itemBuilder: (context, index) {
                   return ForumPostCard(
-                    forum: forums[index],
+                    forum: filteredForums[index],
                     userLog: widget.userLog,
                   );
                 },
@@ -155,125 +172,127 @@ class ForumPageState extends State<ForumPage> {
   }
 
   void _showPostDialog(BuildContext context) {
-  TextEditingController titleController = TextEditingController();
-  TextEditingController postController = TextEditingController();
+    TextEditingController titleController = TextEditingController();
+    TextEditingController postController = TextEditingController();
 
-  showModalBottomSheet(
-    isScrollControlled: true,
-    context: context,
-    builder: (BuildContext context) {
-      // Variable para mantener el nodo de enfoque del primer campo de texto
-      FocusNode titleFocusNode = FocusNode();
+    showModalBottomSheet(
+      isScrollControlled: true,
+      context: context,
+      builder: (BuildContext context) {
+        // Variable para mantener el nodo de enfoque del primer campo de texto
+        FocusNode titleFocusNode = FocusNode();
 
-      // Función para cerrar el nodo de enfoque del primer campo de texto
-      void closeFocusNode() {
-        titleFocusNode.unfocus();
-      }
+        // Función para cerrar el nodo de enfoque del primer campo de texto
+        void closeFocusNode() {
+          titleFocusNode.unfocus();
+        }
 
-      // Enfoca automáticamente el primer campo de texto una vez que el modal se ha construido
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        titleFocusNode.requestFocus();
-      });
+        // Enfoca automáticamente el primer campo de texto una vez que el modal se ha construido
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          titleFocusNode.requestFocus();
+        });
 
-      return GestureDetector(
-        onTap: closeFocusNode, // Cierra el teclado al tocar fuera del campo de texto
-        child: FractionallySizedBox(
-          heightFactor: 0.9,
-          alignment: Alignment.topCenter,
-          child: Container(
-            padding: EdgeInsets.all(16.0),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(16.0),
-                topRight: Radius.circular(16.0),
+        return GestureDetector(
+          onTap:
+              closeFocusNode, // Cierra el teclado al tocar fuera del campo de texto
+          child: FractionallySizedBox(
+            heightFactor: 0.9,
+            alignment: Alignment.topCenter,
+            child: Container(
+              padding: EdgeInsets.all(16.0),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(16.0),
+                  topRight: Radius.circular(16.0),
+                ),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Text(
+                    'Añadir Comentario',
+                    textAlign: TextAlign.center,
+                    style:
+                        TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
+                  ),
+                  SizedBox(height: 16.0),
+                  Container(
+                    decoration: BoxDecoration(
+                      color: Colors.deepOrange[300],
+                      borderRadius: BorderRadius.circular(8.0),
+                    ),
+                    child: TextFormField(
+                      textAlign: TextAlign.center,
+                      style: TextStyle(color: Colors.white),
+                      controller: titleController,
+                      focusNode:
+                          titleFocusNode, // Establece el nodo de enfoque del primer campo de texto
+                      decoration: InputDecoration(
+                        hintText: 'Título del comentario...',
+                        hintStyle: TextStyle(color: Colors.white),
+                        border: InputBorder.none,
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 16.0),
+                  Container(
+                    height: 200,
+                    decoration: BoxDecoration(
+                      color: Colors.grey[200],
+                      borderRadius: BorderRadius.circular(8.0),
+                    ),
+                    child: TextFormField(
+                      textAlign: TextAlign.center,
+                      style: TextStyle(color: Colors.deepOrange),
+                      controller: postController,
+                      maxLines: null,
+                      decoration: InputDecoration(
+                        hintText: 'Escribe tu comentario aquí...',
+                        hintStyle: TextStyle(color: Colors.deepOrange),
+                        border: InputBorder.none,
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 16.0),
+                  ElevatedButton(
+                    onPressed: () {
+                      String title = titleController.text;
+                      String post = postController.text;
+
+                      // Implementa la lógica para enviar el comentario al servidor
+                      _postPost(title, post);
+                      Navigator.pop(context);
+                    },
+                    style: ElevatedButton.styleFrom(
+                      foregroundColor: Colors.white,
+                      backgroundColor: Colors.deepOrange,
+                      shadowColor: Colors.deepOrangeAccent,
+                      elevation: 5,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(30.0),
+                      ),
+                      padding: EdgeInsets.symmetric(
+                          horizontal: 32.0, vertical: 12.0),
+                    ),
+                    child: Text(
+                      'Enviar',
+                      style: TextStyle(
+                        fontSize: 16.0,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Text(
-                  'Añadir Comentario',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
-                ),
-                SizedBox(height: 16.0),
-                Container(
-                  decoration: BoxDecoration(
-                    color: Colors.deepOrange[300],
-                    borderRadius: BorderRadius.circular(8.0),
-                  ),
-                  child: TextFormField(
-                    textAlign: TextAlign.center,
-                    style: TextStyle(color: Colors.white),
-                    controller: titleController,
-                    focusNode: titleFocusNode, // Establece el nodo de enfoque del primer campo de texto
-                    decoration: InputDecoration(
-                      hintText: 'Título del comentario...',
-                      hintStyle: TextStyle(color: Colors.white),
-                      border: InputBorder.none,
-                    ),
-                  ),
-                ),
-                SizedBox(height: 16.0),
-                Container(
-                  height: 200,
-                  decoration: BoxDecoration(
-                    color: Colors.grey[200],
-                    borderRadius: BorderRadius.circular(8.0),
-                  ),
-                  child: TextFormField(
-                    textAlign: TextAlign.center,
-                    style: TextStyle(color: Colors.deepOrange),
-                    controller: postController,
-                    maxLines: null,
-                    decoration: InputDecoration(
-                      hintText: 'Escribe tu comentario aquí...',
-                      hintStyle: TextStyle(color: Colors.deepOrange),
-                      border: InputBorder.none,
-                    ),
-                  ),
-                ),
-                SizedBox(height: 16.0),
-                ElevatedButton(
-                  onPressed: () {
-                    String title = titleController.text;
-                    String post = postController.text;
-
-                    // Implementa la lógica para enviar el comentario al servidor
-                    _postPost(title, post);
-                    Navigator.pop(context);
-                  },
-                  style: ElevatedButton.styleFrom(
-                    foregroundColor: Colors.white,
-                    backgroundColor: Colors.deepOrange,
-                    shadowColor: Colors.deepOrangeAccent,
-                    elevation: 5,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(30.0),
-                    ),
-                    padding: EdgeInsets.symmetric(horizontal: 32.0, vertical: 12.0),
-                  ),
-                  child: Text(
-                    'Enviar',
-                    style: TextStyle(
-                      fontSize: 16.0,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-              ],
-            ),
           ),
-        ),
-      );
-    },
-  );
-}
-
+        );
+      },
+    );
+  }
 
   Future<void> _postPost(String title, String post) async {
-
     final configString = await rootBundle.loadString('assets/config.json');
     final configJson = json.decode(configString);
     final config = Config.fromJson(configJson);
