@@ -39,14 +39,16 @@ class _ItemPageState extends State<ItemPage> {
     final config = Config.fromJson(configJson);
 
     try {
-      var response = await http.get(Uri.parse('http://${config.host}:3000/forum'));
+      var response =
+          await http.get(Uri.parse('http://${config.host}:3000/forum'));
 
       if (response.statusCode == 200) {
         setState(() {
           comments = json.decode(response.body);
         });
       } else {
-        print('Error al cargar los comentarios. Código de respuesta: ${response.statusCode}');
+        print(
+            'Error al cargar los comentarios. Código de respuesta: ${response.statusCode}');
       }
     } catch (e) {
       print('Error al cargar los comentarios: $e');
@@ -104,7 +106,6 @@ class _ItemPageState extends State<ItemPage> {
                 children: [
                   Padding(
                     padding: EdgeInsets.all(16),
-                    
                     child: Image.network(
                       'http://${config.host}/crud/${widget.product.imageUrl}',
                       height: 300,
@@ -124,17 +125,19 @@ class _ItemPageState extends State<ItemPage> {
                             Padding(
                               padding: EdgeInsets.only(top: 60, bottom: 10),
                               child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 children: [
                                   RatingBar.builder(
-                                    initialRating:1,
+                                    initialRating: 1,
                                     ignoreGestures: true,
                                     //initialRating: widget.product.rating,
                                     minRating: 0,
                                     direction: Axis.horizontal,
                                     itemCount: 5,
                                     itemSize: 18,
-                                    itemPadding: EdgeInsets.symmetric(horizontal: 4),
+                                    itemPadding:
+                                        EdgeInsets.symmetric(horizontal: 4),
                                     itemBuilder: (context, _) => Icon(
                                       Icons.star,
                                       color: Colors.amber,
@@ -154,7 +157,8 @@ class _ItemPageState extends State<ItemPage> {
                             Padding(
                               padding: EdgeInsets.only(top: 10, bottom: 20),
                               child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 children: [
                                   Expanded(
                                     child: Text(
@@ -183,60 +187,65 @@ class _ItemPageState extends State<ItemPage> {
                     ),
                   ),
                   Padding(
-  padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-  child: Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      Text(
-        'Valoraciones',
-        style: TextStyle(
-          fontSize: 20,
-          fontWeight: FontWeight.bold,
-        ),
-      ),
-      SizedBox(height: 10), // Ajusta este valor según sea necesario
-      ...comments.map((comment) {
-        return Padding(
-          padding: const EdgeInsets.symmetric(vertical: 8),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    comment['name'],
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
+                    padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Text(
+                          'Valoraciones',
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        SizedBox(
+                            height:
+                                10), // Ajusta este valor según sea necesario
+                        ...comments.map((comment) {
+                          return Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 8),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      comment['name'],
+                                      style: TextStyle(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    RatingBar.builder(
+                                      initialRating: comment['rating'] != null
+                                          ? comment['rating']
+                                          : 0,
+                                      ignoreGestures: true,
+                                      minRating: 0,
+                                      direction: Axis.horizontal,
+                                      itemCount: 5,
+                                      itemSize: 18,
+                                      itemPadding:
+                                          EdgeInsets.symmetric(horizontal: 4),
+                                      itemBuilder: (context, _) => Icon(
+                                        Icons.star,
+                                        color: Colors.amber,
+                                      ),
+                                      onRatingUpdate: (index) {},
+                                    ),
+                                  ],
+                                ),
+                                SizedBox(height: 5),
+                                Text(comment['description']),
+                              ],
+                            ),
+                          );
+                        }).toList(),
+                      ],
                     ),
                   ),
-                  RatingBar.builder(
-                    initialRating: comment['rating'] != null ? comment['rating'] : 0,
-                    ignoreGestures: true,
-                    minRating: 0,
-                    direction: Axis.horizontal,
-                    itemCount: 5,
-                    itemSize: 18,
-                    itemPadding: EdgeInsets.symmetric(horizontal: 4),
-                    itemBuilder: (context, _) => Icon(
-                      Icons.star,
-                      color: Colors.amber,
-                    ),
-                    onRatingUpdate: (index) {},
-                  ),
-                ],
-              ),
-              SizedBox(height: 5),
-              Text(comment['description']),
-            ],
-          ),
-        );
-      }).toList(),
-    ],
-  ),
-),
-
                 ],
               ),
             ),
