@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:pets/models/Product.dart';
 import 'package:pets/models/config.dart';
 import 'package:pets/pages/products/item_page.dart';
@@ -107,6 +108,21 @@ class _RecentItemsWidgetState extends State<RecentItemsWidget> {
                                 fontSize: 20,
                                 fontWeight: FontWeight.bold,
                               ),
+                            ),
+                            SizedBox(height: 4),
+                            RatingBar.builder(
+                              ignoreGestures: true,
+                              initialRating: 0,
+                              minRating: 0,
+                              direction: Axis.horizontal,
+                              itemCount: 5,
+                              itemSize: 18,
+                              itemPadding: EdgeInsets.symmetric(horizontal: 4),
+                              itemBuilder: (context, _) => Icon(
+                                Icons.star,
+                                color: Colors.amber,
+                              ),
+                              onRatingUpdate: (rating) {},
                             ),
                             SizedBox(height: 4),
                             SizedBox(height: 12),

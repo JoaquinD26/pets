@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:pets/models/Product.dart';
 import 'package:pets/models/config.dart';
 import 'package:pets/pages/products/item_page.dart';
@@ -8,7 +9,8 @@ import 'package:pets/pages/products/item_page.dart';
 class NewestItemsWidget extends StatefulWidget {
   final List<Product> displayedProducts;
 
-  const NewestItemsWidget({Key? key, required this.displayedProducts}) : super(key: key);
+  const NewestItemsWidget({Key? key, required this.displayedProducts})
+      : super(key: key);
 
   @override
   State<NewestItemsWidget> createState() => _NewestItemsWidgetState();
@@ -23,7 +25,7 @@ class _NewestItemsWidgetState extends State<NewestItemsWidget> {
     super.initState();
     configFuture = loadConfig();
     displayedProducts = List.from(widget.displayedProducts);
-    displayedProducts.sort((a, b) => a.name.compareTo(b.name)); // ORDEN DE ABECEDARIO
+    displayedProducts.sort((a, b) => a.name.compareTo(b.name));
   }
 
   Future<Config> loadConfig() async {
@@ -36,7 +38,7 @@ class _NewestItemsWidgetState extends State<NewestItemsWidget> {
   void didUpdateWidget(covariant NewestItemsWidget oldWidget) {
     super.didUpdateWidget(oldWidget);
     displayedProducts = List.from(widget.displayedProducts);
-    displayedProducts.sort((a, b) => a.name.compareTo(b.name)); // ORDEN DE ABECEDARIO
+    displayedProducts.sort((a, b) => a.name.compareTo(b.name));
   }
 
   @override
@@ -60,8 +62,8 @@ class _NewestItemsWidgetState extends State<NewestItemsWidget> {
                   return Padding(
                     padding: EdgeInsets.symmetric(vertical: 10),
                     child: Container(
-                      width: 360, // Reducido el ancho del contenedor
-                      height: 200, // Reducida la altura del contenedor
+                      width: 380,
+                      height: 150,
                       decoration: BoxDecoration(
                         color: Colors.white,
                         borderRadius: BorderRadius.circular(10),
@@ -81,29 +83,53 @@ class _NewestItemsWidgetState extends State<NewestItemsWidget> {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => ItemPage(product: product),
+                                  builder: (context) =>
+                                      ItemPage(product: product),
                                 ),
                               );
                             },
                             child: Container(
                               alignment: Alignment.center,
                               child: Image.network(
-                                'http://${config.host}/crud/${product.imageUrl}', // Usa la URL del producto
-                                height: 100, // Reducida la altura de la imagen
-                                width: 120, // Reducido el ancho de la imagen
+                                'http://${config.host}/crud/${product.imageUrl}',
+                                height: 120,
+                                width: 150,
                               ),
                             ),
                           ),
-                          SizedBox(
-                            width: 160, // Reducido el ancho del contenido textual
+                          Container(
+                            width: 190,
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               mainAxisAlignment: MainAxisAlignment.spaceAround,
                               children: [
                                 Text(
-                                  product.name, // Nombre del producto
+                                  product.name,
                                   style: TextStyle(
-                                    fontSize: 18, // Reducido el tamaño del texto
+                                    fontSize: 22,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                RatingBar.builder(
+                                  initialRating: 0,
+                                  ignoreGestures: true,
+                                  minRating: 0,
+                                  direction: Axis.horizontal,
+                                  itemCount: 5,
+                                  itemSize: 18,
+                                  itemPadding:
+                                      EdgeInsets.symmetric(horizontal: 4),
+                                  itemBuilder: (context, _) => Icon(
+                                    Icons.star,
+                                    color: Colors.amber,
+                                  ),
+                                  onRatingUpdate: (index) {},
+                                ),
+                                Text(
+                                  "\$${product.price.toString()}",
+                                  style: TextStyle(
+                                    fontSize: 20,
+                                    color: Colors.red,
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
@@ -113,20 +139,13 @@ class _NewestItemsWidgetState extends State<NewestItemsWidget> {
                           Padding(
                             padding: EdgeInsets.symmetric(vertical: 10),
                             child: Column(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              mainAxisAlignment: MainAxisAlignment
+                                  .end, // Alinea el icono en la parte inferior
                               children: [
                                 Icon(
                                   Icons.favorite_border,
                                   color: Colors.red,
-                                  size: 24, // Reducido el tamaño del icono
-                                ),
-                                Text(
-                                  "${product.price.toString()}€", // Precio del producto
-                                  style: TextStyle(
-                                    fontSize: 18, // Reducido el tamaño del texto
-                                    color: Colors.red,
-                                    fontWeight: FontWeight.bold,
-                                  ),
+                                  size: 26,
                                 ),
                               ],
                             ),

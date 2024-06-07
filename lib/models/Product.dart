@@ -10,10 +10,12 @@ class Product {
   final String imageUrl;
   final String type;
   final String link;
+  //final double rating;
   final Category category;
 
   Product({
     required this.id,
+    //required this.rating,
     required this.name,
     required this.description,
     required this.price,
@@ -21,12 +23,14 @@ class Product {
     required this.type,
     required this.link,
     required this.category,
+    
   });
 
   // Factory constructor to create a Product from JSON
   factory Product.fromJson(Map<String, dynamic> json) {
     return Product(
       id: json['id'],
+      //rating: json['rating'],
       name: json['name'],
       description: utf8.decode(json['description'].codeUnits), // Decode using utf8
       price: json['price'],
@@ -47,6 +51,7 @@ class Product {
       'imageUrl': imageUrl,
       'type': type,
       'link': link,
+      //'rating': rating,
       'category': category.toJson(),
     };
   }

@@ -5,11 +5,27 @@ import 'package:clippy_flutter/arc.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:pets/models/Product.dart';
 import 'package:pets/models/config.dart';
+import 'package:http/http.dart' as http;
 
-class ItemPage extends StatelessWidget {
+class ItemPage extends StatefulWidget {
   final Product product;
 
   const ItemPage({Key? key, required this.product}) : super(key: key);
+
+  @override
+  _ItemPageState createState() => _ItemPageState();
+}
+
+class _ItemPageState extends State<ItemPage> {
+  late Future<Config> configFuture;
+  List<dynamic> comments = [];
+
+  @override
+  void initState() {
+    super.initState();
+    configFuture = loadConfig();
+    loadComments();
+  }
 
   Future<Config> loadConfig() async {
     final configString = await rootBundle.loadString('assets/config.json');
@@ -17,10 +33,30 @@ class ItemPage extends StatelessWidget {
     return Config.fromJson(configJson);
   }
 
+  Future<void> loadComments() async {
+    final configString = await rootBundle.loadString('assets/config.json');
+    final configJson = json.decode(configString);
+    final config = Config.fromJson(configJson);
+
+    try {
+      var response = await http.get(Uri.parse('http://${config.host}:3000/forum'));
+
+      if (response.statusCode == 200) {
+        setState(() {
+          comments = json.decode(response.body);
+        });
+      } else {
+        print('Error al cargar los comentarios. Código de respuesta: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error al cargar los comentarios: $e');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<Config>(
-      future: loadConfig(),
+      future: configFuture,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return Scaffold(
@@ -51,7 +87,7 @@ class ItemPage extends StatelessWidget {
           return Scaffold(
             appBar: AppBar(
               title: Text(
-                product.name,
+                widget.product.name,
                 style: TextStyle(color: Colors.white),
               ),
               backgroundColor: Colors.deepOrange[300],
@@ -68,8 +104,9 @@ class ItemPage extends StatelessWidget {
                 children: [
                   Padding(
                     padding: EdgeInsets.all(16),
+                    
                     child: Image.network(
-                      'http://${config.host}/crud/${product.imageUrl}',
+                      'http://${config.host}/crud/${widget.product.imageUrl}',
                       height: 300,
                     ),
                   ),
@@ -87,25 +124,25 @@ class ItemPage extends StatelessWidget {
                             Padding(
                               padding: EdgeInsets.only(top: 60, bottom: 10),
                               child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
                                   RatingBar.builder(
-                                    initialRating: 4,
-                                    minRating: 1,
+                                    initialRating:1,
+                                    ignoreGestures: true,
+                                    //initialRating: widget.product.rating,
+                                    minRating: 0,
                                     direction: Axis.horizontal,
                                     itemCount: 5,
                                     itemSize: 18,
-                                    itemPadding:
-                                        EdgeInsets.symmetric(horizontal: 4),
+                                    itemPadding: EdgeInsets.symmetric(horizontal: 4),
                                     itemBuilder: (context, _) => Icon(
                                       Icons.star,
-                                      color: Colors.red,
+                                      color: Colors.amber,
                                     ),
                                     onRatingUpdate: (index) {},
                                   ),
                                   Text(
-                                    "\$${product.price}",
+                                    "${widget.product.price}\€",
                                     style: TextStyle(
                                       fontSize: 20,
                                       fontWeight: FontWeight.bold,
@@ -115,17 +152,13 @@ class ItemPage extends StatelessWidget {
                               ),
                             ),
                             Padding(
-                              padding: EdgeInsets.only(
-                                top: 10,
-                                bottom: 20,
-                              ),
+                              padding: EdgeInsets.only(top: 10, bottom: 20),
                               child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
                                   Expanded(
                                     child: Text(
-                                      product.name,
+                                      widget.product.name,
                                       style: TextStyle(
                                         fontSize: 28,
                                         fontWeight: FontWeight.bold,
@@ -137,18 +170,11 @@ class ItemPage extends StatelessWidget {
                               ),
                             ),
                             Padding(
-                              padding: EdgeInsets.symmetric(
-                                vertical: 12,
-                              ),
+                              padding: EdgeInsets.symmetric(vertical: 12),
                               child: Text(
-                                product.description,
+                                widget.product.description,
                                 style: TextStyle(fontSize: 16),
                                 textAlign: TextAlign.justify,
-                              ),
-                            ),
-                            Padding(
-                              padding: EdgeInsets.symmetric(
-                                vertical: 12,
                               ),
                             ),
                           ],
@@ -156,6 +182,61 @@ class ItemPage extends StatelessWidget {
                       ),
                     ),
                   ),
+                  Padding(
+  padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+  child: Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      Text(
+        'Valoraciones',
+        style: TextStyle(
+          fontSize: 20,
+          fontWeight: FontWeight.bold,
+        ),
+      ),
+      SizedBox(height: 10), // Ajusta este valor según sea necesario
+      ...comments.map((comment) {
+        return Padding(
+          padding: const EdgeInsets.symmetric(vertical: 8),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    comment['name'],
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  RatingBar.builder(
+                    initialRating: comment['rating'] != null ? comment['rating'] : 0,
+                    ignoreGestures: true,
+                    minRating: 0,
+                    direction: Axis.horizontal,
+                    itemCount: 5,
+                    itemSize: 18,
+                    itemPadding: EdgeInsets.symmetric(horizontal: 4),
+                    itemBuilder: (context, _) => Icon(
+                      Icons.star,
+                      color: Colors.amber,
+                    ),
+                    onRatingUpdate: (index) {},
+                  ),
+                ],
+              ),
+              SizedBox(height: 5),
+              Text(comment['description']),
+            ],
+          ),
+        );
+      }).toList(),
+    ],
+  ),
+),
+
                 ],
               ),
             ),
