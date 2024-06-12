@@ -153,9 +153,7 @@ class _ItemPageState extends State<ItemPage> {
                           final comment = {
                             "text": commentController.text,
                             "scoreUser": rating.toString(),
-                            "product": {
-                              "id": widget.product.id
-                            },
+                            "product": {"id": widget.product.id},
                             "user": {
                               "id": "1"
                             } // Reemplaza con el ID del usuario real
@@ -328,12 +326,6 @@ class _ItemPageState extends State<ItemPage> {
                                 textAlign: TextAlign.justify,
                               ),
                             ),
-                            ElevatedButton(
-                              onPressed: () {
-                                showAddCommentDialog(context);
-                              },
-                              child: Text('Añadir comentario'),
-                            ),
                           ],
                         ),
                       ),
@@ -344,11 +336,26 @@ class _ItemPageState extends State<ItemPage> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        Text(
-                          'Valoraciones',
-                          style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
+                        
+                        SizedBox(height: 10),
+                        MaterialButton(
+                          onPressed: () {
+                            showAddCommentDialog(context);
+                          },
+                          color: Colors.orange, // Cambia el color de fondo
+                          textColor: Colors.white, // Cambia el color del texto
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 20,
+                              vertical: 10), // Ajusta el padding
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(
+                                12.0), // Añade bordes redondeados
+                          ),
+                          child: Text(
+                            'Añadir valoracion',
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
                         ),
                         SizedBox(height: 10),
