@@ -128,7 +128,7 @@ class _NewestItemsWidgetState extends State<NewestItemsWidget> {
                                   onRatingUpdate: (index) {},
                                 ),
                                 Text(
-                                  "\$${product.price.toString()}",
+                                  "${product.price.toString()}\€",
                                   style: TextStyle(
                                     fontSize: 20,
                                     color: Colors.red,
