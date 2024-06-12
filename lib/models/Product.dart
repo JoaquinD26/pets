@@ -10,12 +10,12 @@ class Product {
   final String imageUrl;
   final String type;
   final String link;
-  //final double rating;
+  final double averageScore;
   final Category category;
 
   Product({
     required this.id,
-    //required this.rating,
+    required this.averageScore,
     required this.name,
     required this.description,
     required this.price,
@@ -30,7 +30,7 @@ class Product {
   factory Product.fromJson(Map<String, dynamic> json) {
     return Product(
       id: json['id'],
-      //rating: json['rating'],
+      averageScore: json['averageScore'],
       name: json['name'],
       description: utf8.decode(json['description'].codeUnits), // Decode using utf8
       price: json['price'],
@@ -51,7 +51,7 @@ class Product {
       'imageUrl': imageUrl,
       'type': type,
       'link': link,
-      //'rating': rating,
+      'averageScore': averageScore,
       'category': category.toJson(),
     };
   }

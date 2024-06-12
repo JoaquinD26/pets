@@ -111,19 +111,22 @@ class _RecentItemsWidgetState extends State<RecentItemsWidget> {
                             ),
                             SizedBox(height: 4),
                             RatingBar.builder(
-                              ignoreGestures: true,
-                              initialRating: 0,
-                              minRating: 0,
-                              direction: Axis.horizontal,
-                              itemCount: 5,
-                              itemSize: 18,
-                              itemPadding: EdgeInsets.symmetric(horizontal: 4),
-                              itemBuilder: (context, _) => Icon(
-                                Icons.star,
-                                color: Colors.amber,
-                              ),
-                              onRatingUpdate: (rating) {},
-                            ),
+                                  initialRating: product.averageScore,
+                                  minRating: 0,
+                                  direction: Axis.horizontal,
+                                  allowHalfRating:
+                                      true, // Permitir medias estrellas
+                                  itemCount: 5,
+                                  itemSize: 18,
+                                  ignoreGestures: true,
+                                  itemPadding:
+                                      EdgeInsets.symmetric(horizontal: 4),
+                                  itemBuilder: (context, _) => Icon(
+                                    Icons.star,
+                                    color: Colors.amber,
+                                  ),
+                                  onRatingUpdate: (index) {},
+                                ),
                             SizedBox(height: 4),
                             SizedBox(height: 12),
                             Row(

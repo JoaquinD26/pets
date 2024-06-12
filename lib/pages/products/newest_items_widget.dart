@@ -84,7 +84,7 @@ class _NewestItemsWidgetState extends State<NewestItemsWidget> {
                                 context,
                                 MaterialPageRoute(
                                   builder: (context) =>
-                                      ItemPage(product: product),
+                                      ItemPage(product: product,),
                                 ),
                               );
                             },
@@ -111,12 +111,14 @@ class _NewestItemsWidgetState extends State<NewestItemsWidget> {
                                   ),
                                 ),
                                 RatingBar.builder(
-                                  initialRating: 0,
-                                  ignoreGestures: true,
+                                  initialRating: product.averageScore,
                                   minRating: 0,
                                   direction: Axis.horizontal,
+                                  allowHalfRating:
+                                      true, // Permitir medias estrellas
                                   itemCount: 5,
                                   itemSize: 18,
+                                  ignoreGestures: true,
                                   itemPadding:
                                       EdgeInsets.symmetric(horizontal: 4),
                                   itemBuilder: (context, _) => Icon(
