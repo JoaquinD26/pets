@@ -180,7 +180,7 @@ class LoginState extends State<LoginPage> {
         // Navegar a la página principal pasando el usuario como argumento
         Navigator.pushAndRemoveUntil(
             context,
-            MaterialPageRoute(builder: (context) => MyHomePage(user: user,activo: false,)),
+            MaterialPageRoute(builder: (context) => MyHomePage(user: user,activo: false,rating: false,)),
             (route) => false);
         // Aquí puedes navegar a la pantalla principal o realizar otras acciones
       } else {

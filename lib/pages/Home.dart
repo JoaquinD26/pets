@@ -12,6 +12,7 @@ import 'package:provider/provider.dart';
 
 class MyHomePage extends StatefulWidget {
   bool activo = false;
+  bool rating = false;
   final String id = "home_page";
   User user;
 
@@ -19,6 +20,7 @@ class MyHomePage extends StatefulWidget {
     super.key,
     required this.user,
     required this.activo,
+    required this.rating,
   });
 
   @override
@@ -36,6 +38,10 @@ class MyHomePageState extends State<MyHomePage> {
     if (widget.activo) {
       _selectedIndex = 3;
     }
+
+    if (widget.rating) {
+      _selectedIndex = 1;
+    }
     _pages = [
       MyPetsView(userLog: widget.user),
       ProductView(
@@ -44,9 +50,6 @@ class MyHomePageState extends State<MyHomePage> {
       ForumPage(
         userLog: widget.user,
       ),
-      // ForumPage(
-      //   userLog: widget.user,
-      // ),
       ProfileView(userLog: widget.user),
     ];
   }

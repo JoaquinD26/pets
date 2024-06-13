@@ -3,15 +3,15 @@ import 'dart:convert';
 import 'package:pets/models/category.dart';
 
 class Product {
-  final int id;
-  final String name;
-  final String description;
-  final double price;
-  final String imageUrl;
-  final String type;
-  final String link;
-  final double averageScore;
-  final Category category;
+  int id;
+  String name;
+  String description;
+  double price;
+  String imageUrl;
+  String type;
+  String link;
+  double averageScore;
+  Category category;
 
   Product({
     required this.id,

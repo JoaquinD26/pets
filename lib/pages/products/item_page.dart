@@ -7,12 +7,14 @@ import 'package:pets/models/Product.dart';
 import 'package:pets/models/config.dart';
 import 'package:http/http.dart' as http;
 import 'package:pets/models/user.dart';
+import 'package:pets/pages/home.dart';
 
 class ItemPage extends StatefulWidget {
   final Product product;
   User userLog;
 
-  ItemPage({Key? key, required this.product, required this.userLog}) : super(key: key);
+  ItemPage({Key? key, required this.product, required this.userLog})
+      : super(key: key);
 
   @override
   _ItemPageState createState() => _ItemPageState();
@@ -178,11 +180,13 @@ class _ItemPageState extends State<ItemPage> {
   }
 
   Future<void> sendComment(Map<String, dynamic> comment) async {
-    final configString = await rootBundle.loadString('assets/config.json');
-    final configJson = json.decode(configString);
-    final config = Config.fromJson(configJson);
-
     try {
+      // Cargar la configuración desde el archivo config.json
+      final configString = await rootBundle.loadString('assets/config.json');
+      final configJson = json.decode(configString);
+      final config = Config.fromJson(configJson);
+
+      // Realizar la solicitud POST para enviar el comentario
       var response = await http.post(
         Uri.parse('http://${config.host}:3000/productComment'),
         headers: {
@@ -191,14 +195,43 @@ class _ItemPageState extends State<ItemPage> {
         body: json.encode(comment),
       );
 
+      // Verificar el código de respuesta del servidor
       if (response.statusCode == 200) {
-        loadComments(); // Reload comments after posting a new one
+        // Actualizar el averageScore del producto después de enviar el comentario
+        await updateProductAverageScore(config);
+        // Recargar los comentarios
+        loadComments(); // Esto actualizará los comentarios en la página
       } else {
         print(
             'Error al enviar el comentario. Código de respuesta: ${response.statusCode}');
       }
     } catch (e) {
       print('Error al enviar el comentario: $e');
+    }
+  }
+
+  Future<void> updateProductAverageScore(Config config) async {
+    try {
+      // Realizar la solicitud GET para obtener el averageScore del producto
+      var response = await http.get(
+        Uri.parse(
+            'http://${config.host}:3000/product/${widget.product.id}/averageScore'),
+      );
+
+      // Verificar el código de respuesta del servidor
+      if (response.statusCode == 200) {
+        // Convertir el cuerpo de la respuesta a un double
+        var averageScore = double.parse(response.body);
+        // Actualizar el estado del widget con el nuevo averageScore
+        setState(() {
+          widget.product.averageScore = averageScore;
+        });
+      } else {
+        print(
+            'Error al obtener el averageScore del producto. Código de respuesta: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error al obtener el averageScore del producto: $e');
     }
   }
 
@@ -240,10 +273,20 @@ class _ItemPageState extends State<ItemPage> {
                 style: TextStyle(color: Colors.white),
               ),
               backgroundColor: Colors.deepOrange[300],
+              // Dentro del AppBar de ItemPage
               leading: IconButton(
                 icon: Icon(Icons.arrow_back, color: Colors.white),
                 onPressed: () {
-                  Navigator.of(context).pop();
+                  Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => MyHomePage(
+                              user: widget.userLog,
+                              rating: true,
+                              activo: false,
+                            )),
+                    (route) => false,
+                  );
                 },
               ),
             ),
@@ -338,7 +381,6 @@ class _ItemPageState extends State<ItemPage> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        
                         SizedBox(height: 10),
                         MaterialButton(
                           onPressed: () {

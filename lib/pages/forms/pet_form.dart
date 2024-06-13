@@ -306,8 +306,11 @@ class AddPetFormState extends State<AddPetForm> {
         Navigator.pushAndRemoveUntil(
           context,
           MaterialPageRoute(
-            builder: (context) => MyHomePage(user: widget.user, activo: false),
-          ),
+              builder: (context) => MyHomePage(
+                    user: widget.user,
+                    activo: false,
+                    rating: false,
+                  )),
           (route) => false,
         );
       } else {
@@ -349,8 +352,11 @@ class AddPetFormState extends State<AddPetForm> {
         Navigator.pushAndRemoveUntil(
           context,
           MaterialPageRoute(
-            builder: (context) => MyHomePage(user: widget.user, activo: false),
-          ),
+              builder: (context) => MyHomePage(
+                    user: widget.user,
+                    activo: false,
+                    rating: false,
+                  )),
           (route) => false,
         );
       } else {

@@ -328,6 +328,7 @@ class _RegisterPageState extends State<RegisterPage> {
                 builder: (context) => MyHomePage(
                       user: user,
                       activo: false,
+                      rating: false,
                     )),
             (route) => false,
           );
