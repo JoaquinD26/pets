@@ -3,6 +3,7 @@ import 'package:pets/components/icon_text_button.dart';
 import 'package:pets/components/menu_row.dart';
 import 'package:pets/models/user.dart';
 import 'package:pets/pages/login.dart';
+import 'package:pets/pages/posts_liked.dart';
 import 'package:pets/pages/profile/profile_form.dart';
 import 'package:pets/utils/t_color.dart';
 
@@ -37,10 +38,12 @@ class ProfileViewState extends State<ProfileView> {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => ProfileForm(user: widget.userLog,)),
+                  MaterialPageRoute(
+                      builder: (context) => ProfileForm(
+                            user: widget.userLog,
+                          )),
                 );
               },
-              
               child: Text(
                 "Editar Perfil",
                 style: TextStyle(
@@ -151,7 +154,16 @@ class ProfileViewState extends State<ProfileView> {
                   MenuRow(
                     icon: Icon(Icons.favorite),
                     title: "Me gustas",
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => PostsLikedPage(
+                            userLog: widget.userLog,
+                          ),
+                        ),
+                      );
+                    },
                   ),
                   const Divider(
                     color: Colors.black26,
@@ -172,10 +184,7 @@ class ProfileViewState extends State<ProfileView> {
                     onPressed: () async {
                       // Realizar el cierre de sesión
                       Navigator.pushNamedAndRemoveUntil(
-                        context, 
-                        LoginPage.id, 
-                        (route) => false
-                      );
+                          context, LoginPage.id, (route) => false);
                     },
                   ),
                   const Divider(
