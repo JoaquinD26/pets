@@ -218,9 +218,9 @@ class MyPetsViewState extends State<MyPetsView> {
                           context: context,
                           builder: (BuildContext context) {
                             return AlertDialog(
-                              title: Text('Confirmar eliminación'),
+                              title: Text('Aviso'),
                               content: Text(
-                                  '¿Estás seguro de que quieres eliminar este comentario?'),
+                                  '¿La mascota desaparecerá de tu lista, estas seguro?'),
                               actions: [
                                 TextButton(
                                   onPressed: () {
