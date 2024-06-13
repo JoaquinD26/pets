@@ -164,10 +164,10 @@ class ForumPageState extends State<ForumPage> {
         onPressed: () {
           _showPostDialog(context);
         },
-        backgroundColor: Colors.deepOrangeAccent,
+        backgroundColor: Colors.orange,
         child: Icon(color: Colors.white, Icons.add),
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     );
   }
 

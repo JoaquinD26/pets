@@ -323,7 +323,7 @@ class PostDetailsPageState extends State<PostDetailsPage> {
         onPressed: () {
           _showCommentDialog(context);
         },
-        backgroundColor: Colors.deepOrangeAccent,
+        backgroundColor: Colors.orange,
         child: Icon(color: Colors.white, Icons.add),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
