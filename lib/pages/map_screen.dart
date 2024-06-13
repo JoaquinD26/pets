@@ -15,6 +15,7 @@ class _MapScreenState extends State<MapScreen> {
   Completer<GoogleMapController> _controller = Completer();
   LatLng? _currentPosition;
   Set<Marker> _markers = {};
+  String? _nextPageToken;
 
   @override
   void initState() {
@@ -30,6 +31,7 @@ class _MapScreenState extends State<MapScreen> {
             desiredAccuracy: LocationAccuracy.high);
         setState(() {
           _currentPosition = LatLng(position.latitude, position.longitude);
+          _addCurrentLocationMarker();
         });
         print('Current position: $_currentPosition');
         _fetchNearbyVeterinarians();
@@ -39,6 +41,7 @@ class _MapScreenState extends State<MapScreen> {
         setState(() {
           _currentPosition =
               LatLng(40.7128, -74.0060); // New York coordinates as an example.
+          _addCurrentLocationMarker();
         });
         _fetchNearbyVeterinarians();
       }
@@ -48,12 +51,33 @@ class _MapScreenState extends State<MapScreen> {
     }
   }
 
+  void _addCurrentLocationMarker() {
+    if (_currentPosition != null) {
+      final marker = Marker(
+        markerId: MarkerId('current_location'),
+        position: _currentPosition!,
+        infoWindow: InfoWindow(
+          title: 'Mi Ubicación',
+        ),
+        icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueAzure),
+      );
+      setState(() {
+        _markers.add(marker);
+      });
+    }
+  }
+
   Future<void> _fetchNearbyVeterinarians() async {
     if (_currentPosition == null) return;
 
     final String apiKey = 'AIzaSyAZO6oBCJoRGufRcpyRUg9JLpoQkX-suTs';
-    final url =
-        'https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${_currentPosition!.latitude},${_currentPosition!.longitude}&radius=1500&type=veterinary_care&key=$apiKey';
+    String url =
+        'https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${_currentPosition!.latitude},${_currentPosition!.longitude}&radius=5000&type=veterinary_care&key=$apiKey';
+
+    if (_nextPageToken != null) {
+      url += '&pagetoken=$_nextPageToken';
+    }
+
     try {
       final response = await http.get(Uri.parse(url));
       final json = jsonDecode(response.body);
@@ -61,6 +85,10 @@ class _MapScreenState extends State<MapScreen> {
       print('Response: $json');
 
       if (json['status'] == 'OK') {
+        setState(() {
+          _nextPageToken = json['next_page_token'];
+        });
+
         for (var result in json['results']) {
           final marker = Marker(
             markerId: MarkerId(result['place_id']),
@@ -76,6 +104,12 @@ class _MapScreenState extends State<MapScreen> {
           });
         }
         print('Markers added: ${_markers.length}');
+
+        // Fetch more results if there's a next page token
+        if (_nextPageToken != null) {
+          await Future.delayed(Duration(seconds: 2)); // Short delay before fetching next page
+          _fetchNearbyVeterinarians();
+        }
       } else {
         print('Error fetching places: ${json['status']}');
       }

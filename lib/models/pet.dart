@@ -1,15 +1,15 @@
 import 'dart:convert';
 
 class Pet {
-  final int id;
-  final String name;
-  final String animal;
-  final String race;
-  final double weight;
-  final int gender;
-  final int chip;
-  final String petImg;
-  final List<String> eventos;
+  int id;
+  String name;
+  String animal;
+  String race;
+  double weight;
+  int gender;
+  int chip;
+  String petImg;
+  List<String> eventos;
 
   Pet({
     required this.id,

@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/services.dart';
@@ -11,9 +12,9 @@ import 'package:pets/utils/custom_snackbar.dart';
 
 class MyPetsView extends StatefulWidget {
   final String id = "pets_page";
-  final User userLog; // Agrega un parámetro para recibir el usuario logeado
+  User userLog; // Agrega un parámetro para recibir el usuario logeado
 
-  const MyPetsView({required this.userLog, super.key});
+  MyPetsView({required this.userLog, super.key});
 
   @override
   MyPetsViewState createState() => MyPetsViewState();
@@ -46,6 +47,12 @@ class MyPetsViewState extends State<MyPetsView> {
     } else {
       throw Exception('Failed to load user: ${response.reasonPhrase}');
     }
+  }
+
+  Future<void> loadUser() async {
+    setState(() {
+      _futureUser = fetchUserById(widget.userLog.id);
+    });
   }
 
   @override
@@ -93,7 +100,7 @@ class MyPetsViewState extends State<MyPetsView> {
                         options: CarouselOptions(
                           height: MediaQuery.of(context).size.height,
                           enlargeCenterPage: true,
-                          autoPlay: mascotas.length == 1 ? false : true,
+                          autoPlay: false,
                           aspectRatio: 16 / 9,
                           autoPlayCurve: Curves.fastOutSlowIn,
                           enableInfiniteScroll:
@@ -122,6 +129,7 @@ class MyPetsViewState extends State<MyPetsView> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
+          // Espera a que se complete la navegación a AddPetForm
           Navigator.push(
             context,
             MaterialPageRoute(
@@ -133,14 +141,15 @@ class MyPetsViewState extends State<MyPetsView> {
           );
         },
         backgroundColor: Colors.orange,
-        child: Icon(color: Colors.white, Icons.add),
+        child: Icon(Icons.add),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     );
   }
+  // fetchUserById
 
   Widget _buildMascotaItem(Pet mascota) {
-     // Obtener la altura de la pantalla
+    // Obtener la altura de la pantalla
     double screenHeight = MediaQuery.of(context).size.height;
 
     // Calcular el 70% de la altura de la pantalla
@@ -160,18 +169,19 @@ class MyPetsViewState extends State<MyPetsView> {
             children: <Widget>[
               const SizedBox(height: 20),
               // Stack con la imagen y la tarjeta de información
-              
+
               Stack(
                 children: [
                   Column(
                     children: [
                       ClipRRect(
                         borderRadius: BorderRadius.circular(8.0),
-                        child: Image.network(
-                          mascota.petImg,
+                        child: CachedNetworkImage(
+                          imageUrl:
+                              "http://localhost/crud/${mascota.petImg}",
                           fit: BoxFit.cover,
                           width: double.infinity,
-                          height:imageHeight,
+                          height: imageHeight,
                         ),
                       ),
                       SizedBox(
@@ -276,7 +286,7 @@ class MyPetsViewState extends State<MyPetsView> {
                   options: CarouselOptions(
                     height: MediaQuery.of(context).size.height,
                     enlargeCenterPage: true,
-                    autoPlay: mascotas.length == 1 ? false : true,
+                    autoPlay: false,
                     aspectRatio: 16 / 9,
                     autoPlayCurve: Curves.fastOutSlowIn,
                     enableInfiniteScroll: mascotas.length == 1 ? false : true,
@@ -292,8 +302,9 @@ class MyPetsViewState extends State<MyPetsView> {
                   items: mascotas.map((mascota) {
                     return Builder(
                       builder: (BuildContext context) {
-                        return Image.network(
-                          mascotaPicked.petImg,
+                        return CachedNetworkImage(
+                          imageUrl:
+                              "http://localhost/crud/${mascotaPicked.petImg}",
                           fit: BoxFit.fitWidth,
                           width: double.infinity,
                         );
@@ -305,7 +316,8 @@ class MyPetsViewState extends State<MyPetsView> {
                   top: 16.0,
                   right: 16.0,
                   child: IconButton(
-                    icon: Icon(Icons.expand_circle_down_outlined, color: Colors.redAccent),
+                    icon: Icon(Icons.expand_circle_down_outlined,
+                        color: Colors.redAccent),
                     onPressed: () {
                       Navigator.of(context).pop();
                     },
@@ -458,7 +470,8 @@ class MyPetsViewState extends State<MyPetsView> {
     final configJson = json.decode(configString);
     final config = Config.fromJson(configJson);
 
-    final url = Uri.parse('http://${config.host}:3000/user/${widget.userLog.id}/$petId');
+    final url = Uri.parse(
+        'http://${config.host}:3000/user/${widget.userLog.id}/$petId');
     final response = await http.delete(url);
     // final url2 = Uri.parse('http://${config.host}:3000/user/$petId');
     // await http.delete(url2);

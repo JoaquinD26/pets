@@ -75,8 +75,6 @@ Future<bool> fetchLikeStatus(int postId, String userId) async {
     if (response.statusCode == 200) {
       var responseData = json.decode(response.body);
 
-      print(responseData);
-
       if (responseData['data'] == null) {
         return false;
       } else {
@@ -439,11 +437,15 @@ class PostDetailsPageState extends State<PostDetailsPage> {
 
     // Verificar el estado actual del like
     bool isLiked = likedByUserMap[post.id] ?? false;
+    
+    String accion = '';
+
+    isLiked ? accion = "dislike": accion = "like";
 
     try {
       var response = await http.put(
         Uri.parse(
-          "http://${config.host}:3000/post/${post.id}/like}/${user.id}",
+          "http://${config.host}:3000/post/${post.id}/${accion}/${user.id}",
         ),
       );
 

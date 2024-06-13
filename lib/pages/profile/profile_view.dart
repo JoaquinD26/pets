@@ -117,20 +117,8 @@ class ProfileViewState extends State<ProfileView> {
                     Expanded(
                       flex: 2,
                       child: IconTextButton(
-                        icon: Icon(Icons.comment_bank_rounded),
-                        title: "Comentarios",
-                        subTitle: "200",
-                        onPressed: () {},
-                      ),
-                    ),
-                    const Spacer(
-                      flex: 1,
-                    ),
-                    Expanded(
-                      flex: 2,
-                      child: IconTextButton(
                         icon: Icon(Icons.question_answer),
-                        title: "Respuestas",
+                        title: "Posts",
                         subTitle: "200",
                         onPressed: () {},
                       ),

@@ -53,6 +53,7 @@ dependencies:
   geolocator: 12.0.0
   google_maps_flutter: ^2.7.0
   permission_handler: ^8.0.0
+  cached_network_image: ^3.3.1
   
 
 

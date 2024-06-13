@@ -13,7 +13,7 @@ import 'package:provider/provider.dart';
 class MyHomePage extends StatefulWidget {
   bool activo = false;
   final String id = "home_page";
-  final User user;
+  User user;
 
   MyHomePage({
     super.key,

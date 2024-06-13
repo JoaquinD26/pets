@@ -2,17 +2,17 @@ import 'package:pets/models/forum.dart';
 import 'package:pets/models/pet.dart';
 
 class User {
-  final String id;
-  final String name;
-  final String lastname;
-  final String email;
-  final String address;
-  final String password;
-  final String cp;
-  final String? birthday;
-  final String? mainImage;
-  final List<Forum>? foro;
-  final List<Pet> pets;
+  String id;
+  String name;
+   String lastname;
+   String email;
+   String address;
+   String password;
+   String cp;
+   String? birthday;
+   String? mainImage;
+   List<Forum>? foro;
+   List<Pet> pets;
 
   User({
     required this.id,
