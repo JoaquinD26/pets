@@ -6,11 +6,13 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:pets/models/Product.dart';
 import 'package:pets/models/config.dart';
 import 'package:http/http.dart' as http;
+import 'package:pets/models/user.dart';
 
 class ItemPage extends StatefulWidget {
   final Product product;
+  User userLog;
 
-  const ItemPage({Key? key, required this.product}) : super(key: key);
+  ItemPage({Key? key, required this.product, required this.userLog}) : super(key: key);
 
   @override
   _ItemPageState createState() => _ItemPageState();
@@ -39,12 +41,13 @@ class _ItemPageState extends State<ItemPage> {
     final config = Config.fromJson(configJson);
 
     try {
-      var response =
-          await http.get(Uri.parse('http://${config.host}:3000/forum'));
+      var response = await http.get(Uri.parse(
+          'http://${config.host}:3000/productComment/product/${widget.product.id}'));
 
       if (response.statusCode == 200) {
         setState(() {
           comments = json.decode(response.body);
+          print('Comentarios cargados: $comments');
         });
       } else {
         print(
@@ -52,6 +55,150 @@ class _ItemPageState extends State<ItemPage> {
       }
     } catch (e) {
       print('Error al cargar los comentarios: $e');
+    }
+  }
+
+  Future<void> showAddCommentDialog(BuildContext context) async {
+    final TextEditingController commentController = TextEditingController();
+    double rating = 0;
+
+    await showDialog(
+      context: context,
+      builder: (context) {
+        return Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(15.0)),
+          ),
+          child: Container(
+            padding: EdgeInsets.all(20),
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Text(
+                    'Añadir comentario',
+                    style: TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.blueGrey[900],
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                  SizedBox(height: 10),
+                  Center(
+                    child: RatingBar.builder(
+                      initialRating: rating,
+                      minRating: 0,
+                      direction: Axis.horizontal,
+                      allowHalfRating: true,
+                      itemCount: 5,
+                      itemSize: 40,
+                      itemPadding: EdgeInsets.symmetric(horizontal: 4),
+                      itemBuilder: (context, _) => Icon(
+                        Icons.star,
+                        color: Colors.amber,
+                      ),
+                      onRatingUpdate: (newRating) {
+                        rating = newRating;
+                      },
+                    ),
+                  ),
+                  SizedBox(height: 20),
+                  TextField(
+                    controller: commentController,
+                    maxLength: 250,
+                    decoration: InputDecoration(
+                      labelText: 'Comentario',
+                      labelStyle: TextStyle(color: Colors.blueGrey[700]),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(12.0)),
+                      ),
+                      filled: true,
+                      fillColor: Colors.blueGrey[50],
+                    ),
+                    maxLines: 3,
+                  ),
+                  SizedBox(height: 20),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      TextButton(
+                        child: Text(
+                          'Cancelar',
+                          style: TextStyle(
+                            color: Colors.redAccent,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                      ),
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.blueAccent,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12.0),
+                          ),
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 20, vertical: 10),
+                        ),
+                        child: Text(
+                          'Enviar',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        onPressed: () async {
+                          final comment = {
+                            "text": commentController.text,
+                            "scoreUser": rating.toString(),
+                            "product": {"id": widget.product.id},
+                            "user": {
+                              "id": widget.userLog.id
+                            } // Reemplaza con el ID del usuario real
+                          };
+
+                          await sendComment(comment);
+
+                          Navigator.of(context).pop();
+                        },
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  Future<void> sendComment(Map<String, dynamic> comment) async {
+    final configString = await rootBundle.loadString('assets/config.json');
+    final configJson = json.decode(configString);
+    final config = Config.fromJson(configJson);
+
+    try {
+      var response = await http.post(
+        Uri.parse('http://${config.host}:3000/productComment'),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: json.encode(comment),
+      );
+
+      if (response.statusCode == 200) {
+        loadComments(); // Reload comments after posting a new one
+      } else {
+        print(
+            'Error al enviar el comentario. Código de respuesta: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error al enviar el comentario: $e');
     }
   }
 
@@ -129,13 +276,13 @@ class _ItemPageState extends State<ItemPage> {
                                     MainAxisAlignment.spaceBetween,
                                 children: [
                                   RatingBar.builder(
-                                    initialRating: 1,
-                                    ignoreGestures: true,
-                                    //initialRating: widget.product.rating,
+                                    initialRating: widget.product.averageScore,
                                     minRating: 0,
                                     direction: Axis.horizontal,
+                                    allowHalfRating: true,
                                     itemCount: 5,
                                     itemSize: 18,
+                                    ignoreGestures: true,
                                     itemPadding:
                                         EdgeInsets.symmetric(horizontal: 4),
                                     itemBuilder: (context, _) => Icon(
@@ -191,55 +338,79 @@ class _ItemPageState extends State<ItemPage> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        Text(
-                          'Valoraciones',
-                          style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
+                        
+                        SizedBox(height: 10),
+                        MaterialButton(
+                          onPressed: () {
+                            showAddCommentDialog(context);
+                          },
+                          color: Colors.orange, // Cambia el color de fondo
+                          textColor: Colors.white, // Cambia el color del texto
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 20,
+                              vertical: 10), // Ajusta el padding
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(
+                                12.0), // Añade bordes redondeados
+                          ),
+                          child: Text(
+                            'Añadir valoracion',
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
                         ),
-                        SizedBox(
-                            height:
-                                10), // Ajusta este valor según sea necesario
+                        SizedBox(height: 10),
+                        if (comments.isEmpty)
+                          Text('No hay valoraciones disponibles.'),
                         ...comments.map((comment) {
                           return Padding(
                             padding: const EdgeInsets.symmetric(vertical: 8),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(
-                                      comment['name'],
-                                      style: TextStyle(
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.bold,
+                            child: Container(
+                              decoration: BoxDecoration(
+                                color: Colors.grey[200],
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              padding: EdgeInsets.all(10),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        comment['user']['name'],
+                                        style: TextStyle(
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.bold,
+                                        ),
                                       ),
-                                    ),
-                                    RatingBar.builder(
-                                      initialRating: comment['rating'] != null
-                                          ? comment['rating']
-                                          : 0,
-                                      ignoreGestures: true,
-                                      minRating: 0,
-                                      direction: Axis.horizontal,
-                                      itemCount: 5,
-                                      itemSize: 18,
-                                      itemPadding:
-                                          EdgeInsets.symmetric(horizontal: 4),
-                                      itemBuilder: (context, _) => Icon(
-                                        Icons.star,
-                                        color: Colors.amber,
+                                      RatingBar.builder(
+                                        initialRating:
+                                            comment['scoreUser'] != null
+                                                ? comment['scoreUser']
+                                                : 0,
+                                        ignoreGestures: true,
+                                        minRating: 0,
+                                        direction: Axis.horizontal,
+                                        allowHalfRating: true,
+                                        itemCount: 5,
+                                        itemSize: 18,
+                                        itemPadding:
+                                            EdgeInsets.symmetric(horizontal: 4),
+                                        itemBuilder: (context, _) => Icon(
+                                          Icons.star,
+                                          color: Colors.amber,
+                                        ),
+                                        onRatingUpdate: (index) {},
                                       ),
-                                      onRatingUpdate: (index) {},
-                                    ),
-                                  ],
-                                ),
-                                SizedBox(height: 5),
-                                Text(comment['description']),
-                              ],
+                                    ],
+                                  ),
+                                  SizedBox(height: 5),
+                                  Text(comment['text']),
+                                ],
+                              ),
                             ),
                           );
                         }).toList(),

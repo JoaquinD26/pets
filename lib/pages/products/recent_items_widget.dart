@@ -5,12 +5,14 @@ import 'package:flutter/services.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:pets/models/Product.dart';
 import 'package:pets/models/config.dart';
+import 'package:pets/models/user.dart';
 import 'package:pets/pages/products/item_page.dart';
 
 class RecentItemsWidget extends StatefulWidget {
   final List<Product> products;
+  User userLog;
 
-  const RecentItemsWidget({Key? key, required this.products}) : super(key: key);
+  RecentItemsWidget({Key? key, required this.products, required this.userLog}) : super(key: key);
 
   @override
   State<RecentItemsWidget> createState() => _RecentItemsWidgetState();
@@ -88,7 +90,7 @@ class _RecentItemsWidgetState extends State<RecentItemsWidget> {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) => ItemPage(product: product),
+                                    builder: (context) => ItemPage(product: product, userLog: widget.userLog),
                                   ),
                                 );
                               },
@@ -111,19 +113,22 @@ class _RecentItemsWidgetState extends State<RecentItemsWidget> {
                             ),
                             SizedBox(height: 4),
                             RatingBar.builder(
-                              ignoreGestures: true,
-                              initialRating: 0,
-                              minRating: 0,
-                              direction: Axis.horizontal,
-                              itemCount: 5,
-                              itemSize: 18,
-                              itemPadding: EdgeInsets.symmetric(horizontal: 4),
-                              itemBuilder: (context, _) => Icon(
-                                Icons.star,
-                                color: Colors.amber,
-                              ),
-                              onRatingUpdate: (rating) {},
-                            ),
+                                  initialRating: product.averageScore,
+                                  minRating: 0,
+                                  direction: Axis.horizontal,
+                                  allowHalfRating:
+                                      true, // Permitir medias estrellas
+                                  itemCount: 5,
+                                  itemSize: 18,
+                                  ignoreGestures: true,
+                                  itemPadding:
+                                      EdgeInsets.symmetric(horizontal: 4),
+                                  itemBuilder: (context, _) => Icon(
+                                    Icons.star,
+                                    color: Colors.amber,
+                                  ),
+                                  onRatingUpdate: (index) {},
+                                ),
                             SizedBox(height: 4),
                             SizedBox(height: 12),
                             Row(

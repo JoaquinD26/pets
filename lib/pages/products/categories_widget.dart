@@ -91,7 +91,7 @@ class _CategoriesWidgetState extends State<CategoriesWidget> {
             )
         .name;
 
-    String imageUrl = 'assets/images/${categoryName.toLowerCase()}.jpg';
+    String imageUrl = 'assets/images/${categoryName}.jpg';
 
     // Construir y devolver el widget de la categoría
     return GestureDetector(

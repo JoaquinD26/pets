@@ -4,8 +4,9 @@ import 'package:pets/models/user.dart';
 import 'package:pets/pages/forum_view.dart';
 import 'package:pets/pages/map_screen.dart';
 import 'package:pets/pages/my_pets_view.dart';
-import 'package:pets/pages/profile/profile_view.dart';
 import 'package:pets/pages/product_view.dart';
+import 'package:pets/pages/profile/profile_view.dart';
+
 import 'package:pets/providers/view_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -38,7 +39,7 @@ class MyHomePageState extends State<MyHomePage> {
     _pages = [
       MyPetsView(userLog: widget.user),
       ProductView(
-        user: widget.user,
+        userLog: widget.user,
       ),
       ForumPage(
         userLog: widget.user,
