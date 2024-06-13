@@ -140,6 +140,11 @@ class MyPetsViewState extends State<MyPetsView> {
   }
 
   Widget _buildMascotaItem(Pet mascota) {
+     // Obtener la altura de la pantalla
+    double screenHeight = MediaQuery.of(context).size.height;
+
+    // Calcular el 70% de la altura de la pantalla
+    double imageHeight = screenHeight * 0.5;
     return GestureDetector(
       onTap: () {
         _showPetInfoDialog(context, mascotas[_currentMascotaIndex]);
@@ -155,6 +160,7 @@ class MyPetsViewState extends State<MyPetsView> {
             children: <Widget>[
               const SizedBox(height: 20),
               // Stack con la imagen y la tarjeta de información
+              
               Stack(
                 children: [
                   Column(
@@ -165,10 +171,11 @@ class MyPetsViewState extends State<MyPetsView> {
                           mascota.petImg,
                           fit: BoxFit.cover,
                           width: double.infinity,
+                          height:imageHeight,
                         ),
                       ),
                       SizedBox(
-                        height: double.minPositive + 150.0,
+                        height: double.minPositive + 250.0,
                       )
                     ],
                   ),
@@ -287,7 +294,7 @@ class MyPetsViewState extends State<MyPetsView> {
                       builder: (BuildContext context) {
                         return Image.network(
                           mascotaPicked.petImg,
-                          fit: BoxFit.cover,
+                          fit: BoxFit.fitWidth,
                           width: double.infinity,
                         );
                       },
