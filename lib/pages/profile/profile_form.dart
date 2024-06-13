@@ -298,6 +298,7 @@ class _EditProfilePageState extends State<ProfileForm> {
               builder: (context) => MyHomePage(
                     user: updatedUser,
                     activo: true,
+                    rating: false,
                   )),
           (route) => false,
         );

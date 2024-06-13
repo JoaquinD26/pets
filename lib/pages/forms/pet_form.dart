@@ -354,6 +354,7 @@ class AddPetFormState extends State<AddPetForm> {
               builder: (context) => MyHomePage(
                     user: widget.user,
                     activo: false,
+                    rating: false,
                   )),
           (route) => false,
         );
@@ -411,6 +412,7 @@ class AddPetFormState extends State<AddPetForm> {
               builder: (context) => MyHomePage(
                     user: widget.user,
                     activo: false,
+                    rating: false,
                   )),
           (route) => false,
         );
