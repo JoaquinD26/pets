@@ -6,11 +6,13 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:pets/models/Product.dart';
 import 'package:pets/models/config.dart';
 import 'package:http/http.dart' as http;
+import 'package:pets/models/user.dart';
 
 class ItemPage extends StatefulWidget {
   final Product product;
+  User userLog;
 
-  const ItemPage({Key? key, required this.product}) : super(key: key);
+  ItemPage({Key? key, required this.product, required this.userLog}) : super(key: key);
 
   @override
   _ItemPageState createState() => _ItemPageState();
@@ -155,7 +157,7 @@ class _ItemPageState extends State<ItemPage> {
                             "scoreUser": rating.toString(),
                             "product": {"id": widget.product.id},
                             "user": {
-                              "id": "1"
+                              "id": widget.userLog.id
                             } // Reemplaza con el ID del usuario real
                           };
 

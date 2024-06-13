@@ -31,7 +31,7 @@ class Product {
     return Product(
       id: json['id'],
       averageScore: json['averageScore'],
-      name: json['name'],
+      name: utf8.decode(json['name'].codeUnits),
       description: utf8.decode(json['description'].codeUnits), // Decode using utf8
       price: json['price'],
       imageUrl: json['image'], // assuming this is the correct field for image URL

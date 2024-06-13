@@ -12,10 +12,9 @@ import 'package:pets/pages/products/recent_items_widget.dart'; // Importa el wid
 // ignore: must_be_immutable
 class ProductView extends StatefulWidget {
   static String id = "product_page";
+  User userLog; // Agrega un parámetro para recibir el usuario logeado
 
-  late User user; // Agrega un parámetro para recibir el usuario logeado
-
-  ProductView({required this.user, Key? key}) : super(key: key);
+  ProductView({Key? key,required this.userLog}) : super(key: key);
 
   @override
   _ProductViewState createState() => _ProductViewState();
@@ -161,7 +160,7 @@ class _ProductViewState extends State<ProductView> {
                       ),
                     ),
                   ),
-                  RecentItemsWidget(products: displayedProducts),
+                  RecentItemsWidget(products: displayedProducts, userLog: widget.userLog),
                 ],
               ),
 
@@ -187,7 +186,7 @@ class _ProductViewState extends State<ProductView> {
                       ),
                     ),
                   )
-                : NewestItemsWidget(displayedProducts: displayedProducts),
+                : NewestItemsWidget(displayedProducts: displayedProducts, userLog: widget.userLog),
           ],
         ),
       ),

@@ -5,12 +5,14 @@ import 'package:flutter/services.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:pets/models/Product.dart';
 import 'package:pets/models/config.dart';
+import 'package:pets/models/user.dart';
 import 'package:pets/pages/products/item_page.dart';
 
 class RecentItemsWidget extends StatefulWidget {
   final List<Product> products;
+  User userLog;
 
-  const RecentItemsWidget({Key? key, required this.products}) : super(key: key);
+  RecentItemsWidget({Key? key, required this.products, required this.userLog}) : super(key: key);
 
   @override
   State<RecentItemsWidget> createState() => _RecentItemsWidgetState();
@@ -88,7 +90,7 @@ class _RecentItemsWidgetState extends State<RecentItemsWidget> {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) => ItemPage(product: product),
+                                    builder: (context) => ItemPage(product: product, userLog: widget.userLog),
                                   ),
                                 );
                               },

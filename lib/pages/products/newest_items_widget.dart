@@ -4,12 +4,13 @@ import 'package:flutter/services.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:pets/models/Product.dart';
 import 'package:pets/models/config.dart';
+import 'package:pets/models/user.dart';
 import 'package:pets/pages/products/item_page.dart';
 
 class NewestItemsWidget extends StatefulWidget {
   final List<Product> displayedProducts;
-
-  const NewestItemsWidget({Key? key, required this.displayedProducts})
+  User userLog;
+  NewestItemsWidget({Key? key, required this.displayedProducts,required this.userLog})
       : super(key: key);
 
   @override
@@ -84,7 +85,7 @@ class _NewestItemsWidgetState extends State<NewestItemsWidget> {
                                 context,
                                 MaterialPageRoute(
                                   builder: (context) =>
-                                      ItemPage(product: product,),
+                                      ItemPage(product: product,userLog: widget.userLog),
                                 ),
                               );
                             },
