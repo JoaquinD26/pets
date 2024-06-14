@@ -104,7 +104,7 @@ class ForumPageState extends State<ForumPage> {
             // Search
             Padding(
               padding: EdgeInsets.fromLTRB(
-               0,60,0,0
+               10,60,10,0
               ),
               child: Container(
                 width: double.infinity,
