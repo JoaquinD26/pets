@@ -46,32 +46,7 @@ class _EditProfilePageState extends State<ProfileForm> {
         TextEditingController(text: widget.user.cp.toString());
   }
 
-  Future<void> _pickImage() async {
-    if (kIsWeb) {
-      // For web
-      final result = await FilePicker.platform.pickFiles(
-        type: FileType.image,
-        withData: true,
-      );
-
-      if (result != null && result.files.single.bytes != null) {
-        setState(() {
-          _webImage = result.files.single.bytes;
-        });
-      }
-    } else {
-      // For mobile
-      final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
-
-      if (pickedFile != null) {
-        setState(() {
-          _image = File(pickedFile.path);
-        });
-      } else {
-        print('No image selected.');
-      }
-    }
-  }
+  
 
   @override
   Widget build(BuildContext context) {
@@ -103,8 +78,6 @@ class _EditProfilePageState extends State<ProfileForm> {
                   const SizedBox(height: 10.0),
                   _buildDateField("Fecha de Nacimiento", controller),
                   const SizedBox(height: 10.0),
-                  _buildImagePicker(),
-                  const SizedBox(height: 10.0),
                   _buildSaveButton(),
                 ],
               ),
@@ -115,22 +88,7 @@ class _EditProfilePageState extends State<ProfileForm> {
     );
   }
 
-  Widget _buildImagePicker() {
-    return Column(
-      children: [
-        if (_webImage != null)
-          Image.memory(_webImage!, height: 200)
-        else if (_image != null)
-          Image.file(_image!, height: 200)
-        else
-          Text("No se ha seleccionado ninguna imagen."),
-        ElevatedButton(
-          onPressed: _pickImage,
-          child: Text("Seleccionar Imagen"),
-        ),
-      ],
-    );
-  }
+ 
 
   Widget _buildDateField(String labelText, TextEditingController controller) {
     return GestureDetector(

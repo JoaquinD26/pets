@@ -70,8 +70,8 @@ class ProfileViewState extends State<ProfileView> {
                 children: [
                   CircleAvatar(
                     radius: media.width * 0.125,
-                    backgroundColor: TColor.secondary,
-                    backgroundImage: NetworkImage(""),
+                    backgroundImage: NetworkImage(
+                        "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b5/Windows_10_Default_Profile_Picture.svg/2048px-Windows_10_Default_Profile_Picture.svg.png"),
                     onBackgroundImageError: (exception, stackTrace) {
                       // Manejar error en la carga de la imagen
                     },

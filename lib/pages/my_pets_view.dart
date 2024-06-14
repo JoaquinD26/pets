@@ -104,36 +104,39 @@ class MyPetsViewState extends State<MyPetsView> {
                       ],
                     ),
                   )
-                : Stack(
-                    children: [
-                      CarouselSlider(
-                        options: CarouselOptions(
-                          height: MediaQuery.of(context).size.height,
-                          enlargeCenterPage: true,
-                          autoPlay: false,
-                          aspectRatio: 16 / 9,
-                          autoPlayCurve: Curves.fastOutSlowIn,
-                          enableInfiniteScroll:
-                              mascotas.length == 1 ? false : true,
-                          autoPlayAnimationDuration:
-                              const Duration(milliseconds: 800),
-                          viewportFraction: 1.0,
-                          onPageChanged: (index, _) {
-                            setState(() {
-                              _currentMascotaIndex = index;
-                            });
-                          },
-                        ),
-                        items: mascotas.map((mascota) {
-                          return Builder(
-                            builder: (BuildContext context) {
-                              return _buildMascotaItem(mascota);
+                : Padding(
+                  padding: const EdgeInsets.fromLTRB(0,15,0,0),
+                  child: Stack(
+                      children: [
+                        CarouselSlider(
+                          options: CarouselOptions(
+                            height: MediaQuery.of(context).size.height,
+                            enlargeCenterPage: true,
+                            autoPlay: false,
+                            aspectRatio: 16 / 9,
+                            autoPlayCurve: Curves.fastOutSlowIn,
+                            enableInfiniteScroll:
+                                mascotas.length == 1 ? false : true,
+                            autoPlayAnimationDuration:
+                                const Duration(milliseconds: 800),
+                            viewportFraction: 1.0,
+                            onPageChanged: (index, _) {
+                              setState(() {
+                                _currentMascotaIndex = index;
+                              });
                             },
-                          );
-                        }).toList(),
-                      ),
-                    ],
-                  );
+                          ),
+                          items: mascotas.map((mascota) {
+                            return Builder(
+                              builder: (BuildContext context) {
+                                return _buildMascotaItem(mascota);
+                              },
+                            );
+                          }).toList(),
+                        ),
+                      ],
+                    ),
+                );
           }
         },
       ),

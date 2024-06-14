@@ -33,7 +33,7 @@ class AddPetFormState extends State<AddPetForm> {
   final TextEditingController _animalController = TextEditingController();
   final TextEditingController _raceController = TextEditingController();
   final TextEditingController _weightController = TextEditingController();
-  String _selectedGender = 'Male';
+  String _selectedGender = 'Macho';
   String _selectedAnimal = "Perro";
   bool _hasChip = false;
   Uint8List? _selectedImageBytes;
@@ -78,7 +78,7 @@ Future<void> _pickImage() async {
       _selectedAnimal = widget.pet!.animal;
       _raceController.text = widget.pet!.race;
       _weightController.text = widget.pet!.weight.toString();
-      _selectedGender = widget.pet!.gender == 1 ? 'Male' : 'Female';
+      _selectedGender = widget.pet!.gender == 1 ? 'Macho' : 'Hembra';
       _hasChip = widget.pet!.chip == 1;
     }
   }
@@ -105,12 +105,12 @@ Future<void> _pickImage() async {
               TextFormField(
                 controller: _nameController,
                 decoration: InputDecoration(
-                  labelText: 'Name',
+                  labelText: 'Nombre',
                   border: OutlineInputBorder(),
                 ),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return 'Please enter the name';
+                    return 'Introduzca un nombre';
                   }
                   return null;
                 },
@@ -136,12 +136,12 @@ Future<void> _pickImage() async {
               TextFormField(
                 controller: _raceController,
                 decoration: InputDecoration(
-                  labelText: 'Race',
+                  labelText: 'Raza',
                   border: OutlineInputBorder(),
                 ),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return 'Please enter the race';
+                    return 'Introduzca la raza';
                   }
                   return null;
                 },
@@ -150,7 +150,7 @@ Future<void> _pickImage() async {
               TextFormField(
                 controller: _weightController,
                 decoration: InputDecoration(
-                  labelText: 'Weight',
+                  labelText: 'Peso',
                   border: OutlineInputBorder(),
                 ),
                 keyboardType: TextInputType.numberWithOptions(decimal: true),
@@ -159,7 +159,7 @@ Future<void> _pickImage() async {
                 ],
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return 'Please enter the weight';
+                    return 'Introduzca el peso';
                   }
                   return null;
                 },
@@ -168,10 +168,10 @@ Future<void> _pickImage() async {
               DropdownButtonFormField<String>(
                 value: _selectedGender,
                 decoration: InputDecoration(
-                  labelText: 'Gender',
+                  labelText: 'Genero',
                   border: OutlineInputBorder(),
                 ),
-                items: ['Male', 'Female'].map((label) => DropdownMenuItem(
+                items: ['Macho', 'Hembra'].map((label) => DropdownMenuItem(
                   value: label,
                   child: Text(label),
                 )).toList(),
@@ -184,7 +184,7 @@ Future<void> _pickImage() async {
               SizedBox(height: 16),
               Row(
                 children: [
-                  Text('Has Chip'),
+                  Text('¿LLeva chip?'),
                   Checkbox(
                     value: _hasChip,
                     onChanged: (bool? value) {
@@ -197,12 +197,12 @@ Future<void> _pickImage() async {
               ),
               SizedBox(height: 16),
               _selectedImageBytes == null
-                  ? Text('No image selected.')
+                  ? Text('Imagen no seleccionada.')
                   : Image.memory(_selectedImageBytes!),
               SizedBox(height: 16),
               ElevatedButton(
                 onPressed: _pickImage,
-                child: Text('Pick an image', style: TextStyle(color: Colors.black)),
+                child: Text('Selecciona imagen', style: TextStyle(color: Colors.black)),
               ),
               SizedBox(height: 20),
               ElevatedButton(
@@ -214,7 +214,7 @@ Future<void> _pickImage() async {
                       animal: _selectedAnimal,
                       race: _raceController.text,
                       weight: double.parse(_weightController.text),
-                      gender: _selectedGender == 'Male' ? 1 : 0,
+                      gender: _selectedGender == 'Macho' ? 1 : 0,
                       chip: _hasChip ? 1 : 0,
                       petImg: '',
                       eventos: [],
@@ -231,7 +231,7 @@ Future<void> _pickImage() async {
                   backgroundColor: Colors.deepOrange[300],
                 ),
                 child: Text(
-                  widget.isEditing ? 'Edit Pet' : 'Add Pet',
+                  widget.isEditing ? 'Editar mascota' : 'Añadir mascota',
                   style: TextStyle(color: Colors.black),
                 ),
               ),

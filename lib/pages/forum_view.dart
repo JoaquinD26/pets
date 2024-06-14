@@ -100,12 +100,11 @@ class ForumPageState extends State<ForumPage> {
         onRefresh: loadForums,
         child: Column(
           children: [
-            SizedBox(height: 20),
+
             // Search
             Padding(
-              padding: EdgeInsets.symmetric(
-                vertical: 10,
-                horizontal: 15,
+              padding: EdgeInsets.fromLTRB(
+               0,60,0,0
               ),
               child: Container(
                 width: double.infinity,
@@ -135,6 +134,7 @@ class ForumPageState extends State<ForumPage> {
                           child: TextFormField(
                             controller: searchController,
                             decoration: InputDecoration(
+                              hintText: "¿Qué te gustaría buscar?",
                               border: InputBorder.none,
                             ),
                           ),
