@@ -184,7 +184,7 @@ Future<void> _pickImage() async {
               SizedBox(height: 16),
               Row(
                 children: [
-                  Text('¿LLeva chip?'),
+                  Text('¿Lleva chip?'),
                   Checkbox(
                     value: _hasChip,
                     onChanged: (bool? value) {
