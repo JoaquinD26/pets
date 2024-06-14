@@ -13,6 +13,7 @@ import 'package:pets/utils/custom_snackbar.dart';
 class MyPetsView extends StatefulWidget {
   final String id = "pets_page";
   User userLog; // Agrega un parámetro para recibir el usuario logeado
+ 
 
   MyPetsView({required this.userLog, super.key});
 
@@ -24,12 +25,20 @@ class MyPetsViewState extends State<MyPetsView> {
   late Future<User> _futureUser;
   late List<Pet> mascotas = [];
   int _currentMascotaIndex = 0;
+  late Config config;
 
   @override
   void initState() {
     super.initState();
     _futureUser = fetchUserById(widget.userLog.id);
+    loadConfig();
   }
+
+  Future<void> loadConfig() async {
+  final configString = await rootBundle.loadString('assets/config.json');
+  final configJson = json.decode(configString);
+  config =  Config.fromJson(configJson);
+}
 
   Future<User> fetchUserById(String id) async {
     final configString = await rootBundle.loadString('assets/config.json');
@@ -57,6 +66,7 @@ class MyPetsViewState extends State<MyPetsView> {
 
   @override
   Widget build(BuildContext context) {
+    
     return Scaffold(
       body: FutureBuilder<User>(
         future: _futureUser,
@@ -178,7 +188,7 @@ class MyPetsViewState extends State<MyPetsView> {
                         borderRadius: BorderRadius.circular(8.0),
                         child: CachedNetworkImage(
                           imageUrl:
-                              "http://localhost/crud/${mascota.petImg}",
+                              "http://${config.host}/crud/${mascota.petImg}",
                           fit: BoxFit.cover,
                           width: double.infinity,
                           height: imageHeight,
@@ -304,7 +314,7 @@ class MyPetsViewState extends State<MyPetsView> {
                       builder: (BuildContext context) {
                         return CachedNetworkImage(
                           imageUrl:
-                              "http://localhost/crud/${mascotaPicked.petImg}",
+                              "http://${config.host}/crud/${mascotaPicked.petImg}",
                           fit: BoxFit.fitWidth,
                           width: double.infinity,
                         );
