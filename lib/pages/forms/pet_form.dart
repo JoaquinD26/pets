@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:file_picker/file_picker.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:pets/models/config.dart';
@@ -45,21 +44,33 @@ class AddPetFormState extends State<AddPetForm> {
     return Config.fromJson(configJson);
   }
 
-  Future<void> _pickImage() async {
-    try {
-      FilePickerResult? result = await FilePicker.platform.pickFiles(type: FileType.image);
-      if (result != null && result.files.isNotEmpty) {
-        PlatformFile file = result.files.first;
+
+Future<void> _pickImage() async {
+  try {
+    FilePickerResult? result = await FilePicker.platform.pickFiles(type: FileType.image);
+    if (result != null && result.files.isNotEmpty) {
+      PlatformFile file = result.files.first;
+      
+      // Mostrar detalles del archivo seleccionado para depuración
+      print('Archivo seleccionado: ${file.name}, ruta: ${file.path}, tamaño: ${file.size}');
+      
+      // Verificar si el archivo seleccionado es accesible
+      if (file.path != null && file.path!.isNotEmpty) {
         setState(() {
-          _selectedImageBytes = file.bytes;
+          // Actualizar el estado con los bytes de la imagen seleccionada
+          _selectedImageBytes = File(file.path!).readAsBytesSync();
         });
       } else {
-        print('No file selected');
+        print('La ruta del archivo seleccionado no es válida');
       }
-    } catch (e) {
-      print('Error picking image: $e');
+    } else {
+      print('No se seleccionó ningún archivo');
     }
+  } catch (e) {
+    print('Error al seleccionar la imagen: $e');
   }
+}
+
 
   void _initializeControllers() {
     if (widget.isEditing && widget.pet != null) {
