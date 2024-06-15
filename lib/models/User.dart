@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:pets/models/forum.dart';
 import 'package:pets/models/pet.dart';
 
@@ -50,9 +52,9 @@ class User {
 
     return User(
       id: json['id'].toString(),
-      name: json['name'],
-      lastname: json['lastName'],
-      email: json['email'],
+      name: utf8.decode(json['name'].toString().codeUnits),
+      lastname: utf8.decode(json['lastName'].toString().codeUnits),
+      email: utf8.decode(json['email'].toString().codeUnits),
       address: json['address'],
       password: json['password'],
       cp: json['postalCode'].toString(), // Conversión a String

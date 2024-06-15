@@ -296,7 +296,7 @@ class PostDetailsPageState extends State<PostDetailsPage> {
                       child: Column(
                         children: [
                           ListTile(
-                            title: Text(userName),
+                            title: Text(userName, style: TextStyle(color: Colors.black, fontWeight:FontWeight.bold),),
                             subtitle: Text(post.text),
                           ),
                           Row(

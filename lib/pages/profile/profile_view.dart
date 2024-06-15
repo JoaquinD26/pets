@@ -170,15 +170,6 @@ class ProfileViewState extends State<ProfileView> {
                     height: 1,
                   ),
                   MenuRow(
-                    icon: Icon(Icons.comment),
-                    title: "Comentarios",
-                    onPressed: () {},
-                  ),
-                  const Divider(
-                    color: Colors.black26,
-                    height: 1,
-                  ),
-                  MenuRow(
                     icon: Icon(Icons.logout_outlined),
                     title: "Cerrar Sesión",
                     onPressed: () async {

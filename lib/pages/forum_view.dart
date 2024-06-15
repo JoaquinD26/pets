@@ -326,7 +326,7 @@ class ForumPageState extends State<ForumPage> {
     final config = Config.fromJson(configJson);
 
     try {
-      DateFormat formatter = DateFormat('yyyy-MM-dd HH:mm:ss');
+      DateFormat formatter = DateFormat('yyyy-MM-dd');
       var fechaDeHoy = formatter.format(DateTime.now());
 
       if (kDebugMode) {

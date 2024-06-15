@@ -27,8 +27,8 @@ class Pet {
   factory Pet.fromJson(Map<String, dynamic> json) {
     return Pet(
       id: json['id'] ?? 0,
-      name: json['name'] ?? '',
-      animal: json['animal'] ?? '',
+      name: utf8.decode(json['name'].toString().codeUnits),
+      animal: utf8.decode(json['animal'].toString().codeUnits),
       race: json['race'] != null ? utf8.decode(json['race'].toString().codeUnits)  : '',
       weight: (json['weight'] ?? 0.0).toDouble(),
       gender: json['gender'] ?? 0,
