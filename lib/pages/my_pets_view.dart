@@ -388,21 +388,23 @@ class MyPetsViewState extends State<MyPetsView> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    mascota.animal,
+                                    mascota.name,
                                     style: TextStyle(
                                       fontSize: 26.0,
                                       color: Colors.black,
                                       fontWeight: FontWeight.bold,
                                     ),
                                   ),
+                                  
                                   Text(
-                                    'Raza - ${mascota.race}',
+                                    'Animal - ${mascota.animal}',
                                     style: TextStyle(
                                       fontSize: 13.0,
                                       color: Colors.black,
                                       fontWeight: FontWeight.bold,
                                     ),
-                                  )
+                                  ),
+                                  
                                 ],
                               ),
                             ),
@@ -426,9 +428,27 @@ class MyPetsViewState extends State<MyPetsView> {
                             ),
                           ],
                         ),
-                        SizedBox(height: 20.0),
+                        
                         Divider(color: Colors.grey[300]),
-                        SizedBox(height: 20.0),
+                        SizedBox(height: 15.0),
+                        _buildInfoRow(
+                            Image.asset(
+                              "assets/icon/genero.png",
+                              height: 25,
+                              width: 25,
+                            ),
+                            'Género',
+                            mascota.gender == 1 ? "Macho" : "Hembra"),
+                        SizedBox(height: 10.0),
+                        _buildInfoRow(
+                            Image.asset(
+                              "assets/icon/mascota.png",
+                              height: 25,
+                              width: 25,
+                            ),
+                            'Raza',
+                            '${mascota.race}'),
+                        SizedBox(height: 10.0),
                         _buildInfoRow(
                             Image.asset(
                               "assets/icon/peso.png",
@@ -437,15 +457,6 @@ class MyPetsViewState extends State<MyPetsView> {
                             ),
                             'Peso',
                             '${mascota.weight} kg'),
-                        SizedBox(height: 10.0),
-                        _buildInfoRow(
-                            Image.asset(
-                              "assets/icon/mascota.png",
-                              height: 25,
-                              width: 25,
-                            ),
-                            'Género',
-                            mascota.gender == 1 ? "Macho" : "Hembra"),
                         SizedBox(height: 10.0),
                         _buildInfoRow(
                             Image.asset(
