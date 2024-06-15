@@ -224,6 +224,7 @@ class PostDetailsPageState extends State<PostDetailsPage> {
               ),
             ),
           ),
+          Center(child: Text("Respuestas...")),
           Expanded(
             child: ListView.builder(
               itemCount: postsList.length,
