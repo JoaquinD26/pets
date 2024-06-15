@@ -201,11 +201,11 @@ class _RegisterPageState extends State<RegisterPage> {
                 context,
                 'El apellido debe contener solo letras y tener al menos 3 caracteres.',
                 true);
-          } else if (!RegExp(r'^(?=.*\d)[a-zA-Z0-9À-ÿ\s,.\-]{4,}$')
+          }else if (!RegExp(r'^(?=.*\d)[a-zA-Z0-9À-ÿ\s,.\-/.]{4,}$')
               .hasMatch(_addressController.text)) {
             CustomSnackBar.show(
                 context,
-                'La dirección tiene que tener numero y tener al menos 4 caracteres',
+                'La dirección tiene que tener número y tener al menos 4 caracteres',
                 true);
           } else if (!RegExp(r'^\d{5}$').hasMatch(_postalCodeController.text)) {
             CustomSnackBar.show(

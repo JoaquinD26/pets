@@ -185,24 +185,34 @@ class PostDetailsPageState extends State<PostDetailsPage> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      SizedBox(height: 16),
-                      Text(
-                        widget.forumPost.user.name,
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 20,
+                     Row(
+                  children: [
+                    CircleAvatar(
+                        radius: 25,
+                        backgroundImage: NetworkImage(
+                            "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b5/Windows_10_Default_Profile_Picture.svg/2048px-Windows_10_Default_Profile_Picture.svg.png")),
+                    SizedBox(width: 10),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          widget.forumPost.user.name,
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 18,
+                          ),
                         ),
-                      ),
-                      SizedBox(
-                        height: 30,
-                      ),
-                      Text(
-                        widget.forumPost.name,
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 12,
+                        Text(
+                          widget.forumPost.date.toLocal().toString().split(' ')[0],
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 14,
+                          ),
                         ),
-                      ),
+                      ],
+                    ),
+                  ],
+                ),
                       SizedBox(height: 8),
                       Text(
                         widget.forumPost.description,
@@ -437,10 +447,10 @@ class PostDetailsPageState extends State<PostDetailsPage> {
 
     // Verificar el estado actual del like
     bool isLiked = likedByUserMap[post.id] ?? false;
-    
+
     String accion = '';
 
-    isLiked ? accion = "dislike": accion = "like";
+    isLiked ? accion = "dislike" : accion = "like";
 
     try {
       var response = await http.put(

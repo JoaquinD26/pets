@@ -26,7 +26,6 @@ class ForumPostCardState extends State<ForumPostCard> {
   int numeroPosts = 0;
 
   Future<int> forumPostsLength(int forumId) async {
-    
     final configString = await rootBundle.loadString('assets/config.json');
     final configJson = json.decode(configString);
     final config = Config.fromJson(configJson);
@@ -108,18 +107,9 @@ class ForumPostCardState extends State<ForumPostCard> {
                 Row(
                   children: [
                     CircleAvatar(
-                      radius: 25,
-                      backgroundImage: _imagenError
-                          ? NetworkImage(
-                              "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b5/Windows_10_Default_Profile_Picture.svg/2048px-Windows_10_Default_Profile_Picture.svg.png")
-                          : NetworkImage(widget.forum.user.mainImage ??
-                              "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b5/Windows_10_Default_Profile_Picture.svg/2048px-Windows_10_Default_Profile_Picture.svg.png"),
-                      onBackgroundImageError: (exception, stackTrace) {
-                        setState(() {
-                          _imagenError = true;
-                        });
-                      },
-                    ),
+                        radius: 25,
+                        backgroundImage: NetworkImage(
+                            "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b5/Windows_10_Default_Profile_Picture.svg/2048px-Windows_10_Default_Profile_Picture.svg.png")),
                     SizedBox(width: 10),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,

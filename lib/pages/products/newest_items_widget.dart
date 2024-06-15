@@ -10,7 +10,8 @@ import 'package:pets/pages/products/item_page.dart';
 class NewestItemsWidget extends StatefulWidget {
   final List<Product> displayedProducts;
   User userLog;
-  NewestItemsWidget({Key? key, required this.displayedProducts,required this.userLog})
+  NewestItemsWidget(
+      {Key? key, required this.displayedProducts, required this.userLog})
       : super(key: key);
 
   @override
@@ -77,19 +78,19 @@ class _NewestItemsWidgetState extends State<NewestItemsWidget> {
                           ),
                         ],
                       ),
-                      child: Row(
-                        children: [
-                          InkWell(
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) =>
-                                      ItemPage(product: product,userLog: widget.userLog),
-                                ),
-                              );
-                            },
-                            child: Container(
+                      child: InkWell(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => ItemPage(
+                                  product: product, userLog: widget.userLog),
+                            ),
+                          );
+                        },
+                        child: Row(
+                          children: [
+                            Container(
                               alignment: Alignment.center,
                               child: Image.network(
                                 'http://${config.host}/crud/${product.imageUrl}',
@@ -97,63 +98,64 @@ class _NewestItemsWidgetState extends State<NewestItemsWidget> {
                                 width: 150,
                               ),
                             ),
-                          ),
-                          Container(
-                            width: 190,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
-                              children: [
-                                Text(
-                                  product.name,
-                                  style: TextStyle(
-                                    fontSize: 22,
-                                    fontWeight: FontWeight.bold,
+                            Container(
+                              width: 190,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceAround,
+                                children: [
+                                  Text(
+                                    product.name,
+                                    style: TextStyle(
+                                      fontSize: 22,
+                                      fontWeight: FontWeight.bold,
+                                    ),
                                   ),
-                                ),
-                                RatingBar.builder(
-                                  initialRating: product.averageScore,
-                                  minRating: 0,
-                                  direction: Axis.horizontal,
-                                  allowHalfRating:
-                                      true, // Permitir medias estrellas
-                                  itemCount: 5,
-                                  itemSize: 18,
-                                  ignoreGestures: true,
-                                  itemPadding:
-                                      EdgeInsets.symmetric(horizontal: 4),
-                                  itemBuilder: (context, _) => Icon(
-                                    Icons.star,
-                                    color: Colors.amber,
+                                  RatingBar.builder(
+                                    initialRating: product.averageScore,
+                                    minRating: 0,
+                                    direction: Axis.horizontal,
+                                    allowHalfRating:
+                                        true, // Permitir medias estrellas
+                                    itemCount: 5,
+                                    itemSize: 18,
+                                    ignoreGestures: true,
+                                    itemPadding:
+                                        EdgeInsets.symmetric(horizontal: 4),
+                                    itemBuilder: (context, _) => Icon(
+                                      Icons.star,
+                                      color: Colors.amber,
+                                    ),
+                                    onRatingUpdate: (index) {},
                                   ),
-                                  onRatingUpdate: (index) {},
-                                ),
-                                Text(
-                                  "${product.price.toString()}\€",
-                                  style: TextStyle(
-                                    fontSize: 20,
+                                  Text(
+                                    "${product.price.toString()}\€",
+                                    style: TextStyle(
+                                      fontSize: 20,
+                                      color: Colors.red,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Padding(
+                              padding: EdgeInsets.symmetric(vertical: 10),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment
+                                    .end, // Alinea el icono en la parte inferior
+                                children: [
+                                  Icon(
+                                    Icons.favorite_border,
                                     color: Colors.red,
-                                    fontWeight: FontWeight.bold,
+                                    size: 26,
                                   ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
-                          ),
-                          Padding(
-                            padding: EdgeInsets.symmetric(vertical: 10),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment
-                                  .end, // Alinea el icono en la parte inferior
-                              children: [
-                                Icon(
-                                  Icons.favorite_border,
-                                  color: Colors.red,
-                                  size: 26,
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     ),
                   );

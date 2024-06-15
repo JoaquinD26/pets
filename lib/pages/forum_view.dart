@@ -339,6 +339,7 @@ class ForumPageState extends State<ForumPage> {
         "description": post,
         "user": {"id": widget.userLog.id},
         "likes": "0",
+        "date": fechaDeHoy
       };
 
       // Realizar la solicitud POST al servidor
