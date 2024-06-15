@@ -185,37 +185,34 @@ class PostDetailsPageState extends State<PostDetailsPage> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Row(
-                        children: [
-                          CircleAvatar(
-                              radius: 25,
-                              backgroundImage: NetworkImage(
-                                  "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b5/Windows_10_Default_Profile_Picture.svg/2048px-Windows_10_Default_Profile_Picture.svg.png")),
-                          SizedBox(width: 10),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                widget.forumPost.user.name,
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 18,
-                                ),
-                              ),
-                              Text(
-                                widget.forumPost.date
-                                    .toLocal()
-                                    .toString()
-                                    .split(' ')[0],
-                                style: TextStyle(
-                                  color: Colors.black,
-                                  fontSize: 14,
-                                ),
-                              ),
-                            ],
+                     Row(
+                  children: [
+                    CircleAvatar(
+                        radius: 25,
+                        backgroundImage: NetworkImage(
+                            "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b5/Windows_10_Default_Profile_Picture.svg/2048px-Windows_10_Default_Profile_Picture.svg.png")),
+                    SizedBox(width: 10),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          widget.forumPost.user.name,
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 18,
                           ),
-                        ],
-                      ),
+                        ),
+                        Text(
+                          widget.forumPost.date.toLocal().toString().split(' ')[0],
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 14,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
                       SizedBox(height: 8),
                       Text(
                         widget.forumPost.description,
@@ -300,12 +297,7 @@ class PostDetailsPageState extends State<PostDetailsPage> {
                       child: Column(
                         children: [
                           ListTile(
-                            title: Text(
-                              userName,
-                              style: TextStyle(
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.bold),
-                            ),
+                            title: Text(userName, style: TextStyle(color: Colors.black, fontWeight:FontWeight.bold),),
                             subtitle: Text(post.text),
                           ),
                           Row(
@@ -358,16 +350,19 @@ class PostDetailsPageState extends State<PostDetailsPage> {
         // Variable para mantener el nodo de enfoque del campo de texto
         FocusNode commentFocusNode = FocusNode();
 
-        // Enfoca automáticamente el campo de texto una vez que el modal se ha construido
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-          commentFocusNode.requestFocus();
-        });
+        // Función para cerrar el nodo de enfoque del campo de texto
+        void closeFocusNode() {
+          commentFocusNode.unfocus();
+        }
+
+        // // Enfoca automáticamente el campo de texto una vez que el modal se ha construido
+        // WidgetsBinding.instance.addPostFrameCallback((_) {
+        //   commentFocusNode.requestFocus();
+        // });
 
         return GestureDetector(
-          onTap: () {
-            // Cierra el teclado y desenfoca el campo de texto al tocar fuera
-            FocusScope.of(context).unfocus();
-          },
+          onTap:
+              closeFocusNode, // Cierra el teclado al tocar fuera del campo de texto
           child: FractionallySizedBox(
             heightFactor: 0.7,
             alignment: Alignment.topCenter,
@@ -392,22 +387,23 @@ class PostDetailsPageState extends State<PostDetailsPage> {
                   SizedBox(height: 16.0),
                   Form(
                     key: _formKey,
-                    child: Focus(
-                      focusNode: commentFocusNode,
-                      child: TextFormField(
-                        controller: postController,
-                        maxLines: 3,
-                        decoration: InputDecoration(
-                          border: OutlineInputBorder(),
-                          hintText: 'Escribe tu comentario aquí',
-                        ),
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return "Escriba su comentario antes de enviar";
-                          }
-                          return null;
-                        },
+                    child: TextFormField(
+                      controller: postController,
+                      focusNode:
+                          commentFocusNode, // Establece el nodo de enfoque del campo de texto
+                      maxLines: 3,
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(),
+                        hintText: 'Escribe tu comentario aquí',
                       ),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          CustomSnackBar.show(context,
+                              "Escriba su comentario antes de enviar", true);
+                          return "";
+                        }
+                        return null;
+                      },
                     ),
                   ),
                   SizedBox(height: 16.0),
@@ -415,7 +411,6 @@ class PostDetailsPageState extends State<PostDetailsPage> {
                     onPressed: () {
                       if (_formKey.currentState!.validate()) {
                         String post = postController.text;
-                        // Lógica para enviar el comentario
                         _replyToComment(post);
                         Navigator.pop(context);
                       }

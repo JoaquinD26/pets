@@ -100,9 +100,12 @@ class ForumPageState extends State<ForumPage> {
         onRefresh: loadForums,
         child: Column(
           children: [
+
             // Search
             Padding(
-              padding: EdgeInsets.fromLTRB(10, 60, 10, 0),
+              padding: EdgeInsets.fromLTRB(
+               10,60,10,0
+              ),
               child: Container(
                 width: double.infinity,
                 height: 50,
@@ -185,10 +188,10 @@ class ForumPageState extends State<ForumPage> {
           titleFocusNode.unfocus();
         }
 
-        // Enfoca automáticamente el primer campo de texto una vez que el modal se ha construido
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-          titleFocusNode.requestFocus();
-        });
+        // // Enfoca automáticamente el primer campo de texto una vez que el modal se ha construido
+        // WidgetsBinding.instance.addPostFrameCallback((_) {
+        //   titleFocusNode.requestFocus();
+        // });
 
         return GestureDetector(
           onTap:
@@ -228,7 +231,8 @@ class ForumPageState extends State<ForumPage> {
                             textAlign: TextAlign.center,
                             style: TextStyle(color: Colors.white),
                             controller: titleController,
-                            focusNode: titleFocusNode,
+                            focusNode:
+                                titleFocusNode, // Establece el nodo de enfoque del primer campo de texto
                             decoration: InputDecoration(
                               hintText: 'Título del comentario...',
                               hintStyle: TextStyle(color: Colors.white),
