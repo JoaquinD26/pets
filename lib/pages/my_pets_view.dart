@@ -13,7 +13,6 @@ import 'package:pets/utils/custom_snackbar.dart';
 class MyPetsView extends StatefulWidget {
   final String id = "pets_page";
   User userLog; // Agrega un parámetro para recibir el usuario logeado
- 
 
   MyPetsView({required this.userLog, super.key});
 
@@ -35,10 +34,10 @@ class MyPetsViewState extends State<MyPetsView> {
   }
 
   Future<void> loadConfig() async {
-  final configString = await rootBundle.loadString('assets/config.json');
-  final configJson = json.decode(configString);
-  config =  Config.fromJson(configJson);
-}
+    final configString = await rootBundle.loadString('assets/config.json');
+    final configJson = json.decode(configString);
+    config = Config.fromJson(configJson);
+  }
 
   Future<User> fetchUserById(String id) async {
     final configString = await rootBundle.loadString('assets/config.json');
@@ -66,7 +65,6 @@ class MyPetsViewState extends State<MyPetsView> {
 
   @override
   Widget build(BuildContext context) {
-    
     return Scaffold(
       body: FutureBuilder<User>(
         future: _futureUser,
@@ -105,8 +103,8 @@ class MyPetsViewState extends State<MyPetsView> {
                     ),
                   )
                 : Padding(
-                  padding: const EdgeInsets.fromLTRB(0,15,0,0),
-                  child: Stack(
+                    padding: const EdgeInsets.fromLTRB(0, 15, 0, 0),
+                    child: Stack(
                       children: [
                         CarouselSlider(
                           options: CarouselOptions(
@@ -136,7 +134,7 @@ class MyPetsViewState extends State<MyPetsView> {
                         ),
                       ],
                     ),
-                );
+                  );
           }
         },
       ),
@@ -167,27 +165,28 @@ class MyPetsViewState extends State<MyPetsView> {
 
     // Calcular el 70% de la altura de la pantalla
     double imageHeight = screenHeight * 0.5;
-    return GestureDetector(
-      onTap: () {
-        _showPetInfoDialog(context, mascotas[_currentMascotaIndex]);
-      },
-      child: Container(
-        margin: const EdgeInsets.symmetric(horizontal: 5.0),
-        // Contenedor con una altura fija para expandir el Stack
-        height: 300.0, // Ajusta la altura según sea necesario
-        child: SingleChildScrollView(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              const SizedBox(height: 20),
-              // Stack con la imagen y la tarjeta de información
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 5.0),
+      // Contenedor con una altura fija para expandir el Stack
+      height: 300.0, // Ajusta la altura según sea necesario
+      child: SingleChildScrollView(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            const SizedBox(height: 20),
+            // Stack con la imagen y la tarjeta de información
 
-              Stack(
-                children: [
-                  Column(
-                    children: [
-                      ClipRRect(
+            Stack(
+              children: [
+                Column(
+                  children: [
+                    GestureDetector(
+                      onTap: () {
+                        _showPetInfoDialog(
+                            context, mascotas[_currentMascotaIndex]);
+                      },
+                      child: ClipRRect(
                         borderRadius: BorderRadius.circular(8.0),
                         child: CachedNetworkImage(
                           imageUrl:
@@ -197,82 +196,81 @@ class MyPetsViewState extends State<MyPetsView> {
                           height: imageHeight,
                         ),
                       ),
-                      SizedBox(
-                        height: double.minPositive + 250.0,
-                      )
-                    ],
-                  ),
-                  Positioned(
-                    top: 10.0, // Ajusta la posición vertical del texto
-                    left: 10.0, // Ajusta la posición horizontal del texto
-                    child: Text(
-                      mascota.name,
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 20.0,
-                        fontWeight: FontWeight.bold,
-                        shadows: [
-                          Shadow(
-                            blurRadius: 5.0,
-                            color: Colors.black,
-                          ),
-                        ],
-                      ),
+                    ),
+                    SizedBox(
+                      height: double.minPositive + 250.0,
+                    )
+                  ],
+                ),
+                Positioned(
+                  top: 10.0, // Ajusta la posición vertical del texto
+                  left: 10.0, // Ajusta la posición horizontal del texto
+                  child: Text(
+                    mascota.name,
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 20.0,
+                      fontWeight: FontWeight.bold,
+                      shadows: [
+                        Shadow(
+                          blurRadius: 5.0,
+                          color: Colors.black,
+                        ),
+                      ],
                     ),
                   ),
-                  Positioned(
-                    top: 10.0, // Ajusta la posición vertical del texto
-                    right: 10.0, // Ajusta la posición horizontal del texto
-                    child: IconButton(
-                      color: Colors.red,
-                      icon: const Icon(Icons.cancel_outlined),
-                      onPressed: () {
-                        showDialog(
-                          context: context,
-                          builder: (BuildContext context) {
-                            return AlertDialog(
-                              title: Text('Aviso'),
-                              content: Text(
-                                  '¿La mascota desaparecerá de tu lista, estas seguro?'),
-                              actions: [
-                                TextButton(
-                                  onPressed: () {
-                                    Navigator.of(context).pop();
-                                  },
-                                  child: Text('Cancelar'),
+                ),
+                Positioned(
+                  top: 10.0, // Ajusta la posición vertical del texto
+                  right: 10.0, // Ajusta la posición horizontal del texto
+                  child: IconButton(
+                    color: Colors.red,
+                    icon: const Icon(Icons.cancel_outlined),
+                    onPressed: () {
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            title: Text('Aviso'),
+                            content: Text(
+                                '¿La mascota desaparecerá de tu lista, estas seguro?'),
+                            actions: [
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                                child: Text('Cancelar'),
+                              ),
+                              ElevatedButton(
+                                onPressed: () {
+                                  deletePet(mascotas[_currentMascotaIndex].id);
+                                  setState(() {
+                                    fetchUserById(widget.userLog.id);
+                                  });
+                                  Navigator.of(context).pop();
+                                },
+                                style: ElevatedButton.styleFrom(
+                                  foregroundColor: Colors.white,
+                                  backgroundColor: Colors.red,
                                 ),
-                                ElevatedButton(
-                                  onPressed: () {
-                                    deletePet(
-                                        mascotas[_currentMascotaIndex].id);
-                                    setState(() {
-                                      fetchUserById(widget.userLog.id);
-                                    });
-                                    Navigator.of(context).pop();
-                                  },
-                                  style: ElevatedButton.styleFrom(
-                                    foregroundColor: Colors.white,
-                                    backgroundColor: Colors.red,
-                                  ),
-                                  child: Text('Eliminar'),
-                                ),
-                              ],
-                            );
-                          },
-                        );
-                      },
-                    ),
+                                child: Text('Eliminar'),
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                    },
                   ),
-                  Positioned(
-                    bottom: 1.0, // Ajusta la posición vertical de la tarjeta
-                    left: 0,
-                    right: 0,
-                    child: _buildMascotaInfo(mascota),
-                  ),
-                ],
-              ),
-            ],
-          ),
+                ),
+                Positioned(
+                  bottom: 1.0, // Ajusta la posición vertical de la tarjeta
+                  left: 0,
+                  right: 0,
+                  child: _buildMascotaInfo(mascota),
+                ),
+              ],
+            ),
+          ],
         ),
       ),
     );
@@ -346,110 +344,124 @@ class MyPetsViewState extends State<MyPetsView> {
 
   Widget _buildMascotaInfo(Pet mascota) {
     return SingleChildScrollView(
-      child: Container(
-        padding: EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Container(
-              width: double.infinity,
-              child: Material(
-                borderRadius: BorderRadius.circular(20.0),
-                elevation: 6.0,
-                child: Container(
-                  padding: EdgeInsets.all(20.0),
-                  decoration: BoxDecoration(
-                    color: Color.fromARGB(255, 255, 233, 226),
-                    borderRadius: BorderRadius.circular(20.0),
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Row(
-                        children: [
-                          // CircleAvatar(
-                          //   radius: 40.0,
-                          //   backgroundImage: NetworkImage(mascota.petImg),
-                          // ),
-                          SizedBox(width: 20.0),
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  mascota.animal,
-                                  style: TextStyle(
-                                    fontSize: 26.0,
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.bold,
+      child: GestureDetector(
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => AddPetForm(
+                user: widget.userLog,
+                pet: mascota, // Pasar el objeto Pet al formulario
+                isEditing: true, // Indicar que se está editando
+              ),
+            ),
+          );
+        },
+        child: Container(
+          padding: EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                width: double.infinity,
+                child: Material(
+                  borderRadius: BorderRadius.circular(20.0),
+                  elevation: 6.0,
+                  child: Container(
+                    padding: EdgeInsets.all(20.0),
+                    decoration: BoxDecoration(
+                      color: Color.fromARGB(255, 255, 233, 226),
+                      borderRadius: BorderRadius.circular(20.0),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Row(
+                          children: [
+                            // CircleAvatar(
+                            //   radius: 40.0,
+                            //   backgroundImage: NetworkImage(mascota.petImg),
+                            // ),
+                            SizedBox(width: 20.0),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    mascota.animal,
+                                    style: TextStyle(
+                                      fontSize: 26.0,
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.bold,
+                                    ),
                                   ),
-                                ),
-                                Text(
-                                  'Raza - ${mascota.race}',
-                                  style: TextStyle(
-                                    fontSize: 13.0,
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                )
-                              ],
+                                  Text(
+                                    'Raza - ${mascota.race}',
+                                    style: TextStyle(
+                                      fontSize: 13.0,
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  )
+                                ],
+                              ),
                             ),
-                          ),
-                          IconButton(
-                            icon: Icon(Icons.edit,
-                                color: Theme.of(context).primaryColor),
-                            onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => AddPetForm(
-                                    user: widget.userLog,
-                                    pet:
-                                        mascota, // Pasar el objeto Pet al formulario
-                                    isEditing:
-                                        true, // Indicar que se está editando
-                                  ),
-                                ),
-                              );
-                            },
-                          ),
-                        ],
-                      ),
-                      SizedBox(height: 20.0),
-                      Divider(color: Colors.grey[300]),
-                      SizedBox(height: 20.0),
-                      _buildInfoRow(
-                          Image.asset(
-                            "assets/icon/peso.png",
-                            height: 25,
-                            width: 25,
-                          ),
-                          'Peso',
-                          '${mascota.weight} kg'),
-                      SizedBox(height: 10.0),
-                      _buildInfoRow(
-                          Image.asset(
-                            "assets/icon/mascota.png",
-                            height: 25,
-                            width: 25,
-                          ),
-                          'Género',
-                          mascota.gender == 1 ? "Macho" : "Hembra"),
-                      SizedBox(height: 10.0),
-                      _buildInfoRow(
-                          Image.asset(
-                            "assets/icon/chip.png",
-                            height: 25,
-                            width: 25,
-                          ),
-                          'Chip',
-                          mascota.chip == 1 ? "Sí" : "No"),
-                    ],
+                            IconButton(
+                              icon: Icon(Icons.edit,
+                                  color: Theme.of(context).primaryColor),
+                              onPressed: () {
+                                // Navigator.push(
+                                //   context,
+                                //   MaterialPageRoute(
+                                //     builder: (context) => AddPetForm(
+                                //       user: widget.userLog,
+                                //       pet:
+                                //           mascota, // Pasar el objeto Pet al formulario
+                                //       isEditing:
+                                //           true, // Indicar que se está editando
+                                //     ),
+                                //   ),
+                                // );
+                              },
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: 20.0),
+                        Divider(color: Colors.grey[300]),
+                        SizedBox(height: 20.0),
+                        _buildInfoRow(
+                            Image.asset(
+                              "assets/icon/peso.png",
+                              height: 25,
+                              width: 25,
+                            ),
+                            'Peso',
+                            '${mascota.weight} kg'),
+                        SizedBox(height: 10.0),
+                        _buildInfoRow(
+                            Image.asset(
+                              "assets/icon/mascota.png",
+                              height: 25,
+                              width: 25,
+                            ),
+                            'Género',
+                            mascota.gender == 1 ? "Macho" : "Hembra"),
+                        SizedBox(height: 10.0),
+                        _buildInfoRow(
+                            Image.asset(
+                              "assets/icon/chip.png",
+                              height: 25,
+                              width: 25,
+                            ),
+                            'Chip',
+                            mascota.chip == 1 ? "Sí" : "No"),
+                      ],
+                    ),
                   ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

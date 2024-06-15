@@ -140,20 +140,6 @@ class _NewestItemsWidgetState extends State<NewestItemsWidget> {
                                 ],
                               ),
                             ),
-                            Padding(
-                              padding: EdgeInsets.symmetric(vertical: 10),
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment
-                                    .end, // Alinea el icono en la parte inferior
-                                children: [
-                                  Icon(
-                                    Icons.favorite_border,
-                                    color: Colors.red,
-                                    size: 26,
-                                  ),
-                                ],
-                              ),
-                            ),
                           ],
                         ),
                       ),

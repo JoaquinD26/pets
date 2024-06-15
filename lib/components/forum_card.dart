@@ -136,7 +136,7 @@ class ForumPostCardState extends State<ForumPostCard> {
                 Text(
                   widget.forum.name,
                   style: TextStyle(
-                    fontSize: 13,
+                    fontSize: 16,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
@@ -146,7 +146,7 @@ class ForumPostCardState extends State<ForumPostCard> {
                     child: Text(
                       widget.forum.description,
                       style: TextStyle(
-                        fontSize: 16,
+                        fontSize: 15,
                       ),
                     ),
                   ),

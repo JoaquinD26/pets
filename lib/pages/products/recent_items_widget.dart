@@ -12,7 +12,8 @@ class RecentItemsWidget extends StatefulWidget {
   final List<Product> products;
   User userLog;
 
-  RecentItemsWidget({Key? key, required this.products, required this.userLog}) : super(key: key);
+  RecentItemsWidget({Key? key, required this.products, required this.userLog})
+      : super(key: key);
 
   @override
   State<RecentItemsWidget> createState() => _RecentItemsWidgetState();
@@ -81,75 +82,74 @@ class _RecentItemsWidgetState extends State<RecentItemsWidget> {
                       ),
                       child: Padding(
                         padding: EdgeInsets.symmetric(horizontal: 10),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            InkWell(
-                              onTap: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => ItemPage(product: product, userLog: widget.userLog),
-                                  ),
-                                );
-                              },
-                              child: Container(
+                        child: InkWell(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => ItemPage(
+                                    product: product, userLog: widget.userLog),
+                              ),
+                            );
+                          },
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Container(
                                 alignment: Alignment.center,
                                 child: Image.network(
                                   'http://${config.host}/crud/${product.imageUrl}',
                                   height: 130,
                                 ),
                               ),
-                            ),
-                            SizedBox(height: 8), // Add some space between image and text
-                            Text(
-                              product.name,
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold,
+                              SizedBox(
+                                  height:
+                                      8), // Add some space between image and text
+                              Text(
+                                product.name,
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
-                            ),
-                            SizedBox(height: 4),
-                            RatingBar.builder(
-                                  initialRating: product.averageScore,
-                                  minRating: 0,
-                                  direction: Axis.horizontal,
-                                  allowHalfRating:
-                                      true, // Permitir medias estrellas
-                                  itemCount: 5,
-                                  itemSize: 18,
-                                  ignoreGestures: true,
-                                  itemPadding:
-                                      EdgeInsets.symmetric(horizontal: 4),
-                                  itemBuilder: (context, _) => Icon(
-                                    Icons.star,
-                                    color: Colors.amber,
+                              SizedBox(height: 4),
+                              RatingBar.builder(
+                                initialRating: product.averageScore,
+                                minRating: 0,
+                                direction: Axis.horizontal,
+                                allowHalfRating:
+                                    true, // Permitir medias estrellas
+                                itemCount: 5,
+                                itemSize: 18,
+                                ignoreGestures: true,
+                                itemPadding:
+                                    EdgeInsets.symmetric(horizontal: 4),
+                                itemBuilder: (context, _) => Icon(
+                                  Icons.star,
+                                  color: Colors.amber,
+                                ),
+                                onRatingUpdate: (index) {},
+                              ),
+                              SizedBox(height: 4),
+                              SizedBox(height: 12),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    "${product.price.toString()}€",
+                                    style: TextStyle(
+                                      fontSize: 17,
+                                      color: Colors.red,
+                                      fontWeight: FontWeight.bold,
+                                    ),
                                   ),
-                                  onRatingUpdate: (index) {},
-                                ),
-                            SizedBox(height: 4),
-                            SizedBox(height: 12),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  "${product.price.toString()}€",
-                                  style: TextStyle(
-                                    fontSize: 17,
-                                    color: Colors.red,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                Icon(
-                                  Icons.favorite_border,
-                                  color: Colors.red,
-                                  size: 26,
-                                ),
-                              ],
-                            ),
-                          ],
+                                ],
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                     ),
