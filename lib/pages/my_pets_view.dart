@@ -410,18 +410,18 @@ class MyPetsViewState extends State<MyPetsView> {
                               icon: Icon(Icons.edit,
                                   color: Theme.of(context).primaryColor),
                               onPressed: () {
-                                // Navigator.push(
-                                //   context,
-                                //   MaterialPageRoute(
-                                //     builder: (context) => AddPetForm(
-                                //       user: widget.userLog,
-                                //       pet:
-                                //           mascota, // Pasar el objeto Pet al formulario
-                                //       isEditing:
-                                //           true, // Indicar que se está editando
-                                //     ),
-                                //   ),
-                                // );
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => AddPetForm(
+                                      user: widget.userLog,
+                                      pet:
+                                          mascota, // Pasar el objeto Pet al formulario
+                                      isEditing:
+                                          true, // Indicar que se está editando
+                                    ),
+                                  ),
+                                );
                               },
                             ),
                           ],

@@ -139,7 +139,7 @@ class _ItemPageState extends State<ItemPage> {
                       ),
                       ElevatedButton(
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.blueAccent,
+                          backgroundColor: Colors.deepOrange[300],
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(12.0),
                           ),
@@ -386,7 +386,7 @@ class _ItemPageState extends State<ItemPage> {
                           onPressed: () {
                             showAddCommentDialog(context);
                           },
-                          color: Colors.orange, // Cambia el color de fondo
+                          color: Colors.deepOrange[300], // Cambia el color de fondo
                           textColor: Colors.white, // Cambia el color del texto
                           padding: EdgeInsets.symmetric(
                               horizontal: 20,

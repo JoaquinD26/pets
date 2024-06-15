@@ -100,8 +100,8 @@ class _NewestItemsWidgetState extends State<NewestItemsWidget> {
                             ),
                             Container(
                               width: 190,
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
+                              child: Column(  
+                                crossAxisAlignment: CrossAxisAlignment.end,
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceAround,
                                 children: [

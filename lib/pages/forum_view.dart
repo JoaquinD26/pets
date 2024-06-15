@@ -100,12 +100,9 @@ class ForumPageState extends State<ForumPage> {
         onRefresh: loadForums,
         child: Column(
           children: [
-
             // Search
             Padding(
-              padding: EdgeInsets.fromLTRB(
-               10,60,10,0
-              ),
+              padding: EdgeInsets.fromLTRB(10, 60, 10, 0),
               child: Container(
                 width: double.infinity,
                 height: 50,
@@ -231,8 +228,7 @@ class ForumPageState extends State<ForumPage> {
                             textAlign: TextAlign.center,
                             style: TextStyle(color: Colors.white),
                             controller: titleController,
-                            focusNode:
-                                titleFocusNode, // Establece el nodo de enfoque del primer campo de texto
+                            focusNode: titleFocusNode,
                             decoration: InputDecoration(
                               hintText: 'Título del comentario...',
                               hintStyle: TextStyle(color: Colors.white),
