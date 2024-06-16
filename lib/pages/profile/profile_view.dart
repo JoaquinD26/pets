@@ -22,47 +22,67 @@ class ProfileView extends StatefulWidget {
 }
 
 class ProfileViewState extends State<ProfileView> {
-  int likePost = 0;
   int countPost = 0;
+  int countPostLikes = 0;
 
   @override
   void initState() {
     super.initState();
-    countLikePost();
+    countAllPostLikes();
     countAllPost();
   }
 
+
   //Cuenta todos los likes del post del usuario actual
-  Future<void> countLikePost() async {
-    final configString = await rootBundle.loadString('assets/config.json');
-    final configJson = json.decode(configString);
-    final config = Config.fromJson(configJson);
-
-    final response = await http.get(Uri.parse('http://${config.host}:3000/post/21/countLikes'));
-    if (response.statusCode == 200) {
-      setState(() {
-        likePost = json.decode(response.body);
-      });
-    } else {
-      // Manejar error en la solicitud
-      print('Failed to load likes count');
-    }
-  }
-
-    //Cuenta todos los likes del post del usuario actual
   Future<void> countAllPost() async {
     final configString = await rootBundle.loadString('assets/config.json');
     final configJson = json.decode(configString);
     final config = Config.fromJson(configJson);
 
-    final response = await http.get(Uri.parse('http://${config.host}:3000/post/25/countLikes'));
+    final response = await http.get(
+        Uri.parse('http://${config.host}:3000/post/user/${widget.userLog.id}'));
     if (response.statusCode == 200) {
+      final posts = json.decode(response.body);
       setState(() {
-        countPost = json.decode(response.body);
+        countPost = posts.length; // Contar el número de posts
       });
     } else {
       // Manejar error en la solicitud
-      print('Failed to load likes count');
+      print('Failed to load posts count');
+    }
+  }
+
+  Future<void> countAllPostLikes() async {
+    final configString = await rootBundle.loadString('assets/config.json');
+    final configJson = json.decode(configString);
+    final config = Config.fromJson(configJson);
+
+    final response = await http.get(
+        Uri.parse('http://${config.host}:3000/post/user/${widget.userLog.id}'));
+    if (response.statusCode == 200) {
+      final posts = json.decode(response.body);
+      int totalLikes = 0;
+
+      for (var post in posts) {
+        final postId = post['id'];
+        final likesResponse = await http.get(
+            Uri.parse('http://${config.host}:3000/post/$postId/countLikes'));
+
+        if (likesResponse.statusCode == 200) {
+          final likesCount = json.decode(likesResponse.body);
+          totalLikes += (likesCount as int); // Casting a int
+        } else {
+          // Manejar error en la solicitud de likes
+          print('Failed to load likes count for post $postId');
+        }
+      }
+
+      setState(() {
+        countPostLikes = totalLikes; // Suma total de likes de todos los posts
+      });
+    } else {
+      // Manejar error en la solicitud de posts
+      print('Failed to load posts');
     }
   }
 
@@ -177,7 +197,7 @@ class ProfileViewState extends State<ProfileView> {
                       child: IconTextButton(
                         icon: Icon(Icons.rate_review),
                         title: "Fiabilidad",
-                        subTitle: likePost.toString(),
+                        subTitle: countPostLikes.toString(),
                         onPressed: () {},
                       ),
                     )
