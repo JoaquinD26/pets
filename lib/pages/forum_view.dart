@@ -101,7 +101,7 @@ class ForumPageState extends State<ForumPage> {
         child: ListView(
           padding: EdgeInsets.zero,
           children: [
-            SizedBox(height: 20),
+            SizedBox(height: 53),
             Padding(
               padding: EdgeInsets.symmetric(
                 vertical: 10,
