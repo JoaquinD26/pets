@@ -154,179 +154,182 @@ class PostDetailsPageState extends State<PostDetailsPage> {
         backgroundColor: Colors.deepOrange[300],
         iconTheme: IconThemeData(color: Colors.white),
       ),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Container(
-            height: 240,
-            margin: EdgeInsets.all(15),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(10),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.grey.withOpacity(0.5),
-                  spreadRadius: 3,
-                  blurRadius: 10,
-                  offset: Offset(0, 3),
-                ),
-              ],
-            ),
-            child: Card(
-              color: Colors.white,
-              margin: EdgeInsets.all(10),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10.0),
+      body: RefreshIndicator(
+        onRefresh: _loadComments,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Container(
+              height: 240,
+              margin: EdgeInsets.all(15),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(10),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey.withOpacity(0.5),
+                    spreadRadius: 3,
+                    blurRadius: 10,
+                    offset: Offset(0, 3),
+                  ),
+                ],
               ),
-              elevation: 0,
-              child: Padding(
-                padding: EdgeInsets.all(16),
-                child: SingleChildScrollView(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                     Row(
-                  children: [
-                    CircleAvatar(
-                        radius: 25,
-                        backgroundImage: NetworkImage(
-                            "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b5/Windows_10_Default_Profile_Picture.svg/2048px-Windows_10_Default_Profile_Picture.svg.png")),
-                    SizedBox(width: 10),
-                    Column(
+              child: Card(
+                color: Colors.white,
+                margin: EdgeInsets.all(10),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10.0),
+                ),
+                elevation: 0,
+                child: Padding(
+                  padding: EdgeInsets.all(16),
+                  child: SingleChildScrollView(
+                    child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          widget.forumPost.user.name,
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 18,
-                          ),
-                        ),
-                        Text(
-                          widget.forumPost.date.toLocal().toString().split(' ')[0],
-                          style: TextStyle(
-                            color: Colors.black,
-                            fontSize: 14,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-                      SizedBox(height: 8),
-                      Text(
-                        widget.forumPost.description,
-                        style: TextStyle(fontSize: 16),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-          ),
-          Center(child: Text("Respuestas")),
-          Expanded(
-            child: ListView.builder(
-              itemCount: postsList.length,
-              itemBuilder: (context, index) {
-                final post = postsList[index];
-                final userName = post.user.name ?? 'Nombre desconocido';
-
-                final likes = likesMap[post.id] ?? 0;
-                final likedByUser = likedByUserMap[post.id] ?? false;
-
-                return Container(
-                  margin: EdgeInsets.all(15),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(20),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.grey.withOpacity(0.5),
-                        spreadRadius: 3,
-                        blurRadius: 10,
-                        offset: Offset(0, 3),
-                      ),
-                    ],
-                  ),
-                  child: Card(
-                    color: Colors.white,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20.0),
-                    ),
-                    elevation: 0,
-                    child: InkWell(
-                      mouseCursor: MaterialStateMouseCursor.clickable,
-                      hoverColor: post.user.id == widget.userLog.id
-                          ? Colors.red[100]
-                          : Colors.transparent,
-                      borderRadius: BorderRadius.circular(20),
-                      onLongPress: () {
-                        post.user.id == widget.userLog.id
-                            ? showDialog(
-                                context: context,
-                                builder: (BuildContext context) {
-                                  return AlertDialog(
-                                    title: Text('Confirmar eliminación'),
-                                    content: Text(
-                                        '¿Estás seguro de que quieres eliminar este comentario?'),
-                                    actions: [
-                                      TextButton(
-                                        onPressed: () {
-                                          Navigator.of(context).pop();
-                                        },
-                                        child: Text('Cancelar'),
-                                      ),
-                                      ElevatedButton(
-                                        onPressed: () {
-                                          _deletePost(post.id);
-                                          Navigator.of(context).pop();
-                                        },
-                                        style: ElevatedButton.styleFrom(
-                                          foregroundColor: Colors.white,
-                                          backgroundColor: Colors.red,
-                                        ),
-                                        child: Text('Eliminar'),
-                                      ),
-                                    ],
-                                  );
-                                },
-                              )
-                            : Container();
-                      },
-                      child: Column(
+                       Row(
+                    children: [
+                      CircleAvatar(
+                          radius: 25,
+                          backgroundImage: NetworkImage(
+                              "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b5/Windows_10_Default_Profile_Picture.svg/2048px-Windows_10_Default_Profile_Picture.svg.png")),
+                      SizedBox(width: 10),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          ListTile(
-                            title: Text(userName, style: TextStyle(color: Colors.black, fontWeight:FontWeight.bold),),
-                            subtitle: Text(post.text),
+                          Text(
+                            widget.forumPost.user.name,
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 18,
+                            ),
                           ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              IconButton(
-                                icon: likedByUser
-                                    ? Icon(Icons.favorite, color: Colors.red)
-                                    : Icon(Icons.favorite_border),
-                                onPressed: () {
-                                  _toggleLikePost(post, widget.userLog);
-                                },
-                              ),
-                              Text('$likes'),
-                              SizedBox(
-                                width: 20,
-                              )
-                            ],
+                          Text(
+                            widget.forumPost.date.toLocal().toString().split(' ')[0],
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 14,
+                            ),
                           ),
                         ],
                       ),
+                    ],
+                  ),
+                        SizedBox(height: 8),
+                        Text(
+                          widget.forumPost.description,
+                          style: TextStyle(fontSize: 16),
+                        ),
+                      ],
                     ),
                   ),
-                );
-              },
+                ),
+              ),
             ),
-          ),
-          SizedBox(height: 30),
-        ],
+            Center(child: Text("Respuestas")),
+            Expanded(
+              child: ListView.builder(
+                itemCount: postsList.length,
+                itemBuilder: (context, index) {
+                  final post = postsList[index];
+                  final userName = post.user.name ?? 'Nombre desconocido';
+        
+                  final likes = likesMap[post.id] ?? 0;
+                  final likedByUser = likedByUserMap[post.id] ?? false;
+        
+                  return Container(
+                    margin: EdgeInsets.all(15),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(20),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.grey.withOpacity(0.5),
+                          spreadRadius: 3,
+                          blurRadius: 10,
+                          offset: Offset(0, 3),
+                        ),
+                      ],
+                    ),
+                    child: Card(
+                      color: Colors.white,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20.0),
+                      ),
+                      elevation: 0,
+                      child: InkWell(
+                        mouseCursor: MaterialStateMouseCursor.clickable,
+                        hoverColor: post.user.id == widget.userLog.id
+                            ? Colors.red[100]
+                            : Colors.transparent,
+                        borderRadius: BorderRadius.circular(20),
+                        onLongPress: () {
+                          post.user.id == widget.userLog.id
+                              ? showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return AlertDialog(
+                                      title: Text('Confirmar eliminación'),
+                                      content: Text(
+                                          '¿Estás seguro de que quieres eliminar este comentario?'),
+                                      actions: [
+                                        TextButton(
+                                          onPressed: () {
+                                            Navigator.of(context).pop();
+                                          },
+                                          child: Text('Cancelar'),
+                                        ),
+                                        ElevatedButton(
+                                          onPressed: () {
+                                            _deletePost(post.id);
+                                            Navigator.of(context).pop();
+                                          },
+                                          style: ElevatedButton.styleFrom(
+                                            foregroundColor: Colors.white,
+                                            backgroundColor: Colors.red,
+                                          ),
+                                          child: Text('Eliminar'),
+                                        ),
+                                      ],
+                                    );
+                                  },
+                                )
+                              : Container();
+                        },
+                        child: Column(
+                          children: [
+                            ListTile(
+                              title: Text(userName, style: TextStyle(color: Colors.black, fontWeight:FontWeight.bold),),
+                              subtitle: Text(post.text),
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                IconButton(
+                                  icon: likedByUser
+                                      ? Icon(Icons.favorite, color: Colors.red)
+                                      : Icon(Icons.favorite_border),
+                                  onPressed: () {
+                                    _toggleLikePost(post, widget.userLog);
+                                  },
+                                ),
+                                Text('$likes'),
+                                SizedBox(
+                                  width: 20,
+                                )
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ),
+            SizedBox(height: 30),
+          ],
+        ),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
@@ -492,13 +495,17 @@ class PostDetailsPageState extends State<PostDetailsPage> {
 
       if (response.statusCode == 200) {
         if (kDebugMode) {
+          CustomSnackBar.show(context, "Respuesta añadida correctamente", false);
           print('Comentario Añadido');
         }
         _loadComments();
       } else {
+        CustomSnackBar.show(context, "Error al añadir la respuesta", true);
         print('Error al añadir foro: ${response.reasonPhrase}');
       }
     } catch (e) {
+      CustomSnackBar.show(context, "Error al añadir la respuesta", true);
+
       print('Error al añadir foro: $e');
     }
   }

@@ -49,7 +49,7 @@ class CustomSnackBar {
     );
 
     overlay.insert(overlayEntry);
-    Future.delayed(Duration(seconds: 3), () {
+    Future.delayed(Duration(milliseconds: 1800), () {
       overlayEntry.remove();
     });
   }

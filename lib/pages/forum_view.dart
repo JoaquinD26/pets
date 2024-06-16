@@ -100,11 +100,55 @@ class ForumPageState extends State<ForumPage> {
         onRefresh: loadForums,
         child: Column(
           children: [
-
+            SizedBox(height: 20,),
             // Search
+            // Padding(
+            //   padding: EdgeInsets.fromLTRB(
+            //    10,60,10,0
+            //   ),
+            //   child: Container(
+            //     width: double.infinity,
+            //     height: 50,
+            //     decoration: BoxDecoration(
+            //       color: Colors.white,
+            //       borderRadius: BorderRadius.circular(20),
+            //       boxShadow: [
+            //         BoxShadow(
+            //           color: Colors.grey.withOpacity(0.5),
+            //           spreadRadius: 2,
+            //           blurRadius: 10,
+            //           offset: Offset(0, 3),
+            //         ),
+            //       ],
+            //     ),
+            //     child: Padding(
+            //       padding: EdgeInsets.symmetric(horizontal: 10),
+            //       child: Row(
+            //         children: [
+            //           Icon(CupertinoIcons.search, color: Colors.red),
+            //           Expanded(
+            //             // height: 50,
+            //             // width: 300,
+            //             child: Padding(
+            //               padding: EdgeInsets.symmetric(horizontal: 15),
+            //               child: TextFormField(
+            //                 controller: searchController,
+            //                 decoration: InputDecoration(
+            //                   hintText: "¿Qué te gustaría buscar?",
+            //                   border: InputBorder.none,
+            //                 ),
+            //               ),
+            //             ),
+            //           ),
+            //         ],
+            //       ),
+            //     ),
+            //   ),
+            // ),
             Padding(
-              padding: EdgeInsets.fromLTRB(
-               10,60,10,0
+              padding: EdgeInsets.symmetric(
+                vertical: 10,
+                horizontal: 15,
               ),
               child: Container(
                 width: double.infinity,
@@ -122,15 +166,22 @@ class ForumPageState extends State<ForumPage> {
                   ],
                 ),
                 child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 10),
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 10,
+                  ),
                   child: Row(
                     children: [
-                      Icon(CupertinoIcons.search, color: Colors.red),
-                      Expanded(
-                        // height: 50,
-                        // width: 300,
+                      Icon(
+                        Icons.search,
+                        color: Colors.red,
+                      ),
+                      SizedBox(
+                        height: 50,
+                        width: 300,
                         child: Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 15),
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 15,
+                          ),
                           child: TextFormField(
                             controller: searchController,
                             decoration: InputDecoration(
@@ -353,15 +404,16 @@ class ForumPageState extends State<ForumPage> {
       if (response.statusCode == 200) {
         // Usuario autenticado exitosamente
 
-        if (kDebugMode) {
-          print('Comentario Añadido');
-        }
+        CustomSnackBar.show(context, "Foro añadido correctamente", false);
+
         // Recargar los foros después de añadir el comentario
         loadForums();
       } else {
+        CustomSnackBar.show(context, "Error al añadir foro", true);
         print('Error al añadir foro: ${response.reasonPhrase}');
       }
     } catch (e) {
+      CustomSnackBar.show(context, "Error al añadir foro", true);
       print('Error al añadir foro: $e');
     }
   }

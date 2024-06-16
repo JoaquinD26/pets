@@ -8,6 +8,7 @@ import 'package:pets/models/config.dart';
 import 'package:http/http.dart' as http;
 import 'package:pets/models/user.dart';
 import 'package:pets/pages/home.dart';
+import 'package:pets/utils/custom_snackbar.dart';
 
 class ItemPage extends StatefulWidget {
   final Product product;
@@ -200,12 +201,15 @@ class _ItemPageState extends State<ItemPage> {
         // Actualizar el averageScore del producto después de enviar el comentario
         await updateProductAverageScore(config);
         // Recargar los comentarios
+        CustomSnackBar.show(context, "Valoración enviada correctamente", false);
         loadComments(); // Esto actualizará los comentarios en la página
       } else {
+        CustomSnackBar.show(context, "Error al enviar la valoración", true);
         print(
             'Error al enviar el comentario. Código de respuesta: ${response.statusCode}');
       }
     } catch (e) {
+      CustomSnackBar.show(context, "Error al enviar la valoración", true);
       print('Error al enviar el comentario: $e');
     }
   }
