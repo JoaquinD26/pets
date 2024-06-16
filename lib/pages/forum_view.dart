@@ -98,53 +98,10 @@ class ForumPageState extends State<ForumPage> {
     return Scaffold(
       body: RefreshIndicator(
         onRefresh: loadForums,
-        child: Column(
+        child: ListView(
+          padding: EdgeInsets.zero,
           children: [
-            SizedBox(height: 20,),
-            // Search
-            // Padding(
-            //   padding: EdgeInsets.fromLTRB(
-            //    10,60,10,0
-            //   ),
-            //   child: Container(
-            //     width: double.infinity,
-            //     height: 50,
-            //     decoration: BoxDecoration(
-            //       color: Colors.white,
-            //       borderRadius: BorderRadius.circular(20),
-            //       boxShadow: [
-            //         BoxShadow(
-            //           color: Colors.grey.withOpacity(0.5),
-            //           spreadRadius: 2,
-            //           blurRadius: 10,
-            //           offset: Offset(0, 3),
-            //         ),
-            //       ],
-            //     ),
-            //     child: Padding(
-            //       padding: EdgeInsets.symmetric(horizontal: 10),
-            //       child: Row(
-            //         children: [
-            //           Icon(CupertinoIcons.search, color: Colors.red),
-            //           Expanded(
-            //             // height: 50,
-            //             // width: 300,
-            //             child: Padding(
-            //               padding: EdgeInsets.symmetric(horizontal: 15),
-            //               child: TextFormField(
-            //                 controller: searchController,
-            //                 decoration: InputDecoration(
-            //                   hintText: "¿Qué te gustaría buscar?",
-            //                   border: InputBorder.none,
-            //                 ),
-            //               ),
-            //             ),
-            //           ),
-            //         ],
-            //       ),
-            //     ),
-            //   ),
-            // ),
+            SizedBox(height: 20),
             Padding(
               padding: EdgeInsets.symmetric(
                 vertical: 10,
@@ -196,16 +153,18 @@ class ForumPageState extends State<ForumPage> {
                 ),
               ),
             ),
-            Flexible(
-              child: ListView.builder(
-                itemCount: filteredForums.length,
-                itemBuilder: (context, index) {
-                  return ForumPostCard(
-                    forum: filteredForums[index],
-                    userLog: widget.userLog,
-                  );
-                },
-              ),
+            ListView.builder(
+              shrinkWrap:
+                  true, // Importante para que funcione dentro de otro ListView
+              physics:
+                  NeverScrollableScrollPhysics(), // Para desactivar el scroll interno
+              itemCount: filteredForums.length,
+              itemBuilder: (context, index) {
+                return ForumPostCard(
+                  forum: filteredForums[index],
+                  userLog: widget.userLog,
+                );
+              },
             ),
             SizedBox(height: 30),
           ],
