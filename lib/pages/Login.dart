@@ -80,7 +80,7 @@ class LoginState extends State<LoginPage> {
       decoration: InputDecoration(
         prefixIcon: Icon(Icons.email_outlined),
         labelText: "Email",
-        hintText: "Joaquindiazlidon@gmail.com",
+        hintText: "usuario@gmail.com",
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12.0),
         ),
