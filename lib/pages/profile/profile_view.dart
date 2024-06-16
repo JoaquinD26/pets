@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 import 'package:pets/components/icon_text_button.dart';
 import 'package:pets/components/menu_row.dart';
+import 'package:pets/models/config.dart';
 import 'package:pets/models/user.dart';
 import 'package:pets/pages/login.dart';
 import 'package:pets/pages/posts_liked.dart';
@@ -18,9 +22,48 @@ class ProfileView extends StatefulWidget {
 }
 
 class ProfileViewState extends State<ProfileView> {
+  int likePost = 0;
+  int countPost = 0;
+
   @override
   void initState() {
     super.initState();
+    countLikePost();
+    countAllPost();
+  }
+
+  //Cuenta todos los likes del post del usuario actual
+  Future<void> countLikePost() async {
+    final configString = await rootBundle.loadString('assets/config.json');
+    final configJson = json.decode(configString);
+    final config = Config.fromJson(configJson);
+
+    final response = await http.get(Uri.parse('http://${config.host}:3000/post/21/countLikes'));
+    if (response.statusCode == 200) {
+      setState(() {
+        likePost = json.decode(response.body);
+      });
+    } else {
+      // Manejar error en la solicitud
+      print('Failed to load likes count');
+    }
+  }
+
+    //Cuenta todos los likes del post del usuario actual
+  Future<void> countAllPost() async {
+    final configString = await rootBundle.loadString('assets/config.json');
+    final configJson = json.decode(configString);
+    final config = Config.fromJson(configJson);
+
+    final response = await http.get(Uri.parse('http://${config.host}:3000/post/25/countLikes'));
+    if (response.statusCode == 200) {
+      setState(() {
+        countPost = json.decode(response.body);
+      });
+    } else {
+      // Manejar error en la solicitud
+      print('Failed to load likes count');
+    }
   }
 
   @override
@@ -122,7 +165,7 @@ class ProfileViewState extends State<ProfileView> {
                       child: IconTextButton(
                         icon: Icon(Icons.question_answer),
                         title: "Posts",
-                        subTitle: "200",
+                        subTitle: countPost.toString(),
                         onPressed: () {},
                       ),
                     ),
@@ -134,7 +177,7 @@ class ProfileViewState extends State<ProfileView> {
                       child: IconTextButton(
                         icon: Icon(Icons.rate_review),
                         title: "Fiabilidad",
-                        subTitle: "200",
+                        subTitle: likePost.toString(),
                         onPressed: () {},
                       ),
                     )
