@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 class Rating {
   final String text;
   final int productId;
@@ -13,7 +15,7 @@ class Rating {
 
   factory Rating.fromJson(Map<String, dynamic> json) {
     return Rating(
-      text: json['text'],
+      text: utf8.decode(json['text'].toString().codeUnits),
       productId: json['product_id'],
       userId: json['user_id'],
       userScore: json['user_score'].toDouble(),

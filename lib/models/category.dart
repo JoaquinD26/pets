@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 class Category {
   final int id;
   final String name;
@@ -10,7 +12,7 @@ class Category {
   factory Category.fromJson(Map<String, dynamic> json) {
     return Category(
       id: json['id'],
-      name: json['name'],
+      name: utf8.decode(json['name'].toString().codeUnits),
     );
   }
 
