@@ -454,7 +454,7 @@ class _ItemPageState extends State<ItemPage> {
                                     ],
                                   ),
                                   SizedBox(height: 5),
-                                  Text(comment['text']),
+                                  Text(utf8.decode(comment['text'].toString().codeUnits)),
                                 ],
                               ),
                             ),
