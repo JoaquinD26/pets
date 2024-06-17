@@ -148,7 +148,7 @@ class PostDetailsPageState extends State<PostDetailsPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'Detalles del Post',
+          'Respuestas del foro',
           style: TextStyle(color: Colors.white),
         ),
         backgroundColor: Colors.deepOrange[300],

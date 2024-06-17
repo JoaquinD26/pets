@@ -80,7 +80,7 @@ class _ItemPageState extends State<ItemPage> {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   Text(
-                    'Añadir comentario',
+                    'Añadir valoración',
                     style: TextStyle(
                       fontSize: 24,
                       fontWeight: FontWeight.bold,
@@ -294,176 +294,184 @@ class _ItemPageState extends State<ItemPage> {
                 },
               ),
             ),
-            body: Padding(
-              padding: EdgeInsets.only(top: 5),
-              child: ListView(
-                children: [
-                  Padding(
-                    padding: EdgeInsets.all(16),
-                    child: Image.network(
-                      'http://${config.host}/crud/${widget.product.imageUrl}',
-                      height: 300,
+            body: RefreshIndicator(
+              onRefresh: loadComments,
+              child: Padding(
+                padding: EdgeInsets.only(top: 5),
+                child: ListView(
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.all(16),
+                      child: Image.network(
+                        'http://${config.host}/crud/${widget.product.imageUrl}',
+                        height: 300,
+                      ),
                     ),
-                  ),
-                  Arc(
-                    edge: Edge.TOP,
-                    arcType: ArcType.CONVEY,
-                    height: 30,
-                    child: Container(
-                      width: double.infinity,
-                      color: Colors.white,
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 20),
-                        child: Column(
-                          children: [
-                            Padding(
-                              padding: EdgeInsets.only(top: 60, bottom: 10),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  RatingBar.builder(
-                                    initialRating: widget.product.averageScore,
-                                    minRating: 0,
-                                    direction: Axis.horizontal,
-                                    allowHalfRating: true,
-                                    itemCount: 5,
-                                    itemSize: 18,
-                                    ignoreGestures: true,
-                                    itemPadding:
-                                        EdgeInsets.symmetric(horizontal: 4),
-                                    itemBuilder: (context, _) => Icon(
-                                      Icons.star,
-                                      color: Colors.amber,
+                    Arc(
+                      edge: Edge.TOP,
+                      arcType: ArcType.CONVEY,
+                      height: 30,
+                      child: Container(
+                        width: double.infinity,
+                        color: Colors.white,
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 20),
+                          child: Column(
+                            children: [
+                              Padding(
+                                padding: EdgeInsets.only(top: 60, bottom: 10),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    RatingBar.builder(
+                                      initialRating:
+                                          widget.product.averageScore,
+                                      minRating: 0,
+                                      direction: Axis.horizontal,
+                                      allowHalfRating: true,
+                                      itemCount: 5,
+                                      itemSize: 18,
+                                      ignoreGestures: true,
+                                      itemPadding:
+                                          EdgeInsets.symmetric(horizontal: 4),
+                                      itemBuilder: (context, _) => Icon(
+                                        Icons.star,
+                                        color: Colors.amber,
+                                      ),
+                                      onRatingUpdate: (index) {},
                                     ),
-                                    onRatingUpdate: (index) {},
-                                  ),
-                                  Text(
-                                    "${widget.product.price}\€",
-                                    style: TextStyle(
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            Padding(
-                              padding: EdgeInsets.only(top: 10, bottom: 20),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Expanded(
-                                    child: Text(
-                                      widget.product.name,
+                                    Text(
+                                      "${widget.product.price}\€",
                                       style: TextStyle(
-                                        fontSize: 28,
+                                        fontSize: 20,
                                         fontWeight: FontWeight.bold,
                                       ),
-                                      softWrap: true,
                                     ),
-                                  ),
-                                ],
+                                  ],
+                                ),
                               ),
-                            ),
-                            Padding(
-                              padding: EdgeInsets.symmetric(vertical: 12),
-                              child: Text(
-                                widget.product.description,
-                                style: TextStyle(fontSize: 16),
-                                textAlign: TextAlign.justify,
+                              Padding(
+                                padding: EdgeInsets.only(top: 10, bottom: 20),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Expanded(
+                                      child: Text(
+                                        widget.product.name,
+                                        style: TextStyle(
+                                          fontSize: 28,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                        softWrap: true,
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               ),
-                            ),
-                          ],
+                              Padding(
+                                padding: EdgeInsets.symmetric(vertical: 12),
+                                child: Text(
+                                  widget.product.description,
+                                  style: TextStyle(fontSize: 16),
+                                  textAlign: TextAlign.justify,
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        SizedBox(height: 10),
-                        MaterialButton(
-                          onPressed: () {
-                            showAddCommentDialog(context);
-                          },
-                          color: Colors.deepOrange[300], // Cambia el color de fondo
-                          textColor: Colors.white, // Cambia el color del texto
-                          padding: EdgeInsets.symmetric(
-                              horizontal: 20,
-                              vertical: 10), // Ajusta el padding
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(
-                                12.0), // Añade bordes redondeados
-                          ),
-                          child: Text(
-                            'Añadir valoracion',
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
+                    Padding(
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          SizedBox(height: 10),
+                          MaterialButton(
+                            onPressed: () {
+                              showAddCommentDialog(context);
+                            },
+                            color: Colors
+                                .deepOrange[300], // Cambia el color de fondo
+                            textColor:
+                                Colors.white, // Cambia el color del texto
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 20,
+                                vertical: 10), // Ajusta el padding
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(
+                                  12.0), // Añade bordes redondeados
                             ),
-                          ),
-                        ),
-                        SizedBox(height: 10),
-                        if (comments.isEmpty)
-                          Text('No hay valoraciones disponibles.'),
-                        ...comments.map((comment) {
-                          return Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 8),
-                            child: Container(
-                              decoration: BoxDecoration(
-                                color: Colors.grey[200],
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              padding: EdgeInsets.all(10),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Text(
-                                        comment['user']['name'],
-                                        style: TextStyle(
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                      RatingBar.builder(
-                                        initialRating:
-                                            comment['scoreUser'] != null
-                                                ? comment['scoreUser']
-                                                : 0,
-                                        ignoreGestures: true,
-                                        minRating: 0,
-                                        direction: Axis.horizontal,
-                                        allowHalfRating: true,
-                                        itemCount: 5,
-                                        itemSize: 18,
-                                        itemPadding:
-                                            EdgeInsets.symmetric(horizontal: 4),
-                                        itemBuilder: (context, _) => Icon(
-                                          Icons.star,
-                                          color: Colors.amber,
-                                        ),
-                                        onRatingUpdate: (index) {},
-                                      ),
-                                    ],
-                                  ),
-                                  SizedBox(height: 5),
-                                  Text(utf8.decode(comment['text'].toString().codeUnits)),
-                                ],
+                            child: Text(
+                              'Añadir valoracion',
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
                               ),
                             ),
-                          );
-                        }).toList(),
-                      ],
+                          ),
+                          SizedBox(height: 10),
+                          if (comments.isEmpty)
+                            Text('No hay valoraciones disponibles.'),
+                          ...comments.map((comment) {
+                            return Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 8),
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  color: Colors.grey[200],
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                padding: EdgeInsets.all(10),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text(
+                                          comment['user']['name'],
+                                          style: TextStyle(
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                        RatingBar.builder(
+                                          initialRating:
+                                              comment['scoreUser'] != null
+                                                  ? comment['scoreUser']
+                                                  : 0,
+                                          ignoreGestures: true,
+                                          minRating: 0,
+                                          direction: Axis.horizontal,
+                                          allowHalfRating: true,
+                                          itemCount: 5,
+                                          itemSize: 18,
+                                          itemPadding: EdgeInsets.symmetric(
+                                              horizontal: 4),
+                                          itemBuilder: (context, _) => Icon(
+                                            Icons.star,
+                                            color: Colors.amber,
+                                          ),
+                                          onRatingUpdate: (index) {},
+                                        ),
+                                      ],
+                                    ),
+                                    SizedBox(height: 5),
+                                    Text(utf8.decode(
+                                        comment['text'].toString().codeUnits)),
+                                  ],
+                                ),
+                              ),
+                            );
+                          }).toList(),
+                        ],
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           );
