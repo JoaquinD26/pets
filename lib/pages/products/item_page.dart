@@ -45,7 +45,7 @@ class _ItemPageState extends State<ItemPage> {
 
     try {
       var response = await http.get(Uri.parse(
-          'http://${config.host}:3000/productComment/product/${widget.product.id}'));
+          'http://${config.host}:4000/productComment/product/${widget.product.id}'));
 
       if (response.statusCode == 200) {
         setState(() {
@@ -189,7 +189,7 @@ class _ItemPageState extends State<ItemPage> {
 
       // Realizar la solicitud POST para enviar el comentario
       var response = await http.post(
-        Uri.parse('http://${config.host}:3000/productComment'),
+        Uri.parse('http://${config.host}:4000/productComment'),
         headers: {
           'Content-Type': 'application/json',
         },
@@ -219,7 +219,7 @@ class _ItemPageState extends State<ItemPage> {
       // Realizar la solicitud GET para obtener el averageScore del producto
       var response = await http.get(
         Uri.parse(
-            'http://${config.host}:3000/product/${widget.product.id}/averageScore'),
+            'http://${config.host}:4000/product/${widget.product.id}/averageScore'),
       );
 
       // Verificar el código de respuesta del servidor

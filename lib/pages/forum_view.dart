@@ -34,7 +34,7 @@ class ForumPageState extends State<ForumPage> {
 
     try {
       var response =
-          await http.get(Uri.parse('http://${config.host}:3000/forum'));
+          await http.get(Uri.parse('http://${config.host}:4000/forum'));
 
       if (response.statusCode == 200) {
         List<dynamic> jsonData = json.decode(response.body);
@@ -354,7 +354,7 @@ class ForumPageState extends State<ForumPage> {
 
       // Realizar la solicitud POST al servidor
       var response = await http.post(
-        Uri.parse('http://${config.host}:3000/forum'),
+        Uri.parse('http://${config.host}:4000/forum'),
         body: jsonEncode(body),
         headers: {'Content-Type': 'application/json'},
       );

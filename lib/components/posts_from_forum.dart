@@ -30,7 +30,7 @@ Future<List<Post>> fetchPostsForForum(int forumId) async {
   final config = await loadConfig();
   try {
     final response = await http.get(
-      Uri.parse('http://${config.host}:3000/post/forum/$forumId'),
+      Uri.parse('http://${config.host}:4000/post/forum/$forumId'),
     );
 
     if (response.statusCode == 200) {
@@ -51,7 +51,7 @@ Future<int> fetchLikesPostsForForum(int postId) async {
   final config = await loadConfig();
   try {
     final response = await http.get(
-      Uri.parse('http://${config.host}:3000/post/$postId/countLikes'),
+      Uri.parse('http://${config.host}:4000/post/$postId/countLikes'),
     );
 
     if (response.statusCode == 200) {
@@ -69,7 +69,7 @@ Future<bool> fetchLikeStatus(int postId, String userId) async {
   final config = await loadConfig();
   try {
     final response = await http.get(
-      Uri.parse('http://${config.host}:3000/post/$postId/like/$userId'),
+      Uri.parse('http://${config.host}:4000/post/$postId/like/$userId'),
     );
 
     if (response.statusCode == 200) {
@@ -459,7 +459,7 @@ class PostDetailsPageState extends State<PostDetailsPage> {
     try {
       var response = await http.put(
         Uri.parse(
-          "http://${config.host}:3000/post/${post.id}/${accion}/${user.id}",
+          "http://${config.host}:4000/post/${post.id}/${accion}/${user.id}",
         ),
       );
 
@@ -488,7 +488,7 @@ class PostDetailsPageState extends State<PostDetailsPage> {
       };
 
       var response = await http.post(
-        Uri.parse('http://${config.host}:3000/post'),
+        Uri.parse('http://${config.host}:4000/post'),
         body: jsonEncode(body),
         headers: {'Content-Type': 'application/json'},
       );
@@ -515,7 +515,7 @@ class PostDetailsPageState extends State<PostDetailsPage> {
 
     try {
       var response = await http.delete(
-        Uri.parse('http://${config.host}:3000/post/$postId'),
+        Uri.parse('http://${config.host}:4000/post/$postId'),
         headers: {'Content-Type': 'application/json'},
       );
 

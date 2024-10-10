@@ -50,7 +50,7 @@ class _PostsLikedPageState extends State<PostsLikedPage> {
     final config = await loadConfig();
     try {
       final response = await http.get(
-        Uri.parse('http://${config.host}:3000/user/$userId/likedPosts'),
+        Uri.parse('http://${config.host}:4000/user/$userId/likedPosts'),
       );
 
       if (response.statusCode == 200) {
@@ -82,7 +82,7 @@ class _PostsLikedPageState extends State<PostsLikedPage> {
     final config = await loadConfig();
     try {
       final response = await http.get(
-        Uri.parse('http://${config.host}:3000/post/$postId/countLikes'),
+        Uri.parse('http://${config.host}:4000/post/$postId/countLikes'),
       );
 
       if (response.statusCode == 200) {
@@ -111,7 +111,7 @@ class _PostsLikedPageState extends State<PostsLikedPage> {
     final config = await loadConfig();
     try {
       final response = await http.get(
-        Uri.parse('http://${config.host}:3000/post/$postId/like/$userId'),
+        Uri.parse('http://${config.host}:4000/post/$postId/like/$userId'),
       );
 
       if (response.statusCode == 200) {
@@ -132,7 +132,7 @@ class _PostsLikedPageState extends State<PostsLikedPage> {
     try {
       var response = await http.put(
         Uri.parse(
-            "http://${config.host}:3000/post/${post.id}/${isLiked ? 'dislike' : 'like'}/${widget.userLog.id}"),
+            "http://${config.host}:4000/post/${post.id}/${isLiked ? 'dislike' : 'like'}/${widget.userLog.id}"),
       );
 
       if (response.statusCode == 200) {
@@ -273,7 +273,7 @@ class _PostsLikedPageState extends State<PostsLikedPage> {
 
     try {
       var response = await http.delete(
-        Uri.parse('http://${config.host}:3000/post/$postId'),
+        Uri.parse('http://${config.host}:4000/post/$postId'),
         headers: {'Content-Type': 'application/json'},
       );
 

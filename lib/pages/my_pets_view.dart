@@ -45,7 +45,7 @@ class MyPetsViewState extends State<MyPetsView> {
     final config = Config.fromJson(configJson);
 
     final response =
-        await http.get(Uri.parse('http://${config.host}:3000/user/$id'));
+        await http.get(Uri.parse('http://${config.host}:4000/user/$id'));
     if (response.statusCode == 200) {
       final user = User.fromJson(json.decode(response.body));
       setState(() {
@@ -507,9 +507,9 @@ class MyPetsViewState extends State<MyPetsView> {
     final config = Config.fromJson(configJson);
 
     final url = Uri.parse(
-        'http://${config.host}:3000/user/${widget.userLog.id}/$petId');
+        'http://${config.host}:4000/user/${widget.userLog.id}/$petId');
     final response = await http.delete(url);
-    // final url2 = Uri.parse('http://${config.host}:3000/user/$petId');
+    // final url2 = Uri.parse('http://${config.host}:4000/user/$petId');
     // await http.delete(url2);
 
     if (response.statusCode == 200) {

@@ -239,7 +239,7 @@ class _EditProfilePageState extends State<ProfileForm> {
       final config = Config.fromJson(configJson);
 
       var response = await http.put(
-        Uri.parse('http://${config.host}:3000/user/$userId'),
+        Uri.parse('http://${config.host}:4000/user/$userId'),
         body: jsonEncode(body),
         headers: {'Content-Type': 'application/json'},
       );

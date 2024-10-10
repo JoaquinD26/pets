@@ -40,7 +40,7 @@ class ProfileViewState extends State<ProfileView> {
     final config = Config.fromJson(configJson);
 
     final response = await http.get(
-        Uri.parse('http://${config.host}:3000/post/user/${widget.userLog.id}'));
+        Uri.parse('http://${config.host}:4000/post/user/${widget.userLog.id}'));
     if (response.statusCode == 200) {
       final posts = json.decode(response.body);
       setState(() {
@@ -58,7 +58,7 @@ class ProfileViewState extends State<ProfileView> {
     final config = Config.fromJson(configJson);
 
     final response = await http.get(
-        Uri.parse('http://${config.host}:3000/post/user/${widget.userLog.id}'));
+        Uri.parse('http://${config.host}:4000/post/user/${widget.userLog.id}'));
     if (response.statusCode == 200) {
       final posts = json.decode(response.body);
       int totalLikes = 0;
@@ -66,7 +66,7 @@ class ProfileViewState extends State<ProfileView> {
       for (var post in posts) {
         final postId = post['id'];
         final likesResponse = await http.get(
-            Uri.parse('http://${config.host}:3000/post/$postId/countLikes'));
+            Uri.parse('http://${config.host}:4000/post/$postId/countLikes'));
 
         if (likesResponse.statusCode == 200) {
           final likesCount = json.decode(likesResponse.body);

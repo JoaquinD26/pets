@@ -245,7 +245,7 @@ Future<void> _pickImage() async {
   Future<int> _addPet(Pet pet) async {
     final config = await loadConfig();
     try {
-      final addPetUrl = Uri.parse('http://${config.host}:3000/pet');
+      final addPetUrl = Uri.parse('http://${config.host}:4000/pet');
       final petJson = pet.toJson();
       final response = await http.post(
         addPetUrl,
@@ -274,7 +274,7 @@ Future<void> _pickImage() async {
     final config = await loadConfig();
     if (imageBytes != null && imageBytes.isNotEmpty) {
       try {
-        var url = Uri.parse("http://${config.host}:3000/pet/upload");
+        var url = Uri.parse("http://${config.host}:4000/pet/upload");
         String petIdString = petId.toString();
         var request = http.MultipartRequest('POST', url)
           ..fields['id'] = petIdString
@@ -304,7 +304,7 @@ Future<void> _pickImage() async {
   Future<void> _connectPetToUser(String userId, int petId) async {
     final config = await loadConfig();
     try {
-      final addPetToUserUrl = Uri.parse('http://${config.host}:3000/user/$userId/$petId');
+      final addPetToUserUrl = Uri.parse('http://${config.host}:4000/user/$userId/$petId');
       final response = await http.get(
         addPetToUserUrl,
         headers: <String, String>{
@@ -345,7 +345,7 @@ Future<void> _pickImage() async {
   Future<void> _editPet(Pet pet) async {
     final config = await loadConfig();
     try {
-      final editPetUrl = Uri.parse('http://${config.host}:3000/pet');
+      final editPetUrl = Uri.parse('http://${config.host}:4000/pet');
       final petJson = pet.toJson();
       final response = await http.put(
         editPetUrl,

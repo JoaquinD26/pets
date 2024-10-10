@@ -36,7 +36,7 @@ class _ProductViewState extends State<ProductView> {
     final configJson = json.decode(configString);
     final config = Config.fromJson(configJson);
     
-    final response = await http.get(Uri.parse('http://${config.host}:3000/product'));
+    final response = await http.get(Uri.parse('http://${config.host}:4000/product'));
     if (response.statusCode == 200) {
       List<dynamic> jsonData = json.decode(response.body);
 

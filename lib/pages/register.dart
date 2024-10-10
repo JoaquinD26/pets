@@ -310,7 +310,7 @@ class _RegisterPageState extends State<RegisterPage> {
       final config = Config.fromJson(configJson);
 
       var response = await http.post(
-        Uri.parse('http://${config.host}:3000/user'),
+        Uri.parse('http://${config.host}:4000/user'),
         body: jsonEncode(body),
         headers: {'Content-Type': 'application/json'},
       );

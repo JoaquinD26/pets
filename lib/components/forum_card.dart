@@ -32,7 +32,7 @@ class ForumPostCardState extends State<ForumPostCard> {
 
     try {
       final response = await http.get(
-        Uri.parse('http://${config.host}:3000/post/forum/$forumId'),
+        Uri.parse('http://${config.host}:4000/post/forum/$forumId'),
       );
 
       if (response.statusCode == 200) {

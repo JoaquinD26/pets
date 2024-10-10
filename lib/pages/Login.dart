@@ -162,7 +162,7 @@ class LoginState extends State<LoginPage> {
 
       // Realizar la solicitud POST al servidor
       var response = await http.post(
-        Uri.parse('http://${config.host}:3000/user/login'),
+        Uri.parse('http://${config.host}:4000/user/login'),
         body: jsonEncode(body),
         headers: {'Content-Type': 'application/json'},
       );
